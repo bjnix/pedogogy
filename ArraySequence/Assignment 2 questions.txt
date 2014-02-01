@@ -1,0 +1,19 @@
+Assignment 2 questions 
+Brent Nix 
+Data Strucutres 
+Fall 2010
+section 1
+
+1) yes
+
+2) the only thing that I didn't expect were a couple major spikes in the LinkedSequence time, but I edited those "bad" points out of the data.
+
+3)The LinkedSequence took less time overall, but when it comes to memory, it seems like it would be less adventageous at certain times, because a new object has to be created each time, whereas with the ArraySequence, there might be large spikes overall, but it could possible by rationalized depending on what kind of application it was going to be used in.
+
+4)The main disadvantage of empirical analysis seems to be the effect of other processes on the run time and also the fact that every machine is going to have a different running time. Analytic analysis creates a more universal set of data, but it is theoretical, so we are not able to see it in its actual working environment (empirical).
+
+5) the expected Big-O times of the array functions are O(n) and the linked sequences are O(1). The amortized Big-O time of every function on the line graphs is constant: O(1). 
+
+6)I would choose a Linked Sequence implementation because the run time will always be constant even when the list has many items in it
+
+7)The Linked Sequence would be constant. The Array list implementation could be given the max size when it is instantiated, and use that size as it's perameter.This would make addLast() O(1), but not addFirst(), which would still have to iterate through the list to shift down the elements every time. 
