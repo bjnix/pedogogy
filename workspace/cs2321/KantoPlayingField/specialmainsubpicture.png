@@ -1,0 +1,17 @@
+                          ;        ;              ;         ; Row I/O    ;                 ; no       ; Off          ;
+; M6       ; 58         ; 2        ; #TCK                                     ; input  ;              ;         ; --         ;                 ; --       ; --           ;
+; M7       ; 60         ; 2        ; #TDO                                     ; output ;              ;         ; --         ;                 ; --       ; --           ;
+; M8       ; 57         ; 2        ; #TDI                                     ; input  ;              ;         ; --         ;                 ; --       ; --           ;
+; M9       ;            ; 2        ; VCCIO2                                   ; power  ;              ; 3.3V    ; --         ;                 ; --       ; --           ;
+; M10      ;            ;          ; VCCINT                                   ; power  ;              ; 1.2V    ; --         ;                 ; --       ; --           ;
+; M11      ;            ;          ; VCCINT                                   ; power  ;              ; 1.2V    ; --         ;                 ; --       ; --           ;
+; M12      ;            ;          ; GND                                      ; gnd    ;              ;         ; --         ;                 ; --       ; --           ;
+; M13      ;            ;          ; GND                                      ; gnd    ;              ;         ; --         ;                 ; --       ; --           ;
+; M14      ;            ;          ; GND                                      ; gnd    ;              ;         ; --         ;                 ; --       ; --           ;
+; M15      ;            ;          ; GND                                      ; gnd    ;              ;         ; --         ;                 ; --       ; --           ;
+; M16      ;            ;          ; VCCINT                                   ; power  ;              ; 1.2V    ; --         ;                 ; --       ; --           ;
+; M17      ;            ;          ; VCCINT                                   ; power  ;              ; 1.2V    ; --         ;                 ; --       ; --           ;
+; M18      ;            ; 5        ; VCCIO5                                   ; power  ;              ; 3.3V    ; --         ;                 ; --       ; --           ;
+; M19      ; 317        ; 5        ; GND*                                     ;        ;              ;         ; Row I/O    ;                 ; no       ; Off          ;
+; M20      ; 316        ; 5        ; GND*                                     ;        ;              ;         ; Row I/O    ;                 ; no       ; Off          ;
+; M21      ; 314        ; 5        ; GND*                                     ;        ;              ;         ; Row I/O    ;                 ; no       ; Off     

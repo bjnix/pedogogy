@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy 3 elements(s) to &apos;cs2321.ArraySequence.java&apos;&#x0A;- Original project: &apos;ArraySequence&apos;&#x0A;- Destination element: &apos;cs2321.ArraySequence.java&apos;&#x0A;- Original elements:&#x0A;     cs2321.ArraySequence.java&#x0A;     cs2321.ElementIterator.java&#x0A;     cs2321.ArrSeqPos.java" description="Copy compilation units" destination="=PriorityQueuesWithSorts/src&lt;cs2321{ArraySequence.java" element1="/src&lt;cs2321{ArraySequence.java" element2="/src&lt;cs2321{ElementIterator.java" element3="/src&lt;cs2321{ArrSeqPos.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1285017083655" units="3" version="1.0"/>
+</session>

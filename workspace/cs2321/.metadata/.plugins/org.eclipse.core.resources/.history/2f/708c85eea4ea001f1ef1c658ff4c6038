@@ -1,0 +1,425 @@
+package cs2321;
+
+import net.datastructures.*;
+
+/**
+ * @author cdbrown
+ * 
+ */
+public class AdjListGraph<V, E> implements Graph<V, E> {
+
+	private class edgeEntry<E>  implements Edge<E> 
+	{		
+		//create pointers to vertices defining the edge
+		private vertEntry<V> vert0;
+		private vertEntry<V> vert1;
+		private UnOrderedMap<Object,Object> edgmap;
+		private E element;
+		private Position<edgeEntry<E>> edgePos;
+		private Position<Edge<E>> edgeVertPosVert0;
+		private Position<Edge<E>> edgeVertPosVert1;
+		public edgeEntry(Vertex<V> u, Vertex<V> v, E e){
+			element = e;
+			edgmap = new UnOrderedMap<Object,Object>();
+			vert0 = (vertEntry<V>) u;
+			vert1 = (vertEntry<V>) v;
+
+		}
+
+
+		//		public void setInVert(vertEntry<V> v){
+		//			vert0 = v;
+		//		}
+		//		public void setOutVert(vertEntry<V> v){
+		//			vert1 = v;
+		//		}
+		//-----Position implementation
+		public String toString(){
+			return  element + "; [" + vert0 + "], [" + vert1 + "]" ; 
+		}
+		public void setElement(E e){
+			element = e;
+		}
+
+		public E element() {
+			return element;
+		}
+		public void setEdgePosVert1( Position<Edge<E>> pos)
+		{
+			edgeVertPosVert1 = pos;
+		}
+		public void setEdgePosVert0( Position<Edge<E>> pos){
+			edgeVertPosVert0 = pos;
+		}
+		public Position<Edge<E>> getEdgePosVert1()
+		{
+			return edgeVertPosVert1;
+		}
+
+		public Position<Edge<E>> getEdgePosVert0()
+		{
+			return edgeVertPosVert0;
+		}
+		public void setPosition(Position<edgeEntry<E>> position){
+			edgePos = position;
+		}
+		public Position<edgeEntry<E>> getPosition()
+		{
+			return edgePos;
+		}
+		//-----Map implementation
+		public Iterable<Entry<Object, Object>> entries() {
+			return edgmap.entries() ;
+		}
+
+		public Object get(Object key) throws InvalidKeyException {
+			return edgmap.get(key);
+		}
+
+		public boolean isEmpty() {
+			return edgmap.isEmpty();
+		}
+
+		public Iterable<Object> keys() {
+			return edgmap.keys();
+		}
+
+		public Object put(Object key, Object value) throws InvalidKeyException {
+			return edgmap.put(key, value);
+		}
+
+		public Object remove(Object key) throws InvalidKeyException {
+			return edgmap.remove(key);
+		}
+
+		public int size() {
+			return edgmap.size();
+		}
+
+		public Iterable<Object> values() {
+			return edgmap.values();
+		}
+
+
+
+	}
+	/**
+	 * A simple vertex class
+	 * @author bjnix
+	 *
+	 * @param <V>
+	 */
+	public class vertEntry<V> implements Vertex<String>
+	{
+		//Declare logfiles of pointers to ingoing and outgoing edges
+		private UnOrderedMap<Object,Object> vertmap;
+		private String element;
+		private LinkedSequence<Edge<E>> edges;
+		private Position<Entry<V, vertEntry<V>>> vertPos = null;
+		private int degree = 0;
+		//Constructor
+		public vertEntry(String v) {
+			edges = new LinkedSequence<Edge<E>>();
+			vertmap = new UnOrderedMap<Object,Object>();
+			element = v;
+			degree = 0;
+
+		}	
+		public String toString()
+		{
+			return element + ", " + degree;
+		}
+		public void degreePlus(){
+			degree ++;
+		}
+		public void degreeMinus(){
+			degree --;
+		}
+		public int degree(){
+			return degree;
+		}
+		//--------Position implementation
+
+		public boolean equals(vertEntry<V> m ){
+			return element.compareTo(m.element) == 0;
+
+		}
+
+
+		public void setElement(String e){
+			element = e;
+		}
+
+		public String element() {
+			return element;
+		}
+
+		public void setPosition(Position<Entry<V, vertEntry<V>>> position){
+			vertPos = position;
+		}
+		public Position<Entry<V, vertEntry<V>>> getPosition()
+		{
+			return vertPos;
+		}
+
+		//--------Map implementation
+		public Iterable<Entry<Object, Object>> entries() {
+			return vertmap.entries() ;
+		}
+
+
+		public Object get(Object key) throws InvalidKeyException {
+			return vertmap.get(key);
+		}
+
+
+		public boolean isEmpty() {
+			return vertmap.isEmpty();
+		}
+
+
+		public Iterable<Object> keys() {
+			return vertmap.keys();
+		}
+
+
+		public Object put(Object key, Object value) throws InvalidKeyException {
+			return vertmap.put(key, value);
+		}
+
+
+		public Object remove(Object key) throws InvalidKeyException {
+			return vertmap.remove(key);
+		}
+
+
+		public int size() {
+			return vertmap.size();
+		}
+
+
+		public Iterable<Object> values() {
+			return vertmap.values();
+		}
+
+	}
+	private int numEdg;
+	private int numVert;
+	private HashMap<V,vertEntry<V>> vertL; 
+	private LinkedSequence<edgeEntry<E>> edgeL;
+
+	public AdjListGraph() {
+		vertL = new HashMap<V,vertEntry<V>>();
+		edgeL = new LinkedSequence<edgeEntry<E>>();
+		numEdg = 0;
+		numVert = 0;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#areAdjacent(net.datastructures.Vertex, net.datastructures.Vertex)
+	 */
+	public boolean areAdjacent(Vertex<V> u, Vertex<V> v)
+	throws InvalidPositionException {
+
+		if (((vertEntry<V>)u).degree() > ((vertEntry<V>)v).degree())
+			return areadj(((vertEntry<V>)v),((vertEntry<V>)u));
+		else
+			return areadj(((vertEntry<V>)u),((vertEntry<V>)v));
+	}
+	private boolean areadj(vertEntry<V> n, vertEntry<V> m)
+	{
+		for(Edge<E> b: n.edges)
+			if ( ((edgeEntry<E>)b).vert0.equals(m) || ((edgeEntry<E>)b).vert1.equals(m))
+				return true;
+		return false;
+
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#edges()
+	 */
+	public Iterable<Edge<E>> edges() {
+		// TODO Auto-generated method stub
+		LinkedSequence<Edge<E>> temp = new LinkedSequence<Edge<E>>();
+		for ( edgeEntry<E> e : edgeL)
+		{
+			temp.addLast(e);
+		}
+		return temp;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#endVertices(net.datastructures.Edge)
+	 */
+	public Vertex[] endVertices(Edge<E> e) throws InvalidPositionException {
+		Vertex[] temp = new Vertex[2];
+
+		temp[0] = ((edgeEntry<E>)e).vert0;
+		temp[1] = ((edgeEntry<E>)e).vert1;
+
+		return temp;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#incidentEdges(net.datastructures.Vertex)
+	 */
+	public Iterable<Edge<E>> incidentEdges(Vertex<V> v)
+	throws InvalidPositionException {
+		return ((vertEntry<V>)v).edges;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#insertEdge(net.datastructures.Vertex, net.datastructures.Vertex, java.lang.Object)
+	 */
+	public Edge<E> insertEdge(Vertex<V> u, Vertex<V> v, E o)
+	throws InvalidPositionException {
+
+
+		//		if(((vertEntry<V>)u).getPosition() == null || ((vertEntry<V>)v).getPosition()== null)
+		//		{throw new InvalidPositionException("Invalid Position of vertex on insertEdge");}
+
+		edgeEntry<E> edge = new edgeEntry<E>(u, v, o);
+		((vertEntry<V>)u).edges.addLast(edge);
+		edge.setEdgePosVert0(((vertEntry<V>)u).edges.last());
+		((vertEntry<V>)u).degreePlus();
+		((vertEntry<V>)v).edges.addLast(edge);
+		edge.setEdgePosVert1(((vertEntry<V>)v).edges.last());
+		((vertEntry<V>)v).degreePlus();
+		edgeL.addLast(edge);
+		edge.setPosition(edgeL.last());
+		numEdg ++;
+		return edge;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#insertVertex(java.lang.Object)
+	 */
+	public Vertex<V> insertVertex(V o) {
+		vertEntry<V> ent;
+		vertEntry<V> temp = vertL.get(o);
+
+		if(temp == null){
+			ent = new vertEntry<V>((String) o);
+			vertL.put(o, ent);
+			ent.setPosition(vertL.getMap(o).last());
+			numVert ++;
+		}
+		else
+			ent = temp; 
+
+		return (Vertex<V>) ent;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#numEdges()
+	 */
+	public int numEdges() {
+		return numEdg;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#numVertices()
+	 */
+	public int numVertices() {
+		return numVert;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#opposite(net.datastructures.Vertex, net.datastructures.Edge)
+	 */
+	public Vertex<V> opposite(Vertex<V> v, Edge<E> en)
+	throws InvalidPositionException {
+
+		if(((edgeEntry<E>)en).vert0.equals(v))
+			return (Vertex<V>) ((edgeEntry<E>)en).vert1;
+		else if(((edgeEntry<E>)en).vert1.equals(v))
+			return (Vertex<V>) ((edgeEntry<E>)en).vert0;
+
+		else
+		{throw new InvalidPositionException ("Invalid position @ opposite()");}
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#removeEdge(net.datastructures.Edge)
+	 */
+	public E removeEdge(Edge<E> e) throws InvalidPositionException {
+		
+		return removeEdge(e,true);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#removeVertex(net.datastructures.Vertex)
+	 */
+	public V removeVertex(Vertex<V> v) throws InvalidPositionException {
+
+		for(Edge<E> e: ((vertEntry<V>)v).edges )
+			removeEdge(e,false);
+		V temp = v.element();
+		vertL.remove(temp);
+		numVert --;
+		return temp;
+	}
+	/**
+	 * private method called by removeVertex and removeEdge
+	 * to remove edge
+	 */
+	private E removeEdge(Edge<E> e, Boolean tf){
+		vertEntry<V> temp0 = ((vertEntry<V>) ((edgeEntry<E>)e).vert0);
+		vertEntry<V> temp1 = ((vertEntry<V>) ((edgeEntry<E>)e).vert1);
+
+		temp0.edges.remove(((edgeEntry<E>)e).getEdgePosVert0());
+		if (tf)temp0.degreeMinus();
+		
+		if (temp0.degree() == 0) 
+			removeVertex((Vertex<V>) temp0);
+		
+		if (!tf)temp0.degreeMinus();
+		temp1.edges.remove(((edgeEntry<E>)e).getEdgePosVert1());
+		
+		if (tf)temp1.degreeMinus();
+		
+		if (temp1.degree() == 0)
+			removeVertex((Vertex<V>) temp1);
+		
+		if (!tf)temp1.degreeMinus();
+		
+		edgeL.remove(((edgeEntry<E>)e).getPosition());
+		
+		
+		numEdg --;
+		return e.element();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#replace(net.datastructures.Edge, java.lang.Object)
+	 */
+	public E replace(Edge<E> p, E o) throws InvalidPositionException {
+		E temp = p.element();
+		((edgeEntry<E>)p).setElement(o);
+		return temp;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#replace(net.datastructures.Vertex, java.lang.Object)
+	 */
+	public V replace(Vertex<V> p, V o) throws InvalidPositionException {
+		V temp = p.element();
+		((vertEntry<V>)p).setElement((String) o);
+		return temp;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#vertices()
+	 */
+	public Iterable<Vertex<V>> vertices() {
+		Iterable<Entry<V, vertEntry<V>>> i = vertL.entries();
+		LinkedSequence<Vertex<V>> temp = new LinkedSequence<Vertex<V>>();
+		for(Entry<V, vertEntry<V>> e: i){
+			temp.addLast((Vertex<V>) e.getValue());
+		}
+		return temp;
+	}
+	//	public static void main(V[] args){
+	//		adj
+	//	}
+}

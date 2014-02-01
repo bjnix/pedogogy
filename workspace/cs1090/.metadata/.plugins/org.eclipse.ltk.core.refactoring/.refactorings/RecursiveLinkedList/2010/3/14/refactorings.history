@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename method &apos;RecursiveLinkedList.ins3rt4ft3r(...)&apos; to &apos;insertAfter&apos;&#x0D;&#x0A;- Original project: &apos;RecursiveLinkedList&apos;&#x0D;&#x0A;- Original element: &apos;RecursiveLinkedList.ins3rt4ft3r(...)&apos;&#x0D;&#x0A;- Renamed element: &apos;RecursiveLinkedList.insertAfter(...)&apos;&#x0D;&#x0A;- Update references to refactored element" delegate="false" deprecate="false" description="Rename method &apos;ins3rt4ft3r&apos;" flags="589826" id="org.eclipse.jdt.ui.rename.method" input="/src&lt;{RecursiveLinkedList.java[RecursiveLinkedList~ins3rt4ft3r~QRecursiveLinkedList;~I~I" name="insertAfter" references="true" stamp="1269825789635" version="1.0"/>
+</session>

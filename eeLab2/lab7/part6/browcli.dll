@@ -1,0 +1,1468 @@
+38672
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Swiss721BT-BlackExtended
+FamilyName:Swis721 BlkEx BT
+StyleName:Black
+MenuName:Swis721 BlkEx BT
+StyleBits:0
+WeightClass:400
+WidthClass:7
+AngleClass:0
+FullName:Swiss 721 Black Extended BT
+WritingScript:Roman
+WinName:Swiss 721 Black Extended BT
+FileLength:40660
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Swiss721BT-LightExtended
+FamilyName:Swis721 LtEx BT
+StyleName:Light
+MenuName:Swis721 LtEx BT
+StyleBits:0
+WeightClass:400
+WidthClass:7
+AngleClass:0
+FullName:Swiss 721 Light Extended BT
+WritingScript:Roman
+WinName:Swiss 721 Light Extended BT
+FileLength:37244
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Swiss721BT-Black
+FamilyName:Swis721 Blk BT
+StyleName:Black
+MenuName:Swis721 Blk BT
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Swiss 721 Black BT
+WritingScript:Roman
+WinName:Swiss 721 Black BT
+FileLength:36460
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Swiss721BT-BlackItalic
+FamilyName:Swis721 Blk BT
+StyleName:Black Italic
+MenuName:Swis721 Blk BT
+StyleBits:1
+WeightClass:400
+WidthClass:5
+AngleClass:1
+FullName:Swiss 721 Black Italic BT
+WritingScript:Roman
+WinName:Swiss 721 Black Italic BT
+FileLength:37316
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Swiss721BT-BlackOutline
+FamilyName:Swis721 BlkOul BT
+StyleName:Black
+MenuName:Swis721 BlkOul BT
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Swiss 721 Black Outline BT
+WritingScript:Roman
+WinName:Swiss 721 Black Outline BT
+FileLength:60536
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Swiss721BT-Light
+FamilyName:Swis721 Lt BT
+StyleName:Light
+MenuName:Swis721 Lt BT
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Swiss 721 Light BT
+WritingScript:Roman
+WinName:Swiss 721 Light BT
+FileLength:35524
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Swiss721BT-LightItalic
+FamilyName:Swis721 Lt BT
+StyleName:Light Italic
+MenuName:Swis721 Lt BT
+StyleBits:1
+WeightClass:400
+WidthClass:5
+AngleClass:1
+FullName:Swiss 721 Light Italic BT
+WritingScript:Roman
+WinName:Swiss 721 Light Italic BT
+FileLength:36412
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:TechnicBold
+FamilyName:TechnicBold
+StyleName:Regular
+MenuName:TechnicBold
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:TechnicBold
+WritingScript:Roman
+WinName:TechnicBold
+FileLength:58584
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:TechnicLite
+FamilyName:TechnicLite
+StyleName:Regular
+MenuName:TechnicLite
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:TechnicLite
+WritingScript:Roman
+WinName:TechnicLite
+FileLength:52648
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Technic
+FamilyName:Technic
+StyleName:Regular
+MenuName:Technic
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Technic
+WritingScript:Roman
+WinName:Technic
+FileLength:58660
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:UniversalMath1BT-Regular
+FamilyName:UniversalMath1 BT
+StyleName:Regular
+MenuName:UniversalMath1 BT
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Universal Math 1 BT
+WritingScript:Roman
+WinName:Universal Math 1 BT
+FileLength:22128
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:VinetaBT-Regular
+FamilyName:Vineta BT
+StyleName:Regular
+MenuName:Vineta BT
+StyleBits:0
+WeightClass:400
+WidthClass:6
+AngleClass:0
+FullName:Vineta BT
+WritingScript:Roman
+WinName:Vineta BT
+FileLength:68552
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ISOCPEURItalic
+FamilyName:ISOCPEUR
+StyleName:Italic
+MenuName:ISOCPEUR
+StyleBits:1
+WeightClass:400
+WidthClass:5
+AngleClass:1
+FullName:ISOCPEUR Italic
+WritingScript:Roman
+WinName:ISOCPEUR Italic
+FileLength:132652
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ISOCPEUR
+FamilyName:ISOCPEUR
+StyleName:Regular
+MenuName:ISOCPEUR
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ISOCPEUR
+WritingScript:Roman
+WinName:ISOCPEUR
+FileLength:140516
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ISOCTEUR
+FamilyName:ISOCTEUR
+StyleName:Regular
+MenuName:ISOCTEUR
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ISOCTEUR
+WritingScript:Roman
+WinName:ISOCTEUR
+FileLength:139712
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ISOCTEURItalic
+FamilyName:ISOCTEUR
+StyleName:Italic
+MenuName:ISOCTEUR
+StyleBits:1
+WeightClass:400
+WidthClass:5
+AngleClass:1
+FullName:ISOCTEUR Italic
+WritingScript:Roman
+WinName:ISOCTEUR Italic
+FileLength:132624
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:NIVision
+FamilyName:NI Vision
+StyleName:Regular
+MenuName:NI Vision
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:NI Vision
+WritingScript:Roman
+WinName:NI Vision
+FileLength:24756
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ZWAdobeF
+FamilyName:ZWAdobeF
+StyleName:Regular
+MenuName:ZWAdobeF
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:1
+FullName:ZWAdobeF
+WritingScript:Roman
+WinName:ZWAdobeF
+FileLength:6800
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:EuroSig
+FamilyName:Euro Sign
+StyleName:Regular
+MenuName:Euro Sign
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Euro Sign
+WritingScript:Roman
+WinName:Euro Sign
+FileLength:5676
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:MT-Extra
+FamilyName:MT Extra
+StyleName:Regular
+MenuName:MT Extra
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:MT Extra
+WritingScript:Roman
+WinName:MT Extra
+FileLength:27092
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Euclid
+FamilyName:Euclid
+StyleName:Regular
+MenuName:Euclid
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Euclid
+WritingScript:Roman
+WinName:Euclid
+FileLength:60758
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Euclid-Bold
+FamilyName:Euclid
+StyleName:Bold
+MenuName:Euclid
+StyleBits:2
+WeightClass:700
+WidthClass:5
+AngleClass:0
+FullName:Euclid Bold
+WritingScript:Roman
+WinName:Euclid Bold
+FileLength:58238
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Euclid-BoldItalic
+FamilyName:Euclid
+StyleName:Bold Italic
+MenuName:Euclid
+StyleBits:3
+WeightClass:700
+WidthClass:5
+AngleClass:1
+FullName:Euclid Bold Italic
+WritingScript:Roman
+WinName:Euclid Bold Italic
+FileLength:70682
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Euclid-Italic
+FamilyName:Euclid
+StyleName:Italic
+MenuName:Euclid
+StyleBits:1
+WeightClass:400
+WidthClass:5
+AngleClass:1
+FullName:Euclid Italic
+WritingScript:Roman
+WinName:Euclid Italic
+FileLength:68584
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:EuclidSymbol
+FamilyName:Euclid Symbol
+StyleName:Regular
+MenuName:Euclid Symbol
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Euclid Symbol
+WritingScript:Roman
+WinName:Euclid Symbol
+FileLength:42306
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:EuclidSymbol-Bold
+FamilyName:Euclid Symbol
+StyleName:Bold
+MenuName:Euclid Symbol
+StyleBits:2
+WeightClass:700
+WidthClass:5
+AngleClass:0
+FullName:Euclid Symbol Bold
+WritingScript:Roman
+WinName:Euclid Symbol Bold
+FileLength:40686
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:EuclidSymbol-BoldItalic
+FamilyName:Euclid Symbol
+StyleName:Bold Italic
+MenuName:Euclid Symbol
+StyleBits:3
+WeightClass:700
+WidthClass:5
+AngleClass:1
+FullName:Euclid Symbol Bold Italic
+WritingScript:Roman
+WinName:Euclid Symbol Bold Italic
+FileLength:41276
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:EuclidSymbol-Italic
+FamilyName:Euclid Symbol
+StyleName:Italic
+MenuName:Euclid Symbol
+StyleBits:1
+WeightClass:400
+WidthClass:5
+AngleClass:1
+FullName:Euclid Symbol Italic
+WritingScript:Roman
+WinName:Euclid Symbol Italic
+FileLength:43452
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:EuclidExtra
+FamilyName:Euclid Extra
+StyleName:Regular
+MenuName:Euclid Extra
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Euclid Extra
+WritingScript:Roman
+WinName:Euclid Extra
+FileLength:29008
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:EuclidExtra-Bold
+FamilyName:Euclid Extra
+StyleName:Bold
+MenuName:Euclid Extra
+StyleBits:2
+WeightClass:700
+WidthClass:5
+AngleClass:0
+FullName:Euclid Extra Bold
+WritingScript:Roman
+WinName:Euclid Extra Bold
+FileLength:28696
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:EuclidFraktur
+FamilyName:Euclid Fraktur
+StyleName:Regular
+MenuName:Euclid Fraktur
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Euclid Fraktur
+WritingScript:Roman
+WinName:Euclid Fraktur
+FileLength:29992
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:EuclidFraktur-Bold
+FamilyName:Euclid Fraktur
+StyleName:Bold
+MenuName:Euclid Fraktur
+StyleBits:2
+WeightClass:700
+WidthClass:5
+AngleClass:0
+FullName:Euclid Fraktur Bold
+WritingScript:Roman
+WinName:Euclid Fraktur Bold
+FileLength:29190
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:EuclidMathOne
+FamilyName:Euclid Math One
+StyleName:Regular
+MenuName:Euclid Math One
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Euclid Math One
+WritingScript:Roman
+WinName:Euclid Math One
+FileLength:36244
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:EuclidMathOne-Bold
+FamilyName:Euclid Math One
+StyleName:Bold
+MenuName:Euclid Math One
+StyleBits:2
+WeightClass:700
+WidthClass:5
+AngleClass:0
+FullName:Euclid Math One Bold
+WritingScript:Roman
+WinName:Euclid Math One Bold
+FileLength:36432
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:EuclidMathTwo
+FamilyName:Euclid Math Two
+StyleName:Regular
+MenuName:Euclid Math Two
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Euclid Math Two
+WritingScript:Roman
+WinName:Euclid Math Two
+FileLength:42516
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:EuclidMathTwo-Bold
+FamilyName:Euclid Math Two
+StyleName:Bold
+MenuName:Euclid Math Two
+StyleBits:2
+WeightClass:700
+WidthClass:5
+AngleClass:0
+FullName:Euclid Math Two Bold
+WritingScript:Roman
+WinName:Euclid Math Two Bold
+FileLength:42036
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Fences-Plain
+FamilyName:Fences
+StyleName:Plain
+MenuName:Fences
+StyleBits:0
+WeightClass:5
+WidthClass:5
+AngleClass:0
+FullName:Fences Plain
+WritingScript:Roman
+WinName:Fences Plain
+FileLength:14308
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Tiger
+FamilyName:Tiger
+StyleName:Regular
+MenuName:Tiger
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Tiger
+WritingScript:Roman
+WinName:Tiger
+FileLength:193636
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:TigerExpert
+FamilyName:Tiger Expert
+StyleName:Regular
+MenuName:Tiger Expert
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Tiger Expert
+WritingScript:Roman
+WinName:Tiger Expert
+FileLength:178620
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:AcadEref
+FamilyName:AcadEref
+StyleName:Regular
+MenuName:AcadEref
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:AcadEref
+WritingScript:Roman
+WinName:AcadEref
+FileLength:7640
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:AIGDT
+FamilyName:AIGDT
+StyleName:Regular
+MenuName:AIGDT
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:AIGDT
+WritingScript:Roman
+WinName:AIGDT
+FileLength:30488
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:AmdtSymbols
+FamilyName:AmdtSymbols
+StyleName:Regular
+MenuName:AmdtSymbols
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:AmdtSymbols
+WritingScript:Roman
+WinName:AmdtSymbols
+FileLength:6696
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:GENISO
+FamilyName:GENISO
+StyleName:Regular
+MenuName:GENISO
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:GENISO
+WritingScript:Roman
+WinName:GENISO
+FileLength:76496
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:AMGDT
+FamilyName:AMGDT
+StyleName:Regular
+MenuName:AMGDT
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:AMGDT
+WritingScript:Roman
+WinName:AMGDT
+FileLength:25080
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Proxy9
+FamilyName:Proxy 9
+StyleName:Regular
+MenuName:Proxy 9
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Proxy 9
+WritingScript:Roman
+WinName:Proxy 9
+FileLength:39108
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Proxy8
+FamilyName:Proxy 8
+StyleName:Regular
+MenuName:Proxy 8
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Proxy 8
+WritingScript:Roman
+WinName:Proxy 8
+FileLength:39108
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Proxy7
+FamilyName:Proxy 7
+StyleName:Regular
+MenuName:Proxy 7
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Proxy 7
+WritingScript:Roman
+WinName:Proxy 7
+FileLength:39108
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Proxy6
+FamilyName:Proxy 6
+StyleName:Regular
+MenuName:Proxy 6
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Proxy 6
+WritingScript:Roman
+WinName:Proxy 6
+FileLength:39108
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Proxy5
+FamilyName:Proxy 5
+StyleName:Regular
+MenuName:Proxy 5
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Proxy 5
+WritingScript:Roman
+WinName:Proxy 5
+FileLength:39108
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Proxy4
+FamilyName:Proxy 4
+StyleName:Regular
+MenuName:Proxy 4
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Proxy 4
+WritingScript:Roman
+WinName:Proxy 4
+FileLength:39108
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Proxy3
+FamilyName:Proxy 3
+StyleName:Regular
+MenuName:Proxy 3
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Proxy 3
+WritingScript:Roman
+WinName:Proxy 3
+FileLength:39108
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Symusic
+FamilyName:Symusic
+StyleName:Regular
+MenuName:Symusic
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Symusic
+WritingScript:Roman
+WinName:Symusic
+FileLength:31764
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Symeteo
+FamilyName:Symeteo
+StyleName:Regular
+MenuName:Symeteo
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Symeteo
+WritingScript:Roman
+WinName:Symeteo
+FileLength:22620
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Symath
+FamilyName:Symath
+StyleName:Regular
+MenuName:Symath
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Symath
+WritingScript:Roman
+WinName:Symath
+FileLength:31264
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Symap
+FamilyName:Symap
+StyleName:Regular
+MenuName:Symap
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Symap
+WritingScript:Roman
+WinName:Symap
+FileLength:33960
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Syastro
+FamilyName:Syastro
+StyleName:Regular
+MenuName:Syastro
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Syastro
+WritingScript:Roman
+WinName:Syastro
+FileLength:35416
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:RomanT
+FamilyName:RomanT
+StyleName:Regular
+MenuName:RomanT
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:RomanT
+WritingScript:Roman
+WinName:RomanT
+FileLength:53404
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:RomanD
+FamilyName:RomanD
+StyleName:Regular
+MenuName:RomanD
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:RomanD
+WritingScript:Roman
+WinName:RomanD
+FileLength:44240
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:RomanC
+FamilyName:RomanC
+StyleName:Regular
+MenuName:RomanC
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:RomanC
+WritingScript:Roman
+WinName:RomanC
+FileLength:48304
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ItalicT
+FamilyName:ItalicT
+StyleName:Regular
+MenuName:ItalicT
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ItalicT
+WritingScript:Roman
+WinName:ItalicT
+FileLength:53764
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:GreekS
+FamilyName:GreekS
+StyleName:Regular
+MenuName:GreekS
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:GreekS
+WritingScript:Roman
+WinName:GreekS
+FileLength:23584
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:GreekC
+FamilyName:GreekC
+StyleName:Regular
+MenuName:GreekC
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:GreekC
+WritingScript:Roman
+WinName:GreekC
+FileLength:26220
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:GothicG
+FamilyName:GothicG
+StyleName:Regular
+MenuName:GothicG
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:GothicG
+WritingScript:Roman
+WinName:GothicG
+FileLength:55716
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:GothicE
+FamilyName:GothicE
+StyleName:Regular
+MenuName:GothicE
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:GothicE
+WritingScript:Roman
+WinName:GothicE
+FileLength:68452
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Txt
+FamilyName:Txt
+StyleName:Regular
+MenuName:Txt
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Txt
+WritingScript:Roman
+WinName:Txt
+FileLength:37508
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Simplex
+FamilyName:Simplex
+StyleName:Regular
+MenuName:Simplex
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Simplex
+WritingScript:Roman
+WinName:Simplex
+FileLength:57476
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ScriptS
+FamilyName:ScriptS
+StyleName:Regular
+MenuName:ScriptS
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ScriptS
+WritingScript:Roman
+WinName:ScriptS
+FileLength:58960
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ScriptC
+FamilyName:ScriptC
+StyleName:Regular
+MenuName:ScriptC
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ScriptC
+WritingScript:Roman
+WinName:ScriptC
+FileLength:59676
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Proxy2
+FamilyName:Proxy 2
+StyleName:Regular
+MenuName:Proxy 2
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Proxy 2
+WritingScript:Roman
+WinName:Proxy 2
+FileLength:39108
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Proxy1
+FamilyName:Proxy 1
+StyleName:Regular
+MenuName:Proxy 1
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Proxy 1
+WritingScript:Roman
+WinName:Proxy 1
+FileLength:39108
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Monotxt
+FamilyName:Monotxt
+StyleName:Regular
+MenuName:Monotxt
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Monotxt
+WritingScript:Roman
+WinName:Monotxt
+FileLength:35564
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ItalicC
+FamilyName:ItalicC
+StyleName:Regular
+MenuName:ItalicC
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ItalicC
+WritingScript:Roman
+WinName:ItalicC
+FileLength:50908
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Italic
+FamilyName:Italic
+StyleName:Regular
+MenuName:Italic
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Italic
+WritingScript:Roman
+WinName:Italic
+FileLength:52272
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ISOCT3
+FamilyName:ISOCT3
+StyleName:Regular
+MenuName:ISOCT3
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ISOCT3
+WritingScript:Roman
+WinName:ISOCT3
+FileLength:37444
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ISOCT2
+FamilyName:ISOCT2
+StyleName:Regular
+MenuName:ISOCT2
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ISOCT2
+WritingScript:Roman
+WinName:ISOCT2
+FileLength:37280
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ISOCT
+FamilyName:ISOCT
+StyleName:Regular
+MenuName:ISOCT
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ISOCT
+WritingScript:Roman
+WinName:ISOCT
+FileLength:37324
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ISOCP3
+FamilyName:ISOCP3
+StyleName:Regular
+MenuName:ISOCP3
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ISOCP3
+WritingScript:Roman
+WinName:ISOCP3
+FileLength:37716
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ISOCP2
+FamilyName:ISOCP2
+StyleName:Regular
+MenuName:ISOCP2
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ISOCP2
+WritingScript:Roman
+WinName:ISOCP2
+FileLength:37828
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ISOCP
+FamilyName:ISOCP
+StyleName:Regular
+MenuName:ISOCP
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ISOCP
+WritingScript:Roman
+WinName:ISOCP
+FileLength:38112
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:GothicI
+FamilyName:GothicI
+StyleName:Regular
+MenuName:GothicI
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:GothicI
+WritingScript:Roman
+WinName:GothicI
+FileLength:53648
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:GDT
+FamilyName:GDT
+StyleName:Regular
+MenuName:GDT
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:GDT
+WritingScript:Roman
+WinName:GDT
+FileLength:29688
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:Complex
+FamilyName:Complex
+StyleName:Regular
+MenuName:Complex
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Complex
+WritingScript:Roman
+WinName:Complex
+FileLength:69796
+%EndFont
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    áÕ\Ï]/[}áv"3ˆQueQÄÖBÅÔ AÉ+M—©å¸?Û+Ì½Ü§¾*NmÓÒUvL&Ï§!^dl¼˜¼Cı¼ÍôG—[¾øŞB&g¹´ñÂ#,mV ‰•€ù‡ò«ƒ¸¹—¬À“ã‰Áá~•rJÛ™e$w3d¾%4Yâãµÿ&VçL J8Åùàjs	K._´eõåˆö–¾ #-|=c ÒêV‘º¬%ö¥‘µÓ„P#)X½kP;ìİÒÓóƒ‰–q©–#õÁ†Ô…	jŞî"°»ÍŠÙGß±Ï^şNÎsqÇËKk#òø×—AÜD¤@{9óWºÂZ‘Oiœuæ<9Â5ÓáeJYğiÖ¯?øëº˜=ëWe{©êz€ärdé†F‡z±+¬ÎÇª¶f'®â â¯AW&6QøÈ d5ùœÜrÒ›X<ŸåáÅSîò?©âx8§¾m9Ô[&sç¡+&&w£.ÊOèØNkŸB­eI¢0UãèÊX]­ÈóY÷p|Ä×€mh7íŞ>Â1 øÈã›L¬´Q­§}ÊÀ!hwÀlYá›5JŒı[ti0CÈ 0WÓ«psª¹‰ñhÕî	$F÷ÆÖŸ+aöóĞ»!WÎqè'S¢ô¡g¿5áSsÌP¡€^â<~ËY?œqÅ{|XMP4ˆjuÖMé,®$m˜·!p—šQN•¸Ÿxür	e°éË$§Î4|Öa¥·.©W› !íÔ^ğâFœ +õ/ ÍDõk£¯EïSÀ>âGõï ßœ<üß­ 7|@Ñ
+œ?œÿÇ•ê¤óc	Î‹¾½WU¼5e•É¢jHÏ¾&p™Óë9	½1×ÙˆÙ{nVŸTF¯…IhŸa˜È’ï˜×¹áNVZÄ ¯ê·]5ÕaùtïÑïC§)U€++fÑ1‰yó
+gG,¡p"5FY`k(¢ï1ıæBAéÔÄÎâŒbÀK^9¿`=å(ˆv0<™4ğKÄôŒ½ø¥ú–£(“½^µÆXcĞ¦t vÇ­×Ã¬õF0iÇX°ß¿°„„\b†¢œaòÓ:î÷£™uÊéb*88³1$ÚG×iŸø‰½"Ä¾`éÓwŞ+ç;¼”ÄàÌ~Š§C@Ì,ø2sƒ67†y˜¦ #ìòğÎœõeC	ì»]üA‡™ÛmÅÿ“Tù~À!¦Ğ[ÊòÏ§¨>Œb~ús'ÈëeÂ«ıùíÏt;e EU²™Ñ°t”d[À½2¥è­ˆ¹ç3Söš4¥´˜àFÃâÌùĞ²`y¨£$VS¿dÍé8Ùrjè$
+ÓÙ¤ô>.gBj&Í®z$û¬}k3àzÙÌ™•xŠø¼ˆŞ øèçØÍÃôi{³(Ğ»HÑwıh÷¼BŠ
+/µ:WõNnsOe“3F~\Ñ–³‹ÈôÕ'á-Ï¨òîè	ê˜U
+’.Ù6[Y¿czäq³ê;ü›-²^}¶¬:4y‰j/?œŸä]®­£fÎŒGï¬=ÇJÌvrYãvJ› G«á¤×‡€£¡²ü¯”	|­w^¬ìü,ÖèÏÓc2„/-2Q4¤,’?¥ôºT¤ã°F\Èù,£W©{©r»‚Tîö¦ ãØy ƒ Ë
+á˜2'ğ%³W–2Š±Á´çQ/Œ‘c5Îy#…|èz nêµ™ ]¯Ğå<ˆ£@œs-ø£dq¿Tn¶‹õ^šíPÌ¤4ºn°Ã÷õ?j”>qwİ_e· óîzIÿhÃ¾ÛV>0+ùŒ!:P÷†Ê2İxDÇZ7Ó[ŞDPl;QáaWÏˆ7VtNHñ§nbÌúõĞuuÅ±’ù™nD¶Â Ğ’ûŞÄ -×PîLMÉ´ëÏ öÄx±¨æ3ĞÚ«ĞTZâÑ
+š$ñ4œÑå˜^™æ4V	;±²rq0¢cùoI:Æ\ÊLOxÀú­9#/,Q¤w¤ÔÕ…cÓjH8(jDğZ¤fG¶õ%,˜rä¸s;vöUÑg}½”¯ÆI¼Ğ[°)O›¸©ÚÎ²w'Zdpö±¿À‹,t¤ƒØ­~e§·ê.²
+0	ºŸ+y×h €‡Š/İ•Æ5%¨n[00¡ï–3Ju*«-hÏ×1NALÄğ^œ	ÚğF!hŠûø¥+~šêi(æáÜ°ÑüëàiÍló`	ÑUõŞĞÓÃËƒH+ƒyüOµA´v¯Õ˜ØñˆxWñ'á¶§ß´ö’R»-Q|5*=%ÀHlí¢Œ“IbÎ‚Ì	íéô
+ÇQÖ
+‡Ëa$î%Jaæ ìß{u®W¶R†EãÌld}ØVÅdÁ33¾'ÉN]J„h³Sœ™Qå~µV'È¸®ôÚÛÂ|è<€·WWC"iè¡Ğ€¿ÿcd$eQcÀ¤2ógëëÓà•’i[2#ÛGªåèn¯c~æö#…r[7»Á¾0çAèVFÇ¯Àoùm&£b•É ÌÛÜĞ[°)O›¸©ÚÎ²w'Zdpö±¿À‹ƒÀu»Y¡9¾3Lu€‡×q;äMH
+ĞÌØ”SÉƒQ>!^_IfL´#Y˜¬w+8Ğ€wÄÁNd¤ £i8AJz®6†‚ÁèHTHÖÙyIu¬»Î€j‚1güŞ[R¯“s&•,‹€- .¬*ÏßøöŸ¥Ã¾âª@kûE^¶åTúQnÖÊdËO]fòuóæéŒ»S/4áñzÍ‚Hrî	Ûç* ~üü—ñx——=ãÎ¦ªKâ³ëĞÖÂã|ğƒ8ïíDftc3l2Øku#~åÊ‘Š±‘,äÏ# ÀF¾Ğu§8uÅ‘²Œ:óÏIZ‚Ø vLÜÁ´Y#p356›E™bXÊ‹,Òô×yÍ!ãóVùìS]ÆlAúûAôŠâmÏ–!»®1ı9xV÷Zå÷£/û„©w•–z›TİEócñÚù¸‚[•xû’¡DJİ8†ñ™IÊ“LWà ×€>	©>¥v²T'ßÀødÿe‡6;K7çëß\_üc‡!J¥t "¶KÙqéO'Z6ô'R?xk	ŞƒıOfòy…±BÑhX˜úO9=pºËV
+i>2àÿŞT†GK	R¢Ú˜(µ1xî¼Èæ\åoÉ"³oĞ×¾~n¶eea‘ÆøÅ×«½øø}V’ñ 8ŸRJW	ª'ìt¯èbÇÜŞÄª4]hU›y90t€VÎó~4¦ÿF{B+Gw•ş¤â6)î]FÇµzˆwIoàO2ÀP—–â…²£ÚÂîbÜhUx=k¤yùÄ=-uôÖè%øn•‰ˆ|éŒ­5„›` õÿçŞm‘k¨6?)àÑÿÊÅØ,	}ûw4ÜkÛ¿q¡'ã óğOéÂÖW¹öÊ NjÖKøİ ¦	ÉGM˜Œæz¢hÁôjs`p™(°P[l5Â8£4E3)ªY1ƒX§±¾qÉ?C2„ùƒğ#ÔÿD©ÚrêHÏİ}-ò¨)¡.Ë#*5­¿E…Í'³¦K¾…sãã+r<T­EeüşˆâxTŒÉV„jíîáVxĞD0fºÓ¤¦bWâo»5Â‰£•(Wïú§ŒšÛ³[«<
+jQ9$ËÅ¹0ªÖ— ä‰®Óœ†³ºZx¬9÷ÿ—‚\¢véA’~ugÑ®f™Í^ö-2c¡Šì/¯nÏFOÂ)#«y[‡4xûš2tÆØ‰ÌE§!…kàqÃï	ÚİÊ9FºX_š’ÙZ_dGZ§KTŒƒ2ˆqœĞ¶KĞ+{;‹\›Êã†§`Jñ‹ò|kşk=±XÅóñ‚vvM`é“:1„=gš;òÆX”nrV‰Ì€©=ÖÇï^pˆGùâŞ2BdæÂ±çãéh40'â-%kòU"¥7Ş‹°ÊbÇ¿Š¤Æ'ÄÀ´4pPá*Me¦Ô¾‰ĞT†#N3*¼ñ+”~’eŸÒÑ É„…9‹Z…ì¼+1><*Ï=$-è¾‘WpG†n»~á+ó P=æ Ğèş Òµ.#„AUGƒ‹ ©ÚÁu-Ó$¼¤®Ê}çeîÓÖÓ©Ê©	/(ñìì­îz‚*äcÈ+Á‡7X€&b9%IŠÏuâÊ4.(‡–ä¡_Ê²½@™‚O¯õÃ_<×æAq­T§:&Ûƒ­ÔnšU¨ãH«?:Ú­4Ü°â¹P¶«JL”F…¬Q/Î¶ìê%Ÿ«W›  9^Ù‘ÓB˜Üs+IEC‹ˆoı7Ks|ª8' Æ	âs4«ˆœ û¯9w5Dâp~üHKÛê,1l[¼(ÚfA.ñê3êT¬9±D2#{ı~M[ÍJÑWó¾¦ kp‘2ŒÆšj:8$
+_Šœ_®‘†~¯ÆöÃÑ‘ëtgj­QâT’`”6¾…‰<7:M§¡b¹lg´ZVÖÛ¯±Äåè(ñ?”:NŠ–8¹êcˆi[Œ„?wx^í qĞdÄ‘)éª?[¬Ù@´I?’½H}¢9°²äu oyAö>n0–EN1ó Çöñ¢¯TÖæ‚‰Š³ù[%[Ó©í’zVS—1
+ÊãúrèR6ª?@ùv”9©İÛøæµVU®4GöëÎiÍ¢JÅi[§›cêc£IC[tRe&(—„£T2éí
+N¦;îø‡ ”Ô 1‰øäk›êRVŸ"çáê*Û[µ›q+Øa«NGõX0hÅ¨$«3H§^*zş²?ÁmÒ×ª%ˆ7ˆ>µb^İ¡–½ĞvÂ>o4ÛÊlQ?Fä^ê™‹´¬r.9xx1JOUô[?~iCÊ¶a†òfÓ³ô‘âhãùüoæfqô:24„Î•nÏ©nÌ2èg1·?@RaMFÂæ`¥¯×ÉI_ö%P‰®Šœ9ßHÃ—¡—9òwñügÚ2ıôÒÀyz…‰èÍ…˜À!€†êT´B¾…•Q.ª!¦Ãº&*Ëz@¾g;Í}l¶¡õ”&ödOšGŸ`pšÍ2Ì7Ò©Ùm¶Ø-úÒÊ3mÀgã\×¶„	pf½d½™ëâ¨ÌÍ‰>eùGë¤Ô)‡òàH0µ¾¯Õš&ÑZ-ãR´6–Áğ&öú"j}¸”B1åê°ª&íÊ$ƒw±Àv¾ıŠæËŠ:ÉÎ$t»ˆ”+” a«ì°Êæpã}ßÔ86sBcşJ_ğãÇ”
+Áª©.G››ÿ]Ls`Kù»>˜•3î%tßj–ùD&‹È>p"‹P×·IÛ2O1…î
+}´ø5ˆ(‘²jÓYòš½$ª&%~ÙƒZ6	µÏ0Ú"è@õBÍ+³À;¶¹v`F1fîÜ±¯É¹ÊªâAçO;`Ü"Šjû§`R:ú#Ö°ì@zN•©,é‡B™èà†d%’°R]eY˜¬ÅŠEËssü	‡Úm‹»íµÎ‘Ë=Ë	ÄõÔÀØC}sØ]@°°R|üh®Q>+âêß¼€g(C¼ïê¾¯É¦SÔß[©v‹Ÿ+0aÈ)P/<*D„}Dsœ•J”šòŒÁÿäì˜|>ú4İ‰«ÜB ÈhpwP'‘Gp
+‰n‚^º´¥Q%XVœíq6¥ŞÍ°q\Ïü«r¨YŞ}Q!âÇ&ËZU4RßC£×B[Êbk’Ç'põ¶í¾¸_€A©‘=QòTLCŸÄ±«Ø.Ámºé’fÛî{a@•(-…¼Ø.‡?ÎOmC’…#hY‘¯*r=9×LsGQ!…lÂA ]Õ›©öúŸyUv—•é(ÂdİA©üˆÇÎÏ–¤™=¤D2„OòqJªq]î‡
+„ÑEê”}‡Üö2¿F‘«›€€Ú'Ò†ƒ,òà`ËXáFußóæYİ¥†¶xh,'A0ßÆ|W‰Úc,s›êåÛm¹A24Ñ…Â£˜›«%¶j0Ô94AŒ:ôë<›Fƒ??fºd[uÖZD–éƒ"]oÑ¤X€Q2ï'—‡ƒdëø¨ø\D4Ğ‰âc-*ğ—­†T'n"×ÂÓ˜ŸçğØ¶S‡X-,øÄ´H"Ra©Iz0@Ã€ÄOèL0C±a„…”__DMøäÙÀkbe«	ÖŠZë]G9C»†ZÕz.gbIŠ‡Mbı"××¬cê°æógMÈu&§ª&6–ÒC¢QûQp©À|Zv–ßùí–ësˆ‹ˆ»QÀsïmÊe‡Ê=á†Q:ó}¢èİÔ}’
+„aNGp¤Tk'YŠÎS¸¹“ÎmCun£WòìÕ&„¶í÷ÆI±½{î‚F±‚•Œ@x›KNe eŞ	Ç\ÈdÜş^ Î¤¨.…A)¸*´fÈˆ‰êR~]ùÄşºñßáñ%JşÌXa§_®»ŸAı¦^Úe˜_•¨­:©²5¥GJx¿O|Âádq/(JÖæğ¶3©ü~áÍl#S>½ñ+z¬­*Âƒm…æW|ƒ€4*tµİåXWôÄ?I‡T½æ]*ä˜„¾îî™§å$§óC¬ÏtÖrQâ¤*‡0=Úã_Ã÷èHI ¹c×çxx)a3w‡NË«Í±LÍj÷ë:T¶šU	K'ø›Üõ•åBÛÓ¶p¾Æ@|KÕ~6¹ş¥Ø[)Q5!8?ğ·ıh¹´¤¤gÛÊ'\ŞÌYFT›ñÇù„# ’˜S—3lÏÃo7,éÃ ˆMÅQXø¤Àt“›GÜ»9¨¿ÖÿHWl¤,„á­;&ó‚Ædø¥x‰óo‡ Æ›ÿYÒ4å="İŞ{J‹Ü(ıÕzË†r¢ÁøK[Ö¿á²Ğùöµ{èºHpIÀY*õù¦¦á*Ä-FØn¡?Sæw²Wmüd·ê?|76b,ÙÖoc_øZRı‡.YÍ«8½Ö2Æêl×Òö6±Íë ÓC”÷ÔeähÃ’Yiø8•ñv,GU´8}ÿ.Æ»Oc}–IwRA&,ÕÉ²ÅäW†åWé4Õ}ÿVÂ9†èóájò&õ;‹€È)Œx=WK—…R¦ÇÏ—…	ø+Õ|Ûÿ‘Õ£NZ—ØˆäahÛ|r‡ïßaGåşAÅº`å¨Ìz.)ıÏÎT:ü\F»ƒ'í¡p¾8Ì1ÌXò“@¯1¯K /5@h½ù°Òt§&³XôØ=e¿ôŠ`JÕFæDæ`Düóğ'À„Äu¹_N&ämÀt[
+ızÄbÆ=ì†ö®…P€¾© qµ‹-°†
+ŸDtVÉ^„Š+Êä,İq¨@n÷Šê¥4£ÂH =Æ¡¿³7¸ˆà¤gJœOCŒÅD!Jƒ•pm^ÉÍ*èÚ•vJıXìÜ»´¢Î8ÚŠ)ôò¾$cSøVwCPw*sÓÆìÚq·õ{ğ5}G6<W¾V¯pö!väÙù¤Êâø0÷P“’“ù=¿Ÿ¥“'ä–5oë6P„À¦áQ’:Ô…—·· ¤ƒ&gz>{ï]=";©¸š¡Û/C>=1UV¹”Çš°1ÅÂ¸-~­Ø’“E¹MHñôã`°5dÚ6I\Ö3SÒ 5‘áø6qšT
+fà¢âãkšIú‡+@&@™Éd†Öú÷ reÌ¼!µÒƒâ‚Òç¦„éÜÏ¡bŞdÁj úë$Ï>}rñ¹ÀÑ ê+ÀVı±ËRæøæC;j€¼æ±"ø 0•Hø«}•§f®ÕJ¸—¸Ü(BÖ;Ò™ˆã7©ËRÇâx£-§ˆ4£²c|6Ü"TÃ
+:²Â
+%½óDˆ!ĞÊÈ¾:¸•¿L¼¬ÎàƒGGÙÜ¯€	­]Ú”-Rõ×´kÒÆFĞ£8Ï÷±‹Òˆ¥ãıÙŠ,;nCoJÏÃñ®¶àMy’I@¡Ÿó è>Z3–…C<¸ìS6j³÷1¡™ÃZm³˜”	®O£6‹‡ú‡"òŞĞ&WH©"®·lijÚw±”§‚ê.‚Ö¹»7a~¼^S{Ài¸x?rÔ0{5÷¤¼êÄ
+fÙ7K¶n¬—ZÆ¬ªâİ*q_¢	b$¯›Ãsyò!Œ;^f¶“ÿ«L0JŠh¡í,¨Öøz_K4;#»Çü€J-çõ‘Èı¬kÊr4¯FÛwê3ƒ½A*v‹ş£ş:¬Åì=+Q?@$µ#<&7qp¥x‹­^ÿ›¸_Í¸ûVÅ’eqèzCÁ>=œ—³,±Ë)¥œ;†Ìûzá¤"•M•n	üá–TQ\©½1²P§}/—ãšü” dÛöıa]Âé§´Jùjî¾}7 ò +à\æ—DxÄÕ^÷í¼çÖºº`•¾c´‹ç÷‚¡øÈw‰¥~Ärv|ë·¯¦éÂ[×©ğ•¶ÜI$ #<dPéã;YÜgngÓ«
+êü['xF33=ÅEoh–Öˆ#háóyçÓh SÉoYuÒà¼Î¥)ñ7ÜĞ-Á¼ÈLÖë…O½D{7åu_™X­¾ûn0í\J<È°V}x…±BÑhX™È™ù4€ıÇ@øDâ¿ÜºæpèÁ†·ÆH)¼L·,º|èc'ã÷ 6ó—°n°à™á:árX*5ÇıùÜG±¬(YÔ/jFÖüİ³_§Õ§8áİÈ»·Gp³ÜÉ­÷Tÿæ|€±õIXsş“Ï¾ëÂFY-·HY¤áâ/ÅÅY.úÒ¶0Z•Â~ßBëœ¹­ú¹Ô§Úaëó…¾û—Ş«à *ë¼(à4xhã@©®Uc½ÁğCáCcZ¼jTÌ¶:‹XùXy“a	ÌIøÅê~SEıÔÕÃ©İéÇfêÇ]™±ò ›ºkVäÉßô²bÏ„<8}@–ì8	6¸¼”²s»ñ¬Ä‚"A§yÚßÆ¯Îÿ/ÎØÉóôÍbÑ<Ñë ŞQjônÿOğˆ–Ø69×ì H‡FwV¥®®nzú+¬Ê°/`!’tô:%aVyUÃéw˜dŞlqËÔÛ—IÓÌG™Z…}”Ç!È8oaò,™EÈ/¹™Œ´+³	Ö‹Ö(›)Ê‘êñµh¬´]‰Ádâ€æ m_J#ó+ N¤rˆ´µ~Ô[ÿºHŒø›/¹>Ó£O‰İğ«Q÷$“gÿ´ùmZûùÂ¼ªÓûC3Ìp[(o*N•aK_C&/
+×<Cr„GeOâO‚íRW9º±a„şB¢ğFğï_¬y~ÅñÔïA#	ZR1,€R“w†°üv´'l×û38ÉIÏœ)x®°Í£]Óî’šV=²äÉ.>V|b–§^0ùİOŸR”Ü¬µ´eğÂÎè'´‚ùüE–œh¨Z·U¯¬½Ş4#è•i€Çr Qd^wÅ}²éš"÷q{¨wïĞ†²]ˆÿÒ\õ’WE™üTù(I¸¢S7j lfd«™™Ñ"·}ÕuÕùWÉÌùø`ŠƒBc–Vq¸Ï†< sh×7rwF”,ò‰Œ7…6«=D0ÄÃrÙ-î~gLJØıò€£EÔMtè2¶¿L
+ß‡xT©|€Ä% gş€-°šù¶dZ¸!Äêóv=xŠ¬ÊI¤OûŸHµ)K‚Û}ÊÄwíK ë…(šÑ6ıjµ˜ÑûßBÖ6[µ`7_³fè4Ş[f¦Á™˜Ì|w˜hZÀR@@–qĞ m"#ë4£ˆ$Év¥1ŞfØŞ]†Uiâˆ™1&G2ÅÒ`&5ƒ]ô ™Ãéz,´Ôæ	İ¥Éëk¥Tm#šğ?!vÅüÍê/Pà¨X,?½Ø´BÍùK,pC€<r@ß!7„™%ßÛ8lXÜ¦ËP@fa„ƒA>ò§önq/ÔüÂ«¾öF÷œù2æøkÏ×©)ÔOzkŠãñ;¼»Ï1n08Ã¤1hdùÖ€‰ù†tÂLg!Ï¼Ç”Kå‘÷â´¢ÂvÉÓ*$×‚lúÂ÷¡P{ÏÂ“	rãâ ‰([\òEÃÍb,6´6
+a`ÇÑB~€ ‹£ŸÕ–YÃ§šn‹hïtBbãDkXÎqÜƒ	X$W¯Åw‰ŒÚCÒûâ_ceæâM«úï¦GıÜoË¥u7TRËêVıa8_2BÀ¶.·Ñ;‰Z$ÿ™ÏÑ(ª5¡£F ‰"iÓ’ƒqÛöš.5¼Óøƒ.áˆùT8K•Ùı´-ßŒ	ú_P©‡nC›eM­Òá@´€«¯®>o¸ñÂ‹"ó²JE¥’ƒ¤ö¤¿c.¦¿Òùñ,[}¤Fã?LÿŸéğ’‘vN¡–’_ÆE©orŒ•ô="ÇÕ¶."i;Z
+c?|øUâĞD°`Ft»7½0èñÚ™œs *¢O÷¼‚AoxÚ»É5§ù€T5 R9VÃò*ÁW‹)VZ‹2'ªõéÛp7Èœ6»¼¬›„&ÀA²¯YÙi@ä­hNábŠêjˆE8YrÛÏÜú8Á™@ê‰t0î™ú´^£z´ˆ0GÏ-Ú9¡;f=íÍÌÌÀ êüw,f£zœwÉÔ¯ôú"â{²±£ëu®Gªy°É½’—-AÇ¥¶3†ÃYzĞ2å¨…À wààüÅº…—i#³â[[Da7,“C¬ñ•ı„YTÁÑÀ_wë„7n<¦	àûH-N•Ö®fs÷¾Ÿ2/ÄæÔ ŠÑ¼ÅµÖ.ÆÁ‚osUd|gãöv(v„¡RdËØê‡ç³è0j ã~™^¸º%†¢:!î/”—ÔC¿ƒAšß|ÏÅ¸£®YÂ/œ÷Ñå´ÒXNïşAá!°xb‹é’ô§ñ Œ
+\¹M?UÉcË””Öprtùs±®ÅV‹EÖ³—&^Äşhm—@ö¿*E7U^·”E/còàßQi¢ëÒvì7¢Qº«ZH)ÿz{-Î§´h‚&œZE¯Q¬ò‚«Q¨ ì“º2fiÍËe0p3{Br#QØş-Bnê¶Ğœô­Èfs¡ùá<<b4JŠ—ÏÂHÜÙÏ—º0P¦c¾wçûë²—»5¼çƒ¹A‹ÃÑ÷PÈ­ÚÅK^L“¦ˆÙ#“®f)şQŒ¸5ì#ö‚R7Õkº(çg§ĞkÀB({ùî;Áîñƒ§—~­OBZ–å]Y-úëMÑv,»|« „„O»ƒ'í¡p¾9›HeHü'}%â–wjĞÙÀƒ§:ß³¶ÿ.Ê(îÑòäá2@rÓşÉ†…Báüœşà_ÍàĞëÓÊ&å-¿›úg[—Óé1¾5VÄıTQ›_Ó7ç‘Ûc¹´
+cøÖ<64Ñˆ}M,B&S:#së^³)ÿªZ‰] ¾¯‡à”R6ünkl©É5Ñ¼"Ìõ”uê—âØjkÀÁ¡¬JâraÙ–Nı×>Ç	ÉååÕú"™!üñ¯y§lcÜ	!¿¨§á„‘Œ8o…tsıŠ€¤ö?³ƒ(ºëøLÈ,4ùÊ²À»š¯gY+ão&Óœs*'F£o‰8ÖÊW…ˆ†@dç­¨}ı¶ Bwdiê ­utÙ²á‚h~Ú*•ÂG
+ğiá¬*Ó^_ïSœ‰ê»Äœw÷„7ˆ¢„ªTí ~
+KÛ) WiøY6(	8˜©$ÊU£5·ë˜X(ƒ3ßPËå
+ìŒîQÉša<’ ÁZ’pFv­+¤B†{¾ŸU·[ÂÍPÜ^n^ªà¬='6é{¬gyñ^â§âİVV=™S¥‚!J)ûÒ"¼JÔ%³!ùşü22-ğŸX!}«ç¶¹tÆìY×ã ö-’8¬ïC³[¯ğ`1%°¶yC,"cÿŸQJ%ÂÜ¦íª¹ïsL`(0^„LÌs³½2acsÙ»Ğc«LÑŒKÖì T6xó˜İüeğîùè¢-} ·àØüÏ Š™ÁùlÁäìòÇ(nÔø.Öùt˜ØæÁå\ôB§Y3-±7Ïzé¥ÏùÜÖÑÓÖƒL>2i(ppí	!8ãĞÚ0+ ¦çÔZ’ÁYø¢à~z'îø}_Œ1ìjhƒ¶y®oYİÙ¿r¯Ê(;æÑïC§(†u¶Æ¶æ§PÛtÏûÂş4æŞ¡!™ˆ&»wËØË2YôŠ‘d
+Ã?Š:ô9[ÚQ¦¦k†BäÈp£ëãwk-¦”íxß.Ğ¸7JuÔ…ĞÏôĞ¬ø[ã×¦3?_7¡õkBÔ”') ×t(Ì¼c)XÏWıø‹“&íğõ`¬™öØ„zò*éÈsïZÆ¥gÕ¯ü*&şµ6'-íÑÎ£ªÂts>§+%¥ë&³¿»®¯n–2(YHN5Ÿ~˜Â+Ö"øs°‡8ÉJ»¥‹ğ„_¤y¯]‹IL¯ÿÕ¿İ‚È;xâ#æÃõ£w‰K Ñv`@lÖcaµJóY;‡l‡=\Ÿ–PG{¶†*õ”*°O‚ÜB™…57A'Û»Kô´l¥,ÍÖqwá¢5éß…òyĞk>İtP7‚{¦6K¬$f9K÷Ó@ıeR¨ŸÒ[
+‹¡¢tyğê#F]¼¨¼Î®³D
+¢>5ŒÄ³è }ÜaœwÌ])Šãö¬è‚ÿc™&ïŠpJê¢$ì}bë»È7;yIÅa^.õ¶–yñ¾HfÎ(Î2J²èÁ$°T‚…fEŒ\Ñò/K]Ò¬)¾Õ™”çf×^YTp¹ùMÿrË¡\ŠxßL6lª*÷Ş)8ŞQ…1½{XÎµJWD§ëÁÍ”³;uwbBµ“ú ²dåÈb¸èz‹C‚sOš>ıòP¯–aOD'hˆà¤È(4J”GğÚ4Ê°BÔT°FÖOFn”e˜îM%ozà÷ĞvâƒL>7ÄÜÆRù¨Äµ¦£ÓFB.Íf"çßÓğ–pøêY¬aoI†ÓóÉˆ/ÂyaE °ö!}NñåZ†ã'–h@V¢ ¥&Ñãn¨¼ÒƒDf¥èör€–’1W~ï°©vW‘ÿÆ29dmbE[…<ºEX›ÄğçÌî–EöÒFR«gÁûø™ÄÚ Q$UJeãCæ 1z™]ì"y$F¤Ü7C*Åñª6KˆyäæC¡ŸØ¢†SÂ½éócH hê”Mmƒg ¬l'nğ-:ás›)x`T ¦ŸoŒ1œ0ø\½Ğ-q3–®mdíÿ§ŸDŒ–µÊç¿ïsŸÓW¦Ç²T5‹ÆáˆUı‡GGÙÕ
+;7ŒÄ2;›GEEM/–õûOS\¥r££øà*f6©ìB²™²—İß =QÈ~ûÀCHYtUÕ§ä?vÖÕ'­†|¦óz—eFæ‡“LÍ„)aR£KC(¥Õ(Ÿ4•x!ƒ"÷¹“Î
+w‚,ÜFDîÇ¥{ŒêùNÙ`ùiØ¸\Ò¼²WÄ8
+ tî/PöS@a—0Ö"ß*M¥V 2ò¥7s;?¤ØåCûô}ÒÛ/¤s­ŒÔÉsó,#‡h”A„,vÔrÆ¸¾–SLñ^p<rÕƒÁ2‹^Aï¥°'o ‹œ~jÏ4~f‰Ÿ¸Øû…«Ç6oZÁ¹§¬i[=úm!¨|¦ª:‰Şt?‡›3©ÃàÌy¾i;¦2ß“ótàå,$ûfbÔ1í¼(¥E‰iyÈ—q­RA_U—š¹ Gi%d¦÷iFDë=LQ„Q+a¾Ô‚¡U¸?,rz[FÉïI–œÓùòƒ¦s¾*Ü[ê@ï.ã^º!—Ù§–^ì'ÔN¹_½Ã<`öÉğÿ¿ã\†AG|ó«ËóY-xM•$‘½QzÌ‹
+åGLîFÓ|ßƒó’J ‡½M2°¤Š‘Œüİ[&ìƒ¹à¤ZzÁ-‚¬öu^¦H¾½€±^šHbx×š¶SQÍÿ@¥[üÓPí‚qpÇ5£«ã<•q/Õ”„¾˜íwä¸Á@ôç€È‘bÖôD£ÊúÄ2ÄdW÷èŞûÑ‚óy¥°ÜLáÜ³ü(JÂ•¿
+11«ï_^*ÉaqƒÑë ¡ñ¨–rÌ‚ÓdÔ°=•à
+œ(ƒœŠ~È·×KÙ…Õ¡yôéÄ×Êd±Ã&z’œ¹30àê;)r”+Á2‡"õÂnÓê³5bĞHI)Øük]CC‚"¶ö‡ÛÏw.hÂ˜)FOåpÛwŠùÖÀ‚!%^4ÕW
+é‡çÌæG'[Ì6çú²ns+šƒR`º#¼ë}?ÈNÍƒ_–j`÷5yÍ ô®²¹{Ù³q¼bÜI:øqjE¸š¤°&dBq¢]Ã>°f§!Òí¯Tó#ßUÛúß!‡´ÏqFmPOİæóØ™^#K" ae¿š-†gäMMŠ6)¸¼‹0DÊ
+â½Iİ—¦\U„†Àbµ ƒwÎªviáğø“fÈë¥× fÀ‘6çìû0Â"™[\oZûêƒfÃœ³:ÓíUÌŞ
+=~»,ic"ùÑhQ”WDnOõT‹V·¶J|©­·êœ€¨n
+4¨„—.Ï9I]¢Æ?hãÇ‡%ôıfÑF¶Ù@×.
+òıdë¦‰;3Ñæòô"
+¥å4(orå$‡F$ÍCz‡^C0oNr»$+úrw*µˆ|}¶Âš¬Äè‹’|H®Ëö¤q–÷ò¶İñ%ğ³3ÕL¶#›«òMå´ï¬WéĞLùÊWˆüèç”CÅ(@€ĞŞi¡v4$ø¸ÚìŒZ³›³B@f[i^Ú=5EäÙI4§âº‰±åûı=Â0ö€@5?WZVjÖO‚=waÖ=æo;>›ø¦«>q
+mî¬ïŞğ
+FO_)XÙïŒl>[ÏKDØ2^ÏXiUMãÜÃİtéß]êñƒÉÇàRŠ_çµ™
+im³·j†"‡Ä ¤¬'v/#\
+ıkk”0î[¹#´*M™šB5A…é8¸Ò(÷$xG•	#Ó×­vˆC/	zTåo£+¦¿óÕÜÂËÊÍ©z2®P¥>Xh%Ô—‡vó£[¬s,Íx.g¯‚Ô“hKKERò½õ+=$ı'*<6F·ês^9Oíí¹ÛüêVë^°Âa ÑÙbÄj1«™ÓU±aÖêÖ(¨şulI>e¿O3§9ô	X°w:=î(¾Œ •Úÿµò†añí·Á„bAšIS. Lá?P¤T­[Â‚°µrßL*ãÅÔ]—ìiéwQ€Ês‘ÏµÈ7+©T1Sµç}ÖJ®åáäÔã¥âà,\ïnˆÜs¥ï¡ÚÖ½, ‡¼¡)óÂ»Ö¸e»1$N‹BÚ‰·g…¯qö„aìûÕ”'ãùÀÁ Ió,£ìÍ£ûÓ®âşJ ”ıYlY—Ça,ûáÙŠÙU²Åwx8:…õà›¼ã ]ö^#ªlÔIÊö_|¸î…1®«¤öi%èT¾É¹Ö¹„eîZ¥úû?‘²åæßa†ğ1j¡mdy…Ö¬t{uã$k¾‰ø½¤²bt‚*)ût1 gë\dÏh:ÊØ¶¹¾)-_µƒğQkû#ÆÌõ	EšxµaUö­Å.ûu§Œ^5Óe))8å¥šø4ÊjßÇÄ2økªÂ‡ºOÖ`qÆ ‡ËÀoq¿fŞßnap*?©¯sÓÿä…XM&ÜyÖ~é‹‘aB«–şJâI/JğÍY¿/“èR|ïZ'Ts­-ZsD™‹“± ÎŸ`í?ªÚ!,# l±’]pû}Ú>t:ÜG¸¿+ó	ø””™-9iÄU¬œ²3«WÚzN^ğò”æ§ƒŠúzPº‘ rêhEugÙ‰ª¹XnÄœQBXR{N©ıJ`çŠwÊ±°;v’q}û±¼m$Z¶Ğ‡Ş±×!¾@×¬³óù‹~t¢aê¡s{ypIÈy¤)`ş¾TOß‚ïs|AÂ›ù(œV9uû,Êç¥¦W$Ìwc²u[óå²gãÜf>DÜpzòŞÍT‹0!İI‹ÄŒ[MÁá8Ä³€:Lïßo ÷Ë.QëÏ	i!á	ÏrWB^'[/­h¤;ü®3oÅç…—â¼ôóáZİ„óÍP­L£Hgi¤:üc•¸ùëŸî%û¢ÇÏZ“{úKBõ~&ŸqtA“Z* ‰¡Kı'8hÇğù”ã÷i_‡Xly5(îªÌ*j»ÿŸ´'×¬Ygøry˜G âÍÒñ<Bb ç‰e5Ş0Ã!ÎÿCş–úœ¯š¬èÖ¸ ™SÒ)ìl¼VÚTZÅ‹İÃ‘¾î:ÄÖ“|€.AõDÂ>%…øyŒD6Xq¡F1øúÀCHEUø¯:Fë\]2¶û÷³ãßĞ¡oQñÒ—5\èø ‡Ô•ÔÁE“âãi§³3~Ñ	j.ë¬™38T’9"/§ïFƒÉ‹F²Äd
+3|6“›‘U·Dş]î±Š ãälÙRs”½ -lì¢ÿJ­íÆ«§ÔñMš†¤ñÍ	âre”Nş@c ì¯AèÚªq¦9@æTšLgy+)Ç±­çe™¯Ülrş52…eÑ`º«#á\g¶Õ‘PµyÅ¹şÛ	”³úôä,r8%5©UN#6‰İDË¤iŠÍxá·k±u û+#~X(E"J™ÛÕ½¼ôfËÔş#åû³Í­H6‚nıO`+¢ü,¬$Qug‘înPxw‘¾ê+õøŠÑÏ³’áÒi¼îªØß±š kÔ¶Y;‚.ôˆ#oèø
+ğò®oÿş„Œ(„¡KbÀ‚Üç)ÜÈí´d­¶ù¨8G›†’†™$œ?Gf©OßË?,PT÷¢Fğ£¡§\¢c^UGgòBhPèÊ&/hÉ•$]¸“2çA&©|ÉÜçªZòIËUøVtŸp§"”ã C*d®ì<š+|wg{Ë2„Au„•İTÙ˜Ty©iàóJnÀôÆ„ßqµR /3%¹IÚöLè^ÿ¶Cõ{ğÀ¯‘­mãwæ¨œ®,F”I¾Ó4é–ÒéH:ètcšåb}åy$0¶áÆwÃ 0F‰1H…êY .¯=A×¶˜‘ŒW‚µ­‰Ô&íF÷la4*A¶9ãqP6‘Mí?K¶¿cd9¥€A°0Š~uÕ2•®“A\ğ1€ábÑj)=‡¤â×c³!ÆœÎƒ¢B"´Z¨‰×oÁ+.= c=â*ÛG•ïG ’;$ñî^£rèaÔ-ıÉ•C¾÷fòA5¹@a¬°
+œ}8ÏwDñ®'È>Pæ˜Kş×\M{ÑP/tì	ƒ˜µD0ìxN)¥}Uk¯¡vZ‰¯ĞPé@HæQè!zÇï¡sÁ¡›¦now½ÎW 6á¦M‰åzÖKzĞR‘–vxª&…n^BÎÏ±À­ÉÉåç$…‚dÔ½<Öízk~Òßêba¡_¹óØÔîèUU¿æoô‘‚&E÷F.=*^ü •í*ĞMì(qŸËIU*¤x°•#ÿº:vM®nvÏÿ(—„e\ïï©ËÓ´@­í^¬=–R~z“XÓ‚À¼K{2‘)§’¿9¦`~¿¸Ò÷$ïÙi‚$²0•ÒApnªHúß¸ç—ZdS1§°½±°ÃgY¶¸¯ÍzIÿ_Áğ	ÄYšígk/Öq[èx¡qTêÎñÍ_¤ge;0”µ4‡íıû½¾	RÆÁñıéxŒèûº¤V7MÿÔ>±Ñi÷*z…÷xé“¦~»çb Á6²gíSÏïÍ½C9Ÿ¹Å––mÃÁwrÉ1ÏÔsåV¬y~ÅñÕ¾X\Gæö²6u~3«ú#•ú!6ª¿MØoböÔğ]D‘«­9Ss½äÔ`åí¿J9P°dXÇpÄúª½F6ÜYö§ÅŠ¶«ÍŸ^£’jï'ÙÂJÁŸ),÷;//ÏÛKu§©ëÓÜu2e‘—” µÒo†àÈX£’0fbË]èèİüw?À®Ä5Û°;oƒï{Q—–•Èš®G¢¸O\ÍI&º©şGÜäıÖù˜ĞdıÈº@ù¿(íÌ˜ò%U=ˆH@ŸDôëÁ|Î4%Ù¥×û‘…Ï•ôi"RFsŞÎÄ„Ö×åõw–æ:èU”ô‘‰ÙJÍ Ç-Ø¬q•SêuC>…´™ª¬³Bğ%†FÁ{	ûÁË,ñ‡§İ¸:àìƒòjäÜ[î®rP¶
+‰)ÀU¼û¹›"éQ(¤3MÎ—j¼^† ™,vğ®ws¬æÏ^‘íS˜°20ƒƒû`â‰GWå2Q‰2¹)%à'şB9Zƒ?G±#iéMÕsXÕ¨]¸Iº¼´¿æi+‡Éaiw½Ï¾ĞÃcı\S²%“Ü@“G©•wöi„¢`jREÔÒ¹ Lı®›kÜòS†gü¡/2ñÊck,†'`ú˜„ÀhÂG¯æü%Ø6\Â?g‰Uª¾Q,~ú–¶t„BG*šz•ÒABÅáèãì‘øêˆ)4~kA@0ÉJÄ¸üœ*Ó)¨,&+o3n"¹µÃÉz®WU/sßÅ0Ó¿‡¹D$ª0e’Æ¼V#ÁD†³ã“U\ŒIÁn_Nî£! iú¨ØÜƒj{a†æšÌTıÚ'Ì×-½²jØ(˜NıŠ‹Ğò›FXa}”Ÿ–5+Åq‹è^<Uål7†ÑÓÔŠÄ!Ş¼åÛÚ»‹ÍOe¶u˜ª‡ı+	<’ù(¡8¢©£Y½ICİYŒôæ€İ¸ØÕ×8¨©¢­5
+¸<‚_œTìè¸”ßÚşÛÈz6¿qª#	£	QÚ½\‹ğ=Ê‡åú}š*fsÌäå¹ğb òHİJª)¡à¬Ş†NÃ¡wƒl“Ff¬³¾,£u­D8Q.¢…ıG¿>¾vi ş…\Ñ°Ÿƒµ¾OŒ˜ÓÙu™«şRLH²9]\><›úZß…áÎäQ}ùÛ2‡q”;`9½¥˜‡Ê¡
+ŞìE‚Ğxç;olóÃE°Yô«<¹kƒƒ.*FI÷2&;|!»Ó –C<T6ÁÍ^’-%¤‚•fµôÒÂg¦ròr	XqYE÷'¶nƒÂ/×ÎcQŒË-V¥ıM³»FSRa”Ÿÿs#šn‹ëXá3
+‚àÂÎxsÉ2­ê¼&|T|ÑºşI}á/,ïÔŸÏ¡YÁF”²ıÅæÄ1:2ôîÍÂJŞéŞpnÅaì±¦ÑßÜp¿›ñäm$<÷~LÛ‘ˆušğ:ÅÕòå÷Õé½•,è©êVæ¤KJAOÔœíÄé±¤øìh¬4BE¥¢rô÷oô‚÷¥Œ[á>	ŠL.~:ÿ5úØvL{äú§e©!o¡~¤¹›Íã·	VC(“pS~^µé»yX¨Uˆaîo ú¾ş}Ç2¡ ë¾JA±eè3ŸSWxıòü|ÅH:€ Îí÷»ú*6Ã×;% ¦T‰E¬ò12	—|øˆ_ÀşV€(·ÜkEÃûUÔ@Ò¬ÄÆKçó	)}‹Ãd?fí=µû±á—½$c‡ŒpÀ‰^ùh‡“KÔjE×ÁØ:§{F`ıt”cºù˜,Ø¢¥w‹%(S/Ab8<.w.ª`mÜâÁ1©Óõ?Ÿû
+¿°½Üwó;´ÏÉ*éGºsX°K;rª—O”§q/&š;kÈ:Èv=É”nÜá7švóÃ3?@oæÍRÄ`İËtØìˆö€ˆĞµ½ª¥ÂØV-–§OLG–JİQ
+±rh«Ş[çóR”ë¦¸…;˜*¹ü÷jJWİÇÖË	XÍc•Tš°+åt]}èÔ‡§õ°¢ñI­ş(GˆÊö93Øo¯èüèÉ ¡A
+!ë=tp““ZB[‡QÜÚ)»-
+@`­Ó»æqB±ÑP¦œ´ƒ€ª-.0Ö±Qc®tÖ^šà°šX÷B9«tcÌMïµHœJ1ò–^ã-X‹Ï½ĞØåš× 9Sa)Ò¨«@!$¬	5QxÏ/8ÈÎ6Ù:üÕÀ5Åµˆq‡Ÿ¡­Ãm#àNÔÓNaß#Êşö¯ÆsQıŞØ¥hPÒØ*_ÕÜøÿL—K«DP·
+ˆõ…®¢Òôn¾“hı¼Ä¼ímuhXWÑºó›
+ÎV3×L2Â‡qÓ±YÎş³°X¿ø'÷¢…?lñÜå¥ œ‡I¥n„¤G%ŞˆË¯—,€¶LãlŞšÎ	4p'ôüVXŒø· ª­ ¢Î)ÊïİŸá2fWÓÎº“äÇå Ï±JœUwÑÕä†ï+‰S ~Œ8Ö¡ng4O÷êg–„p¹bé¿ÍÕ¨Ä2W$µ¿ú‹…¾¦¯Ğó‘çA•:†Ö¾-qVÁû@³ÌÅü¢¹ó·àßQT÷*¨ŞïPÓğRH¤óz]$€ï?•sNâÁ7,Ç$ÄŠE`²Á´lİ­î]²çÒá@]ëPÑÌ’I‚ğ'TÊlù¢}ióÖ 3*ÑKŒä˜÷É”Ü¤ækL&ÂÜY2Òwİ K¶\À÷`“5Êüå\t¯Gl_êÜ)ÿàçc–9æ^Ã&+@Û-m¢³~‚0K“ñZJüô÷ÿ€z>½Wn¾½é	-(?fç–d>€ÅêUpş0ÇÅÈªƒYjÊLœ;gœQæwòÃ¬SÉúÆšC±ß³ñj£Ì€@“Xn;æ`=$9M3VjÜ¨$òÛó¢µxzÁ÷`E¨ÜZ×hµøŸşº ØXdpO¹Å7†]Ä÷cŠšFb°‹¢ë“8/%%-|vşWaÒ‰¶%ªÇÖ‰v²õ§¢&i·«‚ÉLıò’kÆX±ğJ1Èp #•£Ö ı}g³ó‰ÜBãc@0JÅ‹ªáºö¤.Ìdœ °mC€Y…XÂœ¿éÔ¯‚ûeË'Æüïpaå¨'Ä¡:¡zÇ–vôÑàp+eo=uÈäÌl¿-´àûÙga†í¾ŠF‰•ï)H”ÒvÃ“RCüï|º(à4xhãAxÆ^çÂ*Ü;,åÇ¼ğÈX$…Ÿ§4>í¿tÄö4ü9Jöt93êâu:vÎX¹ææãN¾ÊËz4a2x€9°p[´··Ï ‡ÅÆŞ	¥®ÎŒ€ÜU(úö£°&cú÷u¡S|{‰öäÎÀ¾ÙlèÇErÔÇìEà:kÈ…è)ĞNjCI	xË´^BÇQ·ÒÀæPWI¼ü%§#¯é›€±Ep˜µ	¥WBbÜ.É»¿I]tÿP9ZË:Ô1ÛqeîšÅJ	¿{FşUG¨:ä±­³^úÅòò?ú5Lƒ¥ê‹c|˜ô®µ¨˜¨ÏÒirÎrkÁ-ßŸ+÷~ÌâzM­V6.<ÿˆÉJF÷AĞš^Üúéb ó\Ê#dbåÃ§¶Kn‹¿@ˆ¶®ñ†Ó|SÏ ªLyK°i¾‹0øH*5¬£%¨Äb’‰{úòüu·<‚Æ]YÁY¹Dˆî`~,w;ä‘ã6`qó¿G}–çîv«p¬=ÕËµó›İH†#IE¢­&ò‹@Väàç¦¶*2½óó‡YX@$¼„³¼&Ù¥ô÷Ã[Š‚Æ»Î¿¸€i¯k¸l]nÏ’æöª±¨Ã§}DÍ4ëèÛø6øç…rĞXÉBîp{wgÈˆ;_”ŸvMİG”‰iH2A¦BÇS­jŸP<Ö^­c/ÌAîÖ¢‹}GO]o”Tr£KqÏ¥mS}€¯ÙÖ<Ç\'¸Úlœ©,’<ÜeoC+CùÇ± ò]€áË¶ÖÑ%©yû¯GĞo/Aıçjo5ñ6/±wß¡ÿ!íÔ^ğãåËBBN„ØãVóª)ã7áóY—t|‡àöûÜdGŞ³;s>ôèœ„xjĞßór‡Ş´
+Ec-²kY

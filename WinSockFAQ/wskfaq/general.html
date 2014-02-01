@@ -1,0 +1,331 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/DTD/strict.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/bitmaps/favicon.png">
+	<link rel="icon" href="/bitmaps/favicon.png" type="image/png">
+	<link href="./faq.css" rel="Stylesheet" type="text/css">
+
+	<title>Winsock Programmer&rsquo;s FAQ: General Winsock Information</title>
+
+	<style type="text/css">
+		#next-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(./bitmaps/navbar-icons.png);
+			background-position: -38px 0;
+		}
+		#prev-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(./bitmaps/navbar-icons.png);
+			background-position: 0 0;
+		}
+		#stop-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(./bitmaps/navbar-icons.png);
+			background-position: -76px 0;
+		}
+		.navbar {
+			border: 8px solid #d0d0a0;
+			border-spacing: 0;
+			border-radius: 10px;
+			-moz-border-radius: 10px;
+			-webkit-border-radius: 10px;
+			height: 140px;
+			margin: auto;   /* center on page */
+			margin-top: 10px;
+			text-align: center;
+			width: 95%;
+		}
+		.navbar td {
+			background-color: #006000;
+			border: 10px solid #e0e0c0;
+			color: #ffffee;
+			font-size: 182%;
+			font-family:
+				"verdana",
+				"luxi sans",
+				"helvetica narrow",
+				"arial condensed",
+				"arial",
+				"univers",
+				sans-serif;
+			font-weight: bold;
+			text-align: center;
+		}
+		.navbarcap {
+			background-color: #e0e0c0 !important;
+			cursor: pointer;
+			padding-left: 10px;
+			width: 50px;
+		}
+	</style>
+</head>
+
+<body>
+
+
+
+
+
+
+
+
+	
+
+
+
+
+	
+
+	<!--  **** Navigation Bar ****  -->
+	<table class="navbar">
+		<tr>
+			<td class="navbarcap" onclick="location.href='./intro.html'">
+				<a id="prev-link" href="./intro.html"></a>
+			</td>
+
+			<td>
+				Winsock Programmer&rsquo;s FAQ<br>
+
+				
+
+				
+					Section 1: General Winsock Information<br>
+				
+				
+				
+			</td>
+
+			<td class="navbarcap" onclick="location.href='./newbie.html'">
+				<a id="next-link" href="./newbie.html"></a>
+			</td>
+		</tr>
+	</table>
+
+	<!--  **** Body Container ****  -->
+	<div id="body" style="padding-left: 30px" >
+
+
+
+
+
+
+
+<a name="what"></a>
+<h5>1.1 - What is Winsock?</h5>
+
+<p>&ldquo;Winsock&rdquo; is short for Windows Sockets, referring
+to the <a href="http://en.wikipedia.org/wiki/Berkeley_sockets">BSD
+Sockets API</a> it is derived from.</p>
+
+<p class="aside"><b>Aside</b>: You may find old or pedantic material
+using the original camel-case form, WinSock. Microsoft spells it
+&ldquo;Winsock&rdquo; these days, and this FAQ has done so since <a
+href="intro.html#aboutme">I</a> took on the maintenership role.</p>
+
+<p>The Winsock specification defines a network programming interface
+for Microsoft Windows which is based on the &ldquo;socket&rdquo;
+paradigm popularized in <a href="./glossary.html#BSD">BSD&nbsp;Unix</a>. It
+encompasses both familiar Berkeley socket style routines and a set
+of Windows-specific extensions:
+
+<ol>
+  <li><p>Winsock 1 apps can ask Winsock to send notifications in
+  window messages. This allows your program to handle both the network,
+  UI issues, and background processing without having to worry about
+  concurrency.</p></li>
+
+  <li><p>Winsock 2 adds many features. <a href="#ws2additions">See
+  below</a> for details.</p></li>
+</ol>
+
+<p>Winsock 2.<i>x</i> defines two interfaces: an application
+programming interface (API) which shields application developers from
+underlying layers, and a service provider interface (SPI) which allows
+transparent extensions to a Winsock stack. Through proper use of the
+API, a Winsock application can work over various network transport
+protocols and Winsock implementations.</p>
+
+<p>(By the way, most people just say &ldquo;Winsock 2&rdquo; when
+speaking of the current version of Winsock, because the newer versions
+just contain edits and clarifications to the original spec.)</p>
+
+<p>Today, the best specification for Windows Sockets is simply the
+Winsock material in the <a href="http://msdn.microsoft.com/">MSDN</a>
+<a href="http://msdn.microsoft.com/library/">Library</a>. You
+may come across a separate spec document, but this is essentially
+<a href="./articles/history.html">irrelevant</a> these days.</p>
+
+<a name="tcp-vs-winsock"></a>
+<h5>1.2 - What&rsquo;s the difference between Winsock and TCP/IP?</h5>
+
+<p>Networks are made of several layers. Network people talk about those
+layers in terms of the <a href="./glossary.html#osi-model">OSI network model</a>.</p>
+
+<p>TCP/IP is a network protocol, meaning that it is at layers 3
+through 4 in the OSI model. A network protocol provides services
+like <a href="./glossary.html#addressing">addressing</a>, data transport, <a href="./glossary.html#routing">routing</a>, and
+logical connections across a network. Two computers must use the
+same network protocol if programs running on those computers are to
+communicate. Other common network protocols include Novell&rsquo;s IPX,
+3Com/IBM/Microsoft&rsquo;s NetBIOS and Apple&rsquo;s AppleTalk. TCP/IP
+is the most popular network protocol today: virtually all computers
+support it.</p>
+
+<p>Winsock is an API that lets a Windows program send data over any
+network transport protocol. There are several functions in Winsock
+that only work with TCP/IP (e.g. <code>gethostbyaddr()</code>), but there
+are newer generic versions of all these in Winsock 2 which allow you
+to use other transports.</p>
+
+
+<a name="ws2additions"></a>
+<h5>1.3 - What does Winsock 2 have that Winsock 1.1 doesn&rsquo;t?</h5>
+
+<p>One of the most important new features is official support for
+multiple transport protocols. Although Winsock 1.1 was not actually
+limited to TCP/IP, that was the only protocol that had official
+support written into the spec. There was no standard way for a vendor
+to add support for another transport protocol, though a few vendors
+did do proprietary implementations of other protocols. With Winsock 2,
+official support for OSI, Novell IPX/SPX and Digital&rsquo;s DECNet
+exists in the spec, and it&rsquo;s now possible to add support for
+other protocols in a standard way. More importantly, a program can
+be written to be transport-independent, so that it works with all of
+these protocols, without change.</p>
+
+<p>Winsock 2 also adds support for technical initiatives like
+<i>quality of service</i> (QoS) and <i>multicasting</i>. These
+technologies will become increasingly important as bandwidth
+requirements become more regimented and intense. For example,
+QoS allows a videoconferencing program to reserve a certain
+amount of bandwidth so that a sudden file transfer, for example,
+doesn&rsquo;t cause its video to begin breaking up due to a lack of
+bandwidth. Multicasting allows that videoconferencing application to
+send audio and video streams to many participants without duplicating
+data any more than absolutely necessary.</p>
+
+<p>Winsock 2 works with Win32&rsquo;s high-efficiency overlapped I/O
+mechanism. Since this is handled entirely in the kernel in modern
+versions of Windows, there are significant speed advantages over the
+more traditional I/O styles supported by Winsock 1.1.</p>
+
+<p>Winsock 2 also allows for &ldquo;Layered Service Providers.&rdquo;
+This enables many neat things, such as security plug-ins: drop in,
+say, an SSL service provider, and all of a sudden your data is
+automatically encrypted.</p>
+
+<p>There are a number of other additions to the spec. You
+can get a complete list of them on sockets.com&rsquo;s <a
+href="http://www.sockets.com/winsock2.htm#OverView">Winsock 2
+Overview</a> page.</p>
+
+
+<a name="nextrev"></a>
+<h5>1.4 - When is the next rev of the specification due out?</h5>
+
+<p>For reasons I discuss <a href="./articles/history.html">elsewhere</a>,
+there is no longer a need for new Winsock specifications. The current
+specification for Winsock is simply &ldquo;whatever Microsoft stacks
+do today.&rdquo; Microsoft now documents these things in the MSDN
+Library, not a separate spec. (Of course, Windows has undocumented
+features, too.)</p>
+
+<p>Winsock is not the only place Microsoft adds new networking
+functionality. Sometimes they create entirely new APIs, like IP
+Helper, or the Internet Explorer ActiveX control. These complement
+Winsock without directly affecting it. Sometimes, they aren&rsquo;t
+even based on Winsock, instead talking to lower-level APIs like the
+TDI or NDIS layers.</p>
+
+<a name="transport"></a>
+<h5>1.5 - Can Winsock speak { DECNet, IPX/SPX, etc. }?</h5>
+
+<p>Winsock 1.1 only had support for TCP/IP in the spec. Several
+vendors&rsquo; Winsock 1.1 stacks did have support for other
+transports, but the point is that this was never standardized in the
+Winsock 1.1 specification.</p>
+
+<p>Winsock 2 standardized support for DECNet, IPX/SPX and OSI
+transports, and the spec defines a standardized way for adding support
+for additional transports.</p>
+
+
+
+
+		</div> <!-- end body div -->
+
+<hr class="noshade">
+
+
+<!--  Navigation footer  -->
+<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer nav"> 
+	<tr>
+		<td align="left" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="./intro.html">&lt;&lt;&nbsp;Introduction</a><br>
+			</span>
+		
+		</td>
+
+		<td align="right" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="./newbie.html">Information for New Winsockers&nbsp;&gt;&gt;</a>
+			</span>
+		
+		</td>
+	</tr>
+</table>
+
+
+
+
+
+
+	<!--  Document Footer -->
+
+	<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer info"> 
+		<tr>
+			
+				<td align="left" class="thirdwidth">
+					
+					<span class="annotation">Updated Sun Oct 25 2009 10:08 MDT</span>
+				</td>
+				<td align="center" class="thirdwidth">
+				
+			
+
+			
+				&nbsp;
+			
+			</td>
+
+			<td align="right" class="thirdwidth">
+				<a href="/">Go to my home page</a>
+			</td>
+		</tr>	
+	</table>
+
+
+	<script type="text/javascript" src="/js/awstats_misc_tracker.js"></script>
+</body>
+</html>
+

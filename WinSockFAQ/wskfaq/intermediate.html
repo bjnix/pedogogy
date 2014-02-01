@@ -1,0 +1,1050 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/DTD/strict.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/bitmaps/favicon.png">
+	<link rel="icon" href="/bitmaps/favicon.png" type="image/png">
+	<link href="./faq.css" rel="Stylesheet" type="text/css">
+
+	<title>Winsock Programmer&rsquo;s FAQ: Intermediate Winsock Issues</title>
+
+	<style type="text/css">
+		#next-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(./bitmaps/navbar-icons.png);
+			background-position: -38px 0;
+		}
+		#prev-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(./bitmaps/navbar-icons.png);
+			background-position: 0 0;
+		}
+		#stop-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(./bitmaps/navbar-icons.png);
+			background-position: -76px 0;
+		}
+		.navbar {
+			border: 8px solid #d0d0a0;
+			border-spacing: 0;
+			border-radius: 10px;
+			-moz-border-radius: 10px;
+			-webkit-border-radius: 10px;
+			height: 140px;
+			margin: auto;   /* center on page */
+			margin-top: 10px;
+			text-align: center;
+			width: 95%;
+		}
+		.navbar td {
+			background-color: #006000;
+			border: 10px solid #e0e0c0;
+			color: #ffffee;
+			font-size: 182%;
+			font-family:
+				"verdana",
+				"luxi sans",
+				"helvetica narrow",
+				"arial condensed",
+				"arial",
+				"univers",
+				sans-serif;
+			font-weight: bold;
+			text-align: center;
+		}
+		.navbarcap {
+			background-color: #e0e0c0 !important;
+			cursor: pointer;
+			padding-left: 10px;
+			width: 50px;
+		}
+	</style>
+</head>
+
+<body>
+
+
+
+
+
+
+
+
+	
+
+
+
+
+	
+
+	<!--  **** Navigation Bar ****  -->
+	<table class="navbar">
+		<tr>
+			<td class="navbarcap" onclick="location.href='./newbie.html'">
+				<a id="prev-link" href="./newbie.html"></a>
+			</td>
+
+			<td>
+				Winsock Programmer&rsquo;s FAQ<br>
+
+				
+
+				
+					Section 3: Intermediate Winsock Issues<br>
+				
+				
+				
+			</td>
+
+			<td class="navbarcap" onclick="location.href='./advanced.html'">
+				<a id="next-link" href="./advanced.html"></a>
+			</td>
+		</tr>
+	</table>
+
+	<!--  **** Body Container ****  -->
+	<div id="body" style="padding-left: 30px" >
+
+
+
+
+
+
+
+<a name="appproto"></a>
+<h5>3.1 - How do I speak { HTTP, POP3, SMTP, FTP, Telnet, NNTP, etc. } with Winsock?</h5>
+
+<p>Winsock proper does not provide a way for you to speak these
+protocols, because it only deals with the layers underneath these
+application-level protocols. However, there are many ways for you to
+get your program to speak these protocols.</p>
+
+<p>The easiest method is to use a third-party library. The
+<a href="./resources/libraries.html">Resources section</a> lists several of
+these.</p>
+
+<p>If you only need to speak the HTTP, FTP or gopher protocols, you
+can use the WinInet library exposed by Microsoft&rsquo;s Internet
+Explorer. Newer versions of Microsoft&rsquo;s development tools
+include components that make accessing WinInet simple.</p>
+
+<p>Finally, you can always roll your own. You should start by reading
+the specification for the protocol you want to implement. Most of the
+Internet&rsquo;s protocols are documented in <a href="./glossary.html#RFC">RFCs</a>. The
+<a href="/rfcs/">Important RFCs</a> page links to the most commonly
+referenced application-level RFCs. The complexity of the protocols vary
+widely, and the only way to gauge the difficulty of implementing the
+protocol is to read the relevant RFC(s). HTTP, for example, is a pretty
+simple protocol, but the authors of its RFC managed to fill 176 pages
+talking about it. Most RFCs aren&rsquo;t that pretentious, luckily.</p>
+
+<p>If you&rsquo;ve read the RFC and still can&rsquo;t
+figure the protocol out, you can always fall back to the
+<a href="./general.html#mail-and-news">standard Q&amp;A
+resources</a>.</p>
+
+<a name="ssl"></a>
+<h5>3.2 - How can I encrypt my TCP stream with SSL/TLS?</h5>
+
+<p><a href="intro.html#versions">Modern</a> versions of Windows have a
+SSL/TLS mechanism built in.</p>
+
+<p>Windows NT derivatives offer SSL through the security API. You
+can find sample code to show how these mechanisms work in the
+MSDN <a href="http://msdn.microsoft.com/library/">Library</a>.
+You can also find code in the Platform SDK, in the
+<tt>Samples\WinBase\Security\SSL</tt> subdirectory.</p>
+
+<p>Windows CE has a different SSL mechanism. There is <a
+href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnce21/html/crypto21.asp">an
+article in MSDN</a> that describes how to use the functionality.</p>
+
+<p>If all you need is basic HTTP, you can also use the WinInet API
+exposed by Internet Explorer. You can access <tt>https</tt> URLs
+through it just as well as <tt>http</tt> ones. You lose out on a
+lot of flexibility relative to writing your own HTTP client code,
+of course, but it's a lot simpler, too. MS Knowledge Base article
+<a href="http://support.microsoft.com/kb/168151">KB168151</a> shows how to use this feature.</p>
+
+
+<a name="getipaddr"></a>
+<h5>3.3 - How do I get my computer&rsquo;s IP address?</h5>
+
+<p>There are three methods, which each have advantages and
+disadvantages:</p>
+
+<ol>
+  <li><p>The simplest method is to call <code>getsockname()</code> on a
+  connected socket. If you pass it a disconnected socket, it will
+  most likely return something useless, like 0.0.0.0.</p></li>
+
+  <li><p>To get your machine&rsquo;s address without
+  opening a socket first, call <code>WSAIoctl()</code>, passing
+  <code>SIO_GET_INTERFACE_LIST</code> for the second
+  parameter. <a href="./examples/getifaces.html">[C++ Example]</a></p></li>
+
+  <li><p>A more portable alternative to the previous item, with
+  much the same effect, is to call <code>gethostbyname()</code>, passing
+  the value <code>gethostname()</code> returns. It doesn&rsquo;t return as
+  much detail as the previous method. <a href="./examples/ipaddr.html">[C++
+  example]</a></p></li>
+</ol>
+
+<p>The thing that makes this difficult is that a computer can have any
+number of network interfaces, each with an IP, all of which are
+&ldquo;your&rdquo; IP address. Which to choose?</p>
+
+<p>At minimum, you will find two interfaces, one of which is the
+loopback interface, leaving the other as the one you want.  With the
+second method, there is a flag you can check to find the loopback
+interface. In the third, if you can assume IPv4, you can heuristically
+detect it by checking if the first octet of the address is 127.
+(Don&rsquo;t check for 127.0.0.1: all 127.x.y.z addresses are legal
+loopback addresses.)</p>
+
+<p>So now the question is, how likely is it that your program will be
+running on a machine with more than two external network interfaces?
+Quite likely, unfortunately. The computer I&rsquo;m typing this on
+has <i>seven</i>: two Ethernet ports, a WiFi adapter, three virtual
+interfaces for VMware, and a Firewire port. (Firewire can be used for
+an ad-hoc peer-to-peer network.) You may also find a modem configured
+for PPP dial-up, a satellite Internet adapter, a cell network data
+adapter, etc. Any of these might be the one you want.</p>
+
+<p>The computer&rsquo;s network stack uses the route table to figure
+out which interface to use in a given situation. You can also retrieve
+the route table and try to work out the same answer, but it&rsquo;s
+best, whenever possible, to leave this to the stack. This is the
+primary virtue of the first method: in establishing a connection
+to a remote peer, the stack selected one of the network interfaces
+based on the route table, so as far as that remote peer is concerned,
+you have only one IP.</p>
+
+<p>If you&rsquo;re simply trying to connect to a server running on the
+same machine with sockets, use the loopback interface.</p>
+
+<p>If you cannot intelligently decide which interface based on
+heuristics like loopback vs. non, and cannot establish a conneciton
+to make the stack figure this out for you, it&rsquo;s best to just
+ask the user.  Use the second or third method above to collect a list
+of addresses, present it to the user, and make them pick one.</p>
+
+
+<a name="packetscheme"></a>
+<h5>3.4 - What&rsquo;s the proper way to impose a packet scheme on a stream protocol like TCP?</h5>
+
+<p>The two most common methods are delimiters and length-prefixing.</p>
+
+<p>An example of delimiters is separating packets with, say, a caret
+(^). Naturally your delimiter must never occur in regular data, or you
+must have some way of &ldquo;escaping&rdquo; delimiter characters.</p>
+
+<p>An example of length-prefixing is prepending a two-byte integer
+containing the packet length on every packet. See the FAQ article
+<a href="./articles/effective-tcp.html">How to Use TCP Effectively</a> for the proper way to send integers over the
+network. Also see the <a href="./examples/packetize.html">How to Packetize a TCP Stream</a> example.</p>
+
+<p>There are hybrid methods, too. The HTTP protocol, for example,
+separates header lines with CRLF pairs (a kind of delimiting), but
+when an HTTP reply contains a block of binary data, the sever also
+sends the <i>Content-length</i> header before it sends the data,
+which is a kind of length-prefixing.</p>
+
+<p>I favor simple length-prefixing, because as soon as you read the
+length prefix, you know how many more bytes to expect. By contrast,
+delimiters require that you blindly read until you find the end of
+the packet.</p>
+
+
+<a name="svrport"></a>
+<h5>3.5 - I&rsquo;m writing a server. What&rsquo;s a good network port to use?</h5>
+
+<p>If you&rsquo;re writing a server for an existing, popular Internet
+protocol, it&rsquo;s already got a port number assigned to it. You
+can find the most common of these numbers at the website for the <a
+href="http://www.iana.org/">Internet Assigned Numbers Authority</a>
+(IANA).</p>
+
+<p>If you&rsquo;re writing a server for a new protocol, there are
+a few rules and suggestions you should obey when choosing your
+server&rsquo;s port:</p>
+
+<ol>
+	<li>Ports 1-1023 are off-limits to people inventing new
+	protocols. They are reserved by the IANA for standard protocols
+	like POP3 and HTTP (110 and 80, respectively). Until your
+	protocol is granted a port in this range by the IANA, you
+	should use something outside this range. id Software&rsquo;s
+	choice of port 666 for their DOOM game server is cute, but
+	it violates this rule. They cleaned up their act with Quake:
+	it uses port 6112.
+
+	<p>
+	<li>Ports 1024 through 49151 are Registered Ports,
+	which are a good range to choose your ports from. Just
+	beware that the entire world is choosing from ports
+	in this range, so it may make sense for you to <a
+	href="http://www.iana.org/protocols/apply/">register</a>
+	your port, or at least check the <a
+	href="http://www.iana.org/assignments/port-numbers">current
+	list</a> of assigned ports.
+
+	<p>
+	<li>Ports 49152 through 65535 are Dynamic Ports, meaning that
+	operating systems use ports in this range when choosing random
+	ports. (The FTP protocol, for example, uses random ports in
+	the data transfer phase.) This is a poor range to choose ports
+	from, because there&rsquo;s a fairly decent chance that your
+	program and the OS will fight over a given port eventually.
+
+	<p>
+	<li>Many OSes pick local ports for client programs from the
+	1024-5000 range. You would do well to pick server ports
+	higher than 5000, but this is not as rigid a rule as the
+	previous ones.
+
+	<p>
+	<li>There are plenty of uncontested port numbers to choose from
+	in the &ldquo;safe&rdquo; 5000-49151 range. You should avoid
+	port numbers with patterns to them, or a widely-recognized
+	meaning. People tend to pick these since they&rsquo;re easy to
+	remember, but this increases the chances of a collision. Ports
+	6969, 5150 and 22222 are bad choices, for example.
+</ol>
+
+<p>You should also give some thought to making your program&rsquo;s
+port configurable, in case your program is run on a machine
+where another server is already using that port. One way
+to do this is through Winsock&rsquo;s <code>getservbyname()</code>
+function: if that function returns a port number, use that,
+otherwise use the default port number. Then users can change your
+program&rsquo;s port by editing the <tt>services</tt> file, located
+in <tt>%WINSYSDIR%\drivers\etc</tt>.</p>
+
+
+<a name="tcp"></a>
+<h5>3.6 - What is TCP?</h5>
+
+<p>The Transmission Control Protocol is a reliable stream transport
+protocol:</p>
+
+<ol>
+    <li><p>&ldquo;Reliable&rdquo; means that Winsock always succeeds
+    in sending the data to the remote <a href="./glossary.html#peer">peer</a>: TCP can deal
+    with lost, corrupted, duplicated and fragmented packets.</p></li>
+
+    <li><p>&ldquo;Stream&rdquo; means that the remote peer sees
+    incoming data as a stream of individual bytes: there is no
+    notion of <a href="./glossary.html#packet">packets</a>, from the program&rsquo;s
+    viewpoint.</p></li>
+
+    <li><p>&ldquo;Transport&rdquo; refers to a layer of the network
+    <a href="./glossary.html#stack">stack</a> just above the hardware layer, which works out how
+    to transport raw data from one machine to another. Winsock is above
+    the transport layer and your program is above the Winsock layer, so
+    your program does not see TCP directly. It&rsquo;s simply a service
+    you request from Winsock by passing <code>SOCK_STREAM</code> as the
+    second argument to <code>socket()</code>. You can dig down to the TCP layer
+    with a <a href="./newbie.html#debugtools">sniffer</a> or
+    <a href="./advanced.html#rawsocket">raw sockets</a>.</p></li>
+</ol>
+
+<p>TCP can coalesce sends, for efficiency: if you make four quick
+<code>send()</code> calls to Winsock with 100, 50, 30 and 120 bytes in each,
+Winsock is likely to pack all these up into a single 300-byte TCP
+packet when it decides to send them out on the network. (This is
+called the <a href="#nagle-desc">Nagle algorithm</a>.) Compare <a
+href="#udp">UDP</a>.</p>
+
+
+
+<a name="udp"></a>
+<h5>3.7 - What is UDP?</h5>
+
+<p>The User <a href="./glossary.html#datagram">Datagram</a> Protocol is an alternative
+to <a href="./glossary.html#TCP">TCP</a>. Sometimes you see the term &ldquo;TCP/IP&rdquo;
+used to refer to all basic Internet technologies, including UDP,
+but the proper term is UDP/IP, meaning UDP over IP.</p>
+
+<p>Winsock gives you a UDP socket when you pass <code>SOCK_DGRAM</code>
+as the second argument to <code>socket()</code>.</p>
+
+<p>UDP is an &ldquo;unreliable&rdquo; protocol: the <a href="./glossary.html#stack">stack</a>
+does not make any effort to handle lost, duplicated, or out-of-order
+packets. UDP packets are checked for corruption, but a corrupt UDP
+packet is simply dropped silently.</p>
+
+<p>The stack will fragment a UDP datagram when it&rsquo;s larger than
+the network&rsquo;s <a href="./glossary.html#MTU">MTU</a>. The remote peer&rsquo;s stack
+will reassemble the complete datagram from the fragments before it
+delivers it to the receiving application. If a fragment is missing
+or corrupted, the whole datagram is thrown away. This makes large
+datagrams impractical: an 8&nbsp;KB UDP datagram will be broken into
+6 fragments when sent over Ethernet, for example, because it has
+a 1500 byte MTU. If any of those 6 fragments is lost or corrupted,
+the stack throws away the entire 8&nbsp;KB datagram.</p>
+
+<p>Datagram loss can also occur within the stack at the sender or the
+receiver, usually due to lack of buffer space. It is even possible for
+two communicating programs running on the same machine to have data
+loss if they use UDP. (This actually happens on Windows under high load
+conditions, because it starts dropping datagrams when the stack buffers
+get full.) This limits UDP&rsquo;s value as a local IPC mechanism.</p>
+
+<p>If any of these types of loss occur, no notification will be
+sent to the sender or receiver, even if the loss happens within the
+network stack.</p>
+
+<p>Duplicated datagrams are not dropped: they are delivered to the
+receiver. It is up to the application to detect this problem, and it is
+the program&rsquo;s choice what to do with the duplicate datagram.</p>
+
+<p>UDP datagrams can be delivered in any order. Datagrams often
+get reordered on the network when two datagrams get delivered via
+different routes, and the second datagram&rsquo;s route happens to
+be quicker.</p>
+
+
+<a name="udpgood"></a>
+<h5>3.8 - What is UDP good for?</h5>
+
+<p>From the <a href="#udp">above discussion</a>, UDP looks pretty
+useless, right? Well, it does have a few advantages over reliable
+protocols like <a href="./glossary.html#TCP">TCP</a>:</p>
+
+<ol>
+
+	<li>UDP is a slimmer protocol: its protocol header is fixed
+	at 8 bytes, whereas TCP&rsquo;s is 20 bytes at minimum and
+	can be more.
+
+	<p>
+	<li>UDP has no congestion control and no data
+	coalescing. This eliminates the delays caused by
+	the <a href="#delayed-ack">delayed ACK</a> and <a
+	href="#nagle-desc">Nagle</a> algorithms. (This is also a
+	disadvantage in many situations, of course.)
+
+	<p>
+	<li>There is less code in the UDP section of the
+	<a href="./glossary.html#stack">stack</a> than the TCP section. This means that there
+	is less latency between a packet arriving at the network card
+	and being delivered to the application.
+
+	<p>
+	<li>Only UDP packets can be <a href="#broadcast">broadcast</a>
+	or multicast.
+</ol>
+
+<p>This makes UDP good for applications where timeliness and control is
+more important than reliability. Also, some applications are inherently
+tolerant of UDP problems. You have likely experienced blips, skips
+and stutters in streaming media programs: these are due to lost,
+corrupted or duplicated UDP frames.</p>
+
+<p>Be careful not to let UDP&rsquo;s advantages blind you to its <a
+href="#udp">bad points</a>: too many application writers have started
+with UDP, and then later been forced to add reliability features. When
+considering UDP, ask yourself whether it would be better to use TCP
+from the start than to try to reinvent it. Note that you can&rsquo;t
+completely reinvent TCP from the Winsock layer. There are some features
+of TCP like path MTU discovery that require low-level access to the
+OS&rsquo;s networking layers. Other features of TCP are possible to
+duplicate over UDP, but difficult to get right. Keep in mind, TCP/IP
+was created in 1981, and the particular implementation you are using
+probably has code in it going back nearly that far. A whole lot of
+effort has gone into tuning this protocol suite for reliability and
+performance. You will be throwing away those decades of experience
+in trying to reinvent TCP or invent something better.</p>
+
+<p>If you need a balance between UDP and TCP, you might investigate RTP
+(RFC 1889) and <a href="http://www.sctp.org/">SCTP</a> (RFC 2960). RTP
+is a higher level prototocol that usually runs over UDP and adds
+packet sequence numbers, as well as other features. SCTP runs directly
+on top of IP like TCP and UDP; it is a reliable protocol like TCP,
+but is datagram oriented like UDP.</p>
+
+<a name="broadcast"></a>
+<h5>3.9 - How do I send a broadcast packet?</h5>
+
+<p>With the UDP protocol you can send a packet so that all workstations
+on the network will see it. (TCP doesn&rsquo;t allow broadcasting.)</p>
+
+<p>To send broadcast packets, you must first enable the
+<code>SO_BROADCAST</code> option with the <code>setsockopt()</code>
+function. Then you simply send packets out using a special broadcast
+address.</p>
+
+<p>The universal broadcast address is 255.255.255.255. Its advantage
+is that it&rsquo;s generic. The disadvantage is that, because it
+can theoretically refer to every IP-connected machine on the planet,
+many network nodes will drop universal broadcast packets.</p>
+
+<p>A smarter plan is to use your subnet&rsquo;s &ldquo;directed
+broadcast&rdquo; address. This is an address you calculate using a
+network interface&rsquo;s IP address and its netmask; packets sent
+to that address will stay within the subnet, so often routers that
+would drop a universal broadcast will pass directed broadcasts. To
+construct the directed broadcast address, do something like this:</p>
+
+<pre>
+        u_long host_addr = inet_addr("172.16.77.88");   // local IP addr
+        u_long net_mask = inet_addr("255.255.224.0");   // LAN netmask
+        u_long net_addr = host_addr &amp; net_mask;         // 172.16.64.0
+        u_long dir_bcast_addr = net_addr | (~net_mask); // 172.16.95.255
+</pre>
+
+<p><b>Potential Problems:</b> Broadcasts can be useful at
+times, but keep in mind that this creates a load on all the
+machines on the network, even on machines that aren&rsquo;t
+listening for the packet. This is because the part of the
+<a href="./glossary.html#stack">stack</a> that can reject the packet is several layers
+down. To get around this problem, you may want to consider <a
+href="http://www.sockets.com/ch16.htm#Multicast">multicasting</a>
+instead.</p>
+
+<a name="threadsafety"></a>
+<h5>3.10 - Is Winsock thread-safe?</h5>
+
+<p>On <a href="./intro.html#versions">modern</a> Windows stacks, yes,
+it is, within limits.</p>
+
+<p>It is safe, for instance, to have one thread calling <code>send()</code>
+and another thread calling <code>recv()</code> on a single socket.</p>
+
+<p>By contrast, it&rsquo;s a bad idea for two threads to
+both be calling <code>send()</code> on a single socket. This is
+&ldquo;thread-safe&rdquo; in the limited sense that your program
+shouldn&rsquo;t crash, and you certainly shouldn&rsquo;t be able to
+crash the kernel, which is handling these <code>send()</code> calls. The
+fact that it is &ldquo;safe&rdquo; doesn&rsquo;t answer key questions
+about the actual effect of doing this. Which call&rsquo;s data goes out
+first on the connection? Does it get interleaved somehow? Don&rsquo;t
+do this.</p>
+
+<p>Instead of multiple threads accessing a single socket, you may
+want to consider setting up a pair of network I/O queues. Then, give
+one thread sole ownership of the socket: this thread sends data from
+one I/O queue and enqueues received data on the other. Then other
+threads can access the queues (with suitable synchronization).</p>
+
+<p>Applications that use some kind of non-synchronous socket typically
+have some I/O queue already. Of particular interest in this case is
+overlapped I/O or I/O completion ports, because these I/O strategies
+are also thread-friendly. You can tell Winsock about several OVERLAPPED
+blocks, and Winsock will finish sending one before it moves on to the
+next. This means you can keep a chain of these OVERLAPPED blocks,
+each perhaps added to the chain by a different thread. Each thread
+can also call <code>WSASend()</code> on the block they added, making your
+main loop simpler.</p>
+
+
+<a name="threaddupdata"></a>
+<h5>3.11 - If two threads in an application call <code>recv()</code> on a socket, will they each get the same data?</h5>
+
+<p>No. Winsock does not duplicate data among threads.</p>
+
+<a name="threadnotification"></a>
+<h5>3.12 - Is there any way for two threads to be notified when something happens on a socket?</h5>
+
+<p>No.</p>
+
+<p>If two threads call <code>WSAAsyncSelect()</code> on a single socket,
+only the thread that made the last call to <code>WSAAsyncSelect()</code>
+will receive further notification messages.</p>
+
+<p>If two threads call <code>WSAEventSelect()</code> on a socket, only the
+event object used in the last call will be signaled when an event
+occurs on that socket.</p>
+
+<p>You can&rsquo;t trick Winsock by calling <code>WSAAsyncSelect()</code>
+on a socket in one thread and <code>WSAEventSelect()</code> on that same
+socket in another thread. These calls are mutually exclusive for any
+single socket.</p>
+
+<p>You also cannot reliably call <code>select()</code> on a single socket
+from two threads and get the same notifications in each, because one
+thread could clear or cause an event, which would change the events
+that the other thread sees.</p>
+
+<p>As recommended <a href="#threadsafety">above</a>, you should give
+sole ownership of a socket to a single thread, then have it communicate
+with the other threads.</p>
+
+<a name="inetconn"></a>
+<h5>3.13 - How do I detect if there is an Internet connection?</h5>
+
+<p>It is sometimes useful for a Winsock program to only do its
+thing if the computer is already connected to the Internet.</p>
+
+<p>In the old days, &ldquo;connected to the Internet&rdquo;
+usually meant having an established dial-up networking (DUN)
+connection. If that&rsquo;s still the case in your situation, see
+<a href="./examples/rascheck.html">this example</a>. This doesn't help if the
+modem is configured to auto-dial: the fact that the DUN connection is
+down is not a problem, because attempting the connection will bring
+it up.</p>
+
+<p>Now that analog phone line modems are no longer the
+primary way to connect to the Internet, what it means to be
+&ldquo;connected&rdquo; has gotten much fuzzier. You can check
+if there is a LAN or WiFi connection, such as by poking around in
+the <a href="#getipaddr">network interface list</a>, but this is
+a heuristic method at best. Your program can never guess all the
+different interface types that might be used as an Internet connection,
+nor rule out all plausible but wrong choices. Even if you do somehow
+manage to find the interface used for Internet access, you won&rsquo;t
+know if there is a break in the Internet connection somewhere down
+the line without simply trying to connect.</p>
+
+<p>The moral of the story is, rely on the user to know more about
+their system than your program can guess. If they started your
+program and the first thing it does is connect to the Internet,
+assume that is what the user wanted. If it runs in the background
+and only periodically connects to the Internet, it might still be
+best to just try blindly. Back in the days of modems, it was often
+more polite to let the user control the connection themselves,
+either manually or with a preference to check for a DUN connection,
+but this is fast becoming part of history.</p>
+
+<a name="username"></a>
+<h5>3.14 - How can I get the local user name?</h5>
+
+<p>Use the Win32 function
+<code>GetUserName()</code>. <a href="./examples/username.html">[C++ Example]</a>.</p>
+
+<a name="asyncreliable"></a>
+<h5>3.15 - I&rsquo;ve heard that asynchronous sockets are unreliable. Is this true?</h5>
+
+<p>Asynchronous sockets are reliable if your program obeys the letter
+of the Winsock specification.</p>
+
+<p>Every so often, you hear stories about a program that loses asynch
+notification messages. As far as I can tell, it&rsquo;s always due
+to a bug in the complainer&rsquo;s program, due to misunderstanding
+Winsock&rsquo;s parsimonious notification policy.</p>
+
+<p>Consider the <code>FD_WRITE</code> notification. That only
+gets sent when a client&rsquo;s connection is accepted by
+the remote peer, and from then on only when output buffer
+space becomes available <i>after</i> Winsock gives you a
+<a href="./newbie.html#wouldblock"><code>WSAEWOULDBLOCK</code></a>
+error. To put it another way, <code>FD_WRITE</code> only gets
+sent to say, &ldquo;Before now, it was not okay to write data on
+this socket; now it&rsquo;s okay.&rdquo; The conservative way to
+handle this is to always try to send data when you have it, whether
+you&rsquo;ve received an <code>FD_WRITE</code> or not. You might get
+a <code>WSAEWOULDBLOCK</code> error, but that&rsquo;s harmless and
+easy to handle. Your handler for <code>FD_WRITE</code> then just tries
+to send everything queued up until it sends it all or gets another
+<code>WSAEWOULDBLOCK</code>.</p>
+
+<p>I&rsquo;ve been using asynchronous sockets almost exclusively
+for many years now with no problems. Others who&rsquo;ve been using
+asynchronous notification for years longer than I have agree. If you
+believe you&rsquo;re losing notifications, you have to ask yourself
+whether it&rsquo;s more likely that we&rsquo;ve overlooked a bug in
+the stack or that there&rsquo;s a bug in your program.</p>
+
+
+<a name="nagle-desc"></a>
+<h5>3.16 - What is the Nagle algorithm?</h5>
+
+<p>The Nagle algorithm is an optimization to TCP that makes the stack
+wait until all data is acknowledged on the connection before it sends
+more data. The exception is that Nagle will not cause the stack to
+wait for an ACK if it has enough enqueued data that it can fill a
+network <a href="./glossary.html#frame">frame</a>. (Without this exception, the Nagle algorithm
+would effectively disable TCP&rsquo;s <a href="#tcp-window">sliding
+window algorithm</a>.) For a full description of the Nagle algorithm,
+see <a href="/rfcs/useful.html#rfc896">RFC 896</a>.</p>
+
+<p>So, you ask, what&rsquo;s the <i>purpose</i> of the Nagle algorithm?</p>
+
+<p>The ideal case in networking is that each program always sends
+a full <a href="./glossary.html#frame">frame</a> of data with each call to <code>send()</code>. That
+maximizes the percentage of useful program data in a packet.</p>
+
+<p>The basic TCP and <a href="./glossary.html#IPv4">IPv4</a> headers are 20 bytes each. The worst
+case protocol overhead percentage, therefore, is 40/41, or 98%. Since
+the maximum amount of data in an Ethernet frame is 1500 bytes, the best
+case protocol overhead percentage is 40/1500, less than 3%.</p>
+
+<p>While the Nagle algorithm is causing the stack to wait for data to
+be ACKed by the remote peer, the local program can make more calls to
+<code>send()</code>. Because TCP is a <a href="./glossary.html#stream">stream protocol</a>,
+it can coalesce the data in those <code>send()</code> calls into a single
+TCP packet, increasing the percentage of useful data.</p>
+
+<p>Imagine a simple Telnet program: the bulk of a Telnet conversation
+consists of sending one character, and receiving an echo of that
+character back from the remote host. Without the Nagle algorithm,
+this results in TCP&rsquo;s worst case: one byte of user data wrapped
+in dozens of bytes of protocol overhead. With the Nagle algorithm
+enabled, the TCP stack won&rsquo;t send that one Telnet character out
+until the previous characters have all been acknowledged. By then,
+the user may well have typed another character or two, reducing the
+relative protocol overhead.</p>
+
+<p>This simple optimization interacts with other features of the TCP
+protocol suite, too:</p>
+
+<ul>
+  <li><p>Most stacks implement the <a href="#delayed-ack">delayed
+  ACK algorithm</a>: this causes the remote stack to delay ACKs under
+  certain circumstances, which allows the local stack a bit of time
+  to &ldquo;Nagle&rdquo; some more bytes into a single packet.</p></li>
+
+  <li><p>The Nagle algorithm tends to improve the percentage of
+  useful data in packets more on slow networks than on fast networks,
+  because ACKs take longer to come back.</p></li>
+
+  <li><p>TCP allows an ACK packet to also contain data. If the local
+  stack decides it needs to send out an ACK packet and the Nagle
+  algorithm has caused data to build up in the output buffer, the
+  enqueued data will go out along with the ACK packet.</p></li>
+</ul>
+
+<p>The Nagle algorithm is on by default in Winsock, but it can be
+turned off on a per-socket basis with the <code>TCP_NODELAY</code> option
+of <code>setsockopt()</code>. This option should <a href="#disable-nagle">not
+be turned off</a> except in a very few situations.</p>
+
+<p>Beware of depending on the Nagle algorithm too heavily. <code>send()</code>
+is a kernel function, so every call to <code>send()</code> takes much more
+time than for a regular function call. Your application should coalesce
+its own data as much as is practical to minimize the number of calls
+to <code>send()</code>.</p>
+
+<a name="disable-nagle"></a>
+<h5>3.17 - When should I turn off the Nagle algorithm?</h5>
+
+<p>Almost never.</p>
+
+<p>Inexperienced Winsockers usually try disabling the Nagle
+algorithm when they are trying to impose some kind of <a
+href="#packetscheme">packet scheme</a> on a TCP data stream. That is,
+they want to be able to send, say, two packets, one 40 bytes and
+the other 60, and have the receiver get a 40-byte packet followed
+by a separate 60-byte packet. (With the Nagle algorithm enabled,
+TCP will often coalesce these two packets into a single 100 byte
+packet.) Unfortunately, this is futile, for the following reasons:</p>
+
+<ol>
+  <li><p>Even if the sender manages to send its packets individually,
+  the receiving TCP/IP stack may still coalesce the received packets
+  into a single packet. This can happen any time the sender can send
+  data faster than the receiver can deal with it.</p></li>
+
+  <li><p>Winsock Layered Service Providers (LSPs) may coalesce or
+  fragment stream data, especially LSPs that modify the data as it
+  passes.</p></li>
+
+  <li><p>Turning off the Nagle algorithm in a client program
+  will not affect the way that the server sends packets, and vice
+  versa.</p></li>
+
+  <li><p>Routers and other intermediaries on the network can fragment
+  packets, and there is no guarantee of &ldquo;proper&rdquo; reassembly
+  with stream protocols.</p></li>
+
+  <li><p>If a packet arrives that is larger than the available space in
+  the stack&rsquo;s buffers, it may fragment a packet, queuing up as
+  many bytes as it has buffer space for and discarding the rest. (The
+  remote peer will resend the remaining data later.)</p></li>
+
+  <li><p>Winsock is not required to give you all the data it has
+  queued on a socket even if your <code>recv()</code> call gave Winsock
+  enough buffer space. It may require several calls to get all the
+  data queued on a socket.</p></li>
+</ol>
+
+<p>Aside from these problems, disabling the Nagle algorithm almost
+always causes a program&rsquo;s throughput to degrade. The only time
+you should disable the algorithm is when some other consideration,
+such as packet timing, is more important than throughput.</p>
+
+<p>Often, programs that deal with real-time user input will disable
+the Nagle algorithm to achieve the snappiest possible response, at
+the expense of network bandwidth. Two examples are X Window servers
+and multiplayer network games. In these cases, it is more important
+that there be as little delay between packets as possible than it is
+to conserve network bandwidth.</p>
+
+<p>For more on this topic, see the
+<a href="./articles/lame-list.html#item19">Lame List</a> and the FAQ article
+<a href="./articles/effective-tcp.html">How to Use TCP Effectively</a>.</p>
+
+
+<a name="tcp-window"></a>
+<h5>3.18 - What is TCP&rsquo;s sliding window?</h5>
+
+<p>In a na&iuml;ve implementation of TCP, every <a href="./glossary.html#packet">packet</a> is
+immediately acknowledged with an ACK packet. Until the ACK arrives
+from the receiver (in this na&iuml;ve implementation, at any rate),
+the sender does not send another packet. If the ACK does not arrive
+within some particular time frame, the sending stack retransmits
+the packet.</p>
+
+<p>The problem with this is that all that waiting limits network
+throughput drastically. The minimum time between packets with such a
+scheme must be at least twice the minimum round trip time for that
+network, for the time to send the packet and for the time for the
+receiver to send back an ACK. Add in processing time on each end,
+temporary hardware faults (e.g. Ethernet collisions), retransmissions,
+routing delays, and who knows what else: the stacks end up spending
+more time waiting for ACKs than sending data. This is a problem
+because it means you can&rsquo;t effectively fill a network pipe with
+a single socket.</p>
+
+<p>The limit of data throughput over a network link is the maximum
+amount of data it is possible to have in transit at once divided
+by the round trip time. Imagine a naive TCP/IP implementation
+running over a 100BaseT Ethernet. The maximum payload size for TCP
+over Ethernet is 1460 bytes, and the 100BaseT round trip time is
+roughly 0.3&nbsp;ms. 1460 divided by 0.0003 seconds comes out to
+4.8 MByte/s. If you&rsquo;ve done any speed testing on a 100BaseT
+Ethernet, you know you can hit 6&nbsp;MByte/s easily, 9&nbsp;MByte/s
+with switched Ethernet, and with good hardware and software you can
+approach the theoretical maximum of 12.5&nbsp;MByte/s. That&rsquo;s
+two to three times the data rate we calculated above. We owe that
+speed jump to TCP&rsquo;s &ldquo;sliding window.&rdquo;</p>
+
+<p>A sliding window means that the stack can have several
+unacknowledged packets &ldquo;in flight&rdquo; before it stops and
+waits for the remote peer to acknowledge the first packet. When the
+TCP connection is established, the stacks tell each other how much
+buffer space they&rsquo;ve allocated for this connection: this is
+the maximum window size. Since each peer knows how big the remote
+peer&rsquo;s buffer is and how many unacknowledged bytes it has
+sent, it will stop sending data when it calculates that the remote
+peer&rsquo;s buffer is full. Each peer then sends window size updates
+in each ACK packet, telling the remote peer that stack buffer space
+has become available.</p>
+
+<p class=aside><b>Aside:</b> &ldquo;Why is it called a sliding
+window,&rdquo; you ask? Imagine a TCP data stream as a long line of
+bytes. The sliding window is how the sender sees the receiver&rsquo;s
+buffer: as a fixed-size &ldquo;window&rdquo; sliding along the stream
+of bytes. One edge of the window is between the last byte the receiver
+has read and the next byte to be read, and the other edge is between
+the last byte in the receiver&rsquo;s input buffer and the first byte
+to be sent from the sender&rsquo;s output buffer. As the receiver reads
+bytes out of the network buffers, the window slides down the stream;
+any time it slides into the sender&rsquo;s buffer, the sender sends
+more data to fill up the window.</p>
+
+<p>In <a href="./intro.html#versions">modern</a> Winsock stacks, the
+default sliding window is at least 8&nbsp;KB. (You can change it in
+the registry: <a href="http://support.microsoft.com/kb/120642">KB120642</a>) That means that if it sends
+8&nbsp;KB of data without receiving an acknowledgement for the first
+packet, the stack won&rsquo;t send any more data until the first
+packet is acknowledged or the retry timer goes off, at which point
+it will try to send the first packet again. As each packet at the
+front of the window gets acknowledged, the 8&nbsp;KB window slides
+along the data stream, allowing the remote peer to send more data.</p>
+
+<p>Dividing Microsoft&rsquo;s 8&nbsp;KB value by 0.0003 seconds gives
+about 26&nbsp;MByte/s, which means you hit the medium&rsquo;s maximum
+data rate (~12&nbsp;MByte/s) before you hit the limit imposed by the
+round trip time.</p>
+
+<p>Some networks have long round trip times which require large TCP
+windows if your application needs to be able to fill the entire pipe
+with a single TCP stream. Satellite systems are the most common example
+of this: the minimum round trip time we see on our satellite Internet
+connection at work is about 600&nbsp;ms! Some DSL systems have pretty
+long round trip times, too, though not nearly as bad as satellite
+systems. You need to run the numbers to find out what the situation
+is for your system.</p>
+
+<p>For what it&rsquo;s worth, typical modem round trip times are
+in the 100-250&nbsp;ms range. Calculating for 250&nbsp;ms comes
+out to 32&nbsp;KB/s, about five times the data rate of the fastest
+modem connections you&rsquo;re likely to see. In other words, an
+8&nbsp;KB window is plenty large for modems, despite the long round
+trip times.</p>
+
+<p>See the next two items for related discussion.</p>
+
+
+<a name="silly-window"></a>
+<h5>3.19 - What is the silly window syndrome?</h5>
+
+<p>The silly window syndrome results when the sender can send data
+faster than the reciever can handle it, and the receiver calls
+<code>recv()</code> with very small buffer sizes.</p>
+
+<p>The fast sender will quickly fill the receiver&rsquo;s
+<a href="#tcp-window">TCP window</a>. The receiver then
+reads N bytes, N being a relatively small number compared to
+the <a href="./glossary.html#frame">network&nbsp;frame</a> size. A na&iuml;ve
+<a href="./glossary.html#stack">stack</a> will immediately send an ACK to the sender to tell
+it that there are now N bytes available in its TCP window. This will
+cause the sender to send N bytes of data; since N is smaller than
+the frame size, there&rsquo;s relatively more protocol overhead in
+the packet compared to a full frame. Because the receiver is slow,
+the TCP window stays very small, and thus hurts throughput because
+the ratio of protocol overhead to application data goes up.</p>
+
+<p>The solution to this problem is the <a href="#delayed-ack">delayed
+ACK algorithm</a>. This causes the window advertisement ACK to be
+delayed a bit, hopefully allowing the slow receiver to read more of
+the enqueued data before the ACK goes out. This results in a larger
+window advertisement, so the fast sender can send more data in a
+single frame.</p>
+
+<p>Note that the delayed-ACK solution doesn&rsquo;t mean your program
+can safely use small <code>recv()</code> buffers. You should still read
+as much as is reasonable in a single call, if only to minimize the
+number of context switches between kernel and user space.</p>
+
+<a name="delayed-ack"></a>
+<h5>3.20 - What is the delayed ACK algorithm?</h5>
+
+<p>In a simpleminded implementation of TCP, every data <a href="./glossary.html#packet">packet</a>
+that comes in is immediately acknowledged with an ACK packet. (ACKs
+help to provide the reliability TCP promises.)</p>
+
+<p>In modern stacks, ACKs are delayed for a short time (up to
+200&nbsp;ms, typically) for several reasons:</p>
+
+<ol>
+  <li><p>to avoid the <a href="#silly-window">silly window
+  syndrome</a></p></li>
+
+  <li></p>to allow ACKs to piggyback on a reply frame if one is ready
+  to go when the stack decides to do the ACK</p></li>
+
+  <li><p>to allow the stack to send one ACK for several frames,
+  if those frames arrive within the delay period.</p></li>
+</ol>
+
+<p>The stack is only allowed to delay ACKs for up to 2 frames of
+data.</p>
+
+
+<a name="high-load"></a>
+<h5>3.21 - What platform should I deploy my server on?</h5>
+
+<p>Assuming that you&rsquo;ve decided to use Windows, your only real
+choice for handling high loads is one of the Server class versions
+of Windows.</p>
+
+<p>It it <a
+href="http://www.oreilly.com/news/differences_nt.html">known</a>
+that Microsoft&rsquo;s <a href="./intro.html#versions">modern</a>
+home and workstation class operating systems are based on the same
+underlying kernel as the server class ones. There is thus no technical
+reason these less expensive operating systems should be less capable
+in kernel-controlled tasks like network communication.</p>
+
+<p>Unfortunately, in order to segment the market, Microsoft has
+designed these operating systems so that the non-server kernels cripple
+themselves at startup time with respect to the equivalent capabilities
+offered by the server operating systems. This behavior was clear
+back in the WinNT and Win2K days when the workstation and server OSes
+came out together, but it&rsquo;s still the case these days with the
+releases more apparently separate. Windows Server 2003 and Windows
+XP share a similar underlying kernel, as do Windows Server 2008 and
+Windows Vista. There may be differences due simply to progress &mdash;
+Win2K3 came out a few years after XP &mdash; but the main reason for
+capability differences is simply market segmentation.</p>
+
+<p>The most important difference is that the
+<a href="./advanced.html#backlog">connection backlog</a> on the
+workstation-class OSes is limited to 5 slots. This means that your
+program has to call <code>accept()</code> fast enough that not more than
+5 connections build up in the network stack&rsquo;s connection
+backlog. The stack rejects new connections as long as the queue is
+full. For a well-written server, this is not normally a problem, but
+it does mean that a concerted attack (a SYN flood, for example) can
+fill the queue, denying service to legitimate users. The server-class
+OSes have much higher connection backlog limits and also have features
+specifically designed to minimize the impact of a SYN attack.</p>
+
+<p>A less important difference from a practical standpoint is that
+the EULA for Microsoft&rsquo;s workstation-class operating systems
+prohibit running a program that handles more than than 10 connections
+concurrently. I don&rsquo;t know of any recent version of Windows
+that enforces this limit in the kernel.</p>
+
+
+
+
+		</div> <!-- end body div -->
+
+<hr class="noshade">
+
+
+<!--  Navigation footer  -->
+<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer nav"> 
+	<tr>
+		<td align="left" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="./newbie.html">&lt;&lt;&nbsp;Information for New Winsockers</a><br>
+			</span>
+		
+		</td>
+
+		<td align="right" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="./advanced.html">Advanced Winsock Issues&nbsp;&gt;&gt;</a>
+			</span>
+		
+		</td>
+	</tr>
+</table>
+
+
+
+
+
+
+	<!--  Document Footer -->
+
+	<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer info"> 
+		<tr>
+			
+				<td align="left" class="thirdwidth">
+					
+					<span class="annotation">Updated Mon Oct 26 2009 04:55 MDT</span>
+				</td>
+				<td align="center" class="thirdwidth">
+				
+			
+
+			
+				&nbsp;
+			
+			</td>
+
+			<td align="right" class="thirdwidth">
+				<a href="/">Go to my home page</a>
+			</td>
+		</tr>	
+	</table>
+
+
+	<script type="text/javascript" src="/js/awstats_misc_tracker.js"></script>
+</body>
+</html>
+

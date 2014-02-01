@@ -1,0 +1,220 @@
+package cs2321;
+
+import net.datastructures.*;
+
+/**
+ * A hash table implemented using maps.
+ * Hashes only objects with built-in java hash code (i.e. String)
+ * @author Brent Nix
+ *
+ *SCJ: the amount of buckets in the array (N) is going to be constant
+ *and (n) the number of elements in each bucket will be added to this number linearly
+ *
+ * @param <K>
+ * @param <V>
+ */
+@SpaceComplexity("O(N+n)")
+public class HashMap<K, V> implements Map<K, V> {
+
+	/**
+	 * Simple class for creating entries
+	 * @author Brent Nix
+	 *
+	 * SCJ: the entry is only a node containing two elements, 
+	 * so the space complexity is constant
+	 *
+	 * @param <K> key
+	 * @param <V> value
+	 */
+	@SpaceComplexity("O(1)")
+	public static class HashEntry<K,V> implements Entry<K,V>
+	{
+		//initialize variables
+		private K key;
+		private V value;
+
+		//**constructor**
+		public HashEntry(K k, V v)
+		{
+			key = k;
+			value = v;
+		}
+
+		@Override
+		public K getKey() {
+
+			return key;
+		}
+
+		@Override
+		public V getValue() {
+
+			return value;
+
+		}
+
+	}
+	private UnOrderedMap<K,V>[] buckets;//an array of buckets
+	private int mNumberOfBuckets ; //number of buckets in the array
+	private int size = 0;//the amount of items in the collection
+	//**constructor for user specified size
+	public HashMap(int hashsize){
+
+		buckets = (UnOrderedMap<K, V>[])new UnOrderedMap[hashsize];
+		for ( int i = 0 ; i < hashsize ; i ++ )
+			buckets[i] = new UnOrderedMap<K, V>();
+		mNumberOfBuckets = hashsize;
+	}
+	//** constructor for 23 buckets
+	public HashMap(){
+		int hashsize = 23;
+		mNumberOfBuckets = hashsize;
+
+		buckets = (UnOrderedMap<K, V>[])new UnOrderedMap[hashsize];
+		for ( int i = 0 ; i < hashsize ; i ++ )
+			buckets[i] = new UnOrderedMap<K, V>();
+	}
+
+	@TimeComplexity("O(N+n)")
+	public Iterable<Entry<K, V>> entries() {
+		//TCJ: Because the iterator has to go through the list and then through the bucket, but it 
+		//stays linear because it does not go n * n times. N is the number of buckets and n is the 
+		//number of elements in the bucket.
+		LinkedSequence<Entry<K, V>> iter = new LinkedSequence<Entry<K, V>>();//create iterable list
+		for (int i = 0; i < mNumberOfBuckets ; i ++)//for each entry in data,
+		{			
+			Iterable<Entry<K, V>> it = buckets[i].entries();
+			for(Entry<K, V> e: it)
+				iter.addLast(e);			
+		}
+		return iter;		
+	}
+	public UnOrderedMap<K, V> getMap(K key)
+	{
+		int c = (key.hashCode()%mNumberOfBuckets);
+		if (c < 0){ c = c + mNumberOfBuckets;}
+		return buckets[c];
+	}
+	@TimeComplexity("O(n/N)")
+	public V get(K key) throws InvalidKeyException {
+		//TCJ: Because the put method inherited from UnOrderedMap has a constant time complexity 
+		//and the time does not vary with the size of the collection
+		int c = (key.hashCode()%mNumberOfBuckets);
+		if (c < 0){ c = c + mNumberOfBuckets;}
+		return buckets[c].get(key);
+	}
+	@TimeComplexity("O(1)")
+	public boolean isEmpty() {
+		//TCJ: time complexity does not vary with respect to size
+		return (size == 0);
+	}
+
+	@TimeComplexity("O(N+n)")
+	public Iterable<K> keys() {
+		//TCJ: Because the iterator has to go through the list and then through the bucket, but it 
+		//stays linear because it does not go n * n times. N is the number of buckets and n is the 
+		//number of elements in the bucket.
+		LinkedSequence<K> iter = new LinkedSequence<K>();//create iterable list
+		for (int i = 0; i < mNumberOfBuckets ; i ++)//for each entry in data,
+		{			
+			Iterable<Entry<K, V>> it = buckets[i].entries();
+			for(Entry<K, V> e: it)
+				iter.addLast(e.getKey());			
+		}
+		return iter;
+	}
+	@TimeComplexity("O(1)")
+	public V put(K key, V value) throws InvalidKeyException {
+		//TCJ: Because the put method inherited from UnOrderedMap has a constant time complexity 
+		//and the time does not vary with the size of the collection
+		
+		int c = (key.hashCode()%mNumberOfBuckets);
+		if (c < 0){ c = c + mNumberOfBuckets;}
+		size ++;
+		return buckets[c].put(key, value);
+
+	}
+	@TimeComplexity("O(N+n)")
+	public V remove(K key) throws InvalidKeyException {
+		//TCJ: Because the remove method inherited from UnOrderedMap has a constant time complexity 
+		//and the time does not vary with the size of the collection
+		
+		int c = (key.hashCode()%mNumberOfBuckets);
+		if (c < 0){ c = c + mNumberOfBuckets;}
+		size --;
+		return buckets[c].remove(key);
+
+	}
+	@TimeComplexity("O(1)")
+	public int size() {
+		//TCJ: Because time complexity does not vary with the size of the array
+		return size;
+	}
+
+	@TimeComplexity("O(N+n)")
+	public Iterable<V> values() {
+		//TCJ: Because the iterator has to go through the list and then through the bucket, but it 
+		//stays linear because it does not go n * n times. N is the number of buckets and n is the 
+		//number of elements in the bucket.
+		LinkedSequence<V> iter = new LinkedSequence<V>();//create iterable list
+		for (int i = 0; i < mNumberOfBuckets ; i ++)//for each entry in data,
+		{			
+			Iterable<Entry<K, V>> it = buckets[i].entries();
+			for(Entry<K, V> e: it)
+				iter.addLast(e.getValue());			
+		}
+		return iter;
+	}
+	@TimeComplexity("O(n)")
+	public String toString(){
+		//TCJ: must iterate throw list, so the time varies linearly with respect to the size of the list.
+		String gum = " ";
+		for ( Entry<K, V> e : entries())
+			gum = gum + "\n" + e.getKey() + " , " + e.getValue();
+		return gum;
+	}
+	public static void main(String[] args)
+	{
+		HashMap<Integer, String> hm = new HashMap<Integer, String>();
+		System.out.println(hm.isEmpty());
+		hm.put(0, "A");
+		hm.put(1, "B");
+		hm.put(2, "C");
+		hm.put(3, "D");
+		hm.put(4, "E");
+		hm.put(5, "F");
+		hm.put(6, "G");
+		hm.put(7, "H");
+		hm.put(8, "I");
+		hm.put(9, "J");
+		hm.put(10, "K");
+		hm.put(11, "L");
+		System.out.println(hm.put(4, "NOOO"));
+		hm.put(12, "M");
+		hm.put(13, "N");
+		hm.put(14, "O");
+		hm.put(15, "P");
+		hm.put(16, "Q");
+		hm.put(17, "R");
+		hm.put(18, "S");
+		hm.put(19, "T");
+		hm.put(20, "U");
+		hm.put(21, "V");
+		hm.put(22, "W");
+		hm.put(23, "X");
+		hm.put(24, "Y");
+		hm.put(25, "Z");
+		hm.put(26, "Foo");
+		hm.put(27, "Poo");
+		
+		System.out.println(hm.isEmpty());
+		System.out.println(hm.remove(14));
+		System.out.println(hm.remove(3));
+		System.out.println(hm.remove(18));
+		System.out.println(hm.remove(24));
+		System.out.println(hm);
+		System.out.println(hm.get(30));
+
+	}
+
+}

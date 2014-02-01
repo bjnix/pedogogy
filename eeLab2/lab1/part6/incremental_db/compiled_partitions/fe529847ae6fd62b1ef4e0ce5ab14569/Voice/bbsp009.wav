@@ -1,0 +1,534 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+  <title>Arduino Reference - SoftwareSerialListen </title>
+  <link rel="shortcut icon" type="image/x-icon" href="http://arduino.cc/en/favicon.png">
+  <link rel='stylesheet' href='arduinoWideRender.css' 
+type='text/css' />
+    <!--HeaderText--><style type='text/css'><!--
+  ul, ol, pre, dl, p { margin-top:0px; margin-bottom:0px; }
+  code { white-space: nowrap; }
+  .vspace { margin-top:1.33em; }
+  .indent { margin-left:40px; }
+  .outdent { margin-left:40px; text-indent:-40px; }
+  a.createlinktext { text-decoration:none; border-bottom:1px dotted gray; }
+  a.createlink { text-decoration:none; position:relative; top:-0.5em;
+    font-weight:bold; font-size:smaller; border-bottom:none; }
+  img { border:0px; }
+  .editconflict { color:green; 
+  font-style:italic; margin-top:1.33em; margin-bottom:1.33em; }
+
+  table.markup { border: 2px dotted #ccf; width:90%; }
+  td.markup1, td.markup2 { padding-left:10px; padding-right:10px; }
+  td.markup1 { border-bottom: 1px solid #ccf; }
+  div.faq { margin-left:2em; }
+  div.faq p.question { margin: 1em 0 0.75em -2em; font-weight:bold; }
+  div.faq hr { margin-left: -2em; }
+   
+    .frame 
+      { border:1px solid #cccccc; padding:4px; background-color:#f9f9f9; }
+    .lfloat { float:left; margin-right:0.5em; }
+    .rfloat { float:right; margin-left:0.5em; }
+a.varlink { text-decoration:none; }
+/**
+ * GeSHi (C) 2004 - 2007 Nigel McNie, 2007 - 2008 Benny Baumann
+ * (http://qbnz.com/highlighter/ and http://geshi.org/)
+ */
+.arduino  {font-family:monospace;}
+.arduino .imp {font-weight: bold; color: red;}
+.arduino .kw1 {color: #CC6600;}
+.arduino .kw2 {color: #006699;}
+.arduino .kw3 {color: #CC6600; font-weight: bold;}
+.arduino .co1 {color: #7E7E7E; font-style: italic;}
+.arduino .co2 {color: #7E7E7E;}
+.arduino .coMULTI {color: #7E7E7E; font-style: italic;}
+.arduino .es0 {color: #000099; font-weight: bold;}
+.arduino .es1 {color: #000099; font-weight: bold;}
+.arduino .es2 {color: #660099; font-weight: bold;}
+.arduino .es3 {color: #660099; font-weight: bold;}
+.arduino .es4 {color: #660099; font-weight: bold;}
+.arduino .es5 {color: #006699; font-weight: bold;}
+.arduino .br0 {color: #000000;}
+.arduino .sy0 {color: #000000;}
+.arduino .st0 {color: #0066CC;}
+.arduino .nu0 {color: #000000;}
+.arduino .nu6 {color: #208080;}
+.arduino .nu8 {color: #208080;}
+.arduino .nu12 {color: #208080;}
+.arduino .nu16 {color:#800080;}
+.arduino .nu17 {color:#800080;}
+.arduino .nu18 {color:#800080;}
+.arduino .nu19 {color:#800080;}
+.arduino .me1 {color: #ff1493;}
+.arduino .me2 {color: #ff1493;}
+.arduino span.xtra { display:block; }
+
+.sourceblocklink {
+  text-align: right;
+  font-size: smaller;
+}
+.sourceblocktext {
+  padding: 0.5em;
+  color: #000000;
+  background-color: #ffffff;
+}
+.sourceblocktext div {
+  font-family: monospace;
+  font-size: small;
+  line-height: 1;
+  height: 1%;
+}
+.sourceblocktext div.head,
+.sourceblocktext div.foot {
+  font: italic medium serif;
+  padding: 0.5em;
+}
+
+--></style>  <meta name='robots' content='index,follow' />
+
+  <meta name="verify-v1" content="TtxFIEJAB6zdJ509wLxjnapQzKAMNm9u0Wj4ho6wxIY=" />
+</head>
+<body>
+<div id="page">
+  <!--PageHeaderFmt-->
+  <div id="pageheader">
+    <div class="title"><a href='http://arduino.cc/en'>Arduino</a></div>
+  </div>
+  <!--/PageHeaderFmt-->
+
+  <!--PageLeftFmt-->
+  <div id="pagenav">
+    <div id="navbar">
+  	<p><a class='wikilink' href='http://arduino.cc/en/Main/Buy'>Buy</a>
+<a class='wikilink' href='http://arduino.cc/en/Main/Software'>Download</a>
+<a class='wikilink' href='Guide_index.html'>Getting Started</a>
+<a class='wikilink' href='http://arduino.cc/en/Tutorial/HomePage'>Learning</a>
+<a class='wikilink' href='index.html'>Reference</a>
+<a class='wikilink' href='http://arduino.cc/en/Main/Hardware'>Hardware</a>
+<a class='wikilink' href='FAQ.html'>FAQ</a>
+</p>
+<p class='vspace'></p>
+
+    </div>
+  </div>
+  <!--/PageLeftFmt-->
+
+  <div id="pagetext">
+  <!--PageText-->
+<div id='wikitext'>
+<p><strong>Reference</strong> &nbsp;  <a class='wikilink' href='index.html'>Language</a> | <a class='wikilink' href='Libraries.html'>Libraries</a> | <a class='wikilink' href='Comparison.html'>Comparison</a> | <a class='wikilink' href='Changes.html'>Changes</a>
+</p>
+<p class='vspace'></p><h2><span class='wikiword'>SoftwareSerial</span>: listen()</h2>
+<h4>Description</h4>
+<p>Enables the selected software serial port to listen. Only one software serial port can listen at a time; data that arrives for other ports will be discarded.  Any data already received is discarded during the call to listen() (unless the given instance is already listening).  
+</p>
+<p class='vspace'></p><h4>Syntax</h4>
+<p><em>mySerial</em>.listen()
+</p>
+<p class='vspace'></p><h4>Parameters</h4>
+<p><em>mySerial</em>:the name of the instance to listen
+</p>
+<p class='vspace'></p><h4>Returns</h4>
+<p>None
+</p>
+<p class='vspace'></p><h4>Example</h4>
+<p>
+<div class='sourceblock ' id='sourceblock1'>
+  <div class='sourceblocktext'><div class="arduino"><span class="co2">#include &lt;SoftwareSerial.h&gt;</span><br />
+<br />
+<span class="co1">// software serial : TX = digital pin 2, RX = digital pin 3</span><br />
+SoftwareSerial portOne<span class="br0">&#40;</span><span class="nu0">2</span><span class="sy0">,</span> <span class="nu0">3</span><span class="br0">&#41;</span><span class="sy0">;</span><br />
+<br />
+<span class="co1">// software serial : TX = digital pin 4, RX = digital pin 5</span><br />
+SoftwareSerial portTwo<span class="br0">&#40;</span><span class="nu0">4</span><span class="sy0">,</span> <span class="nu0">5</span><span class="br0">&#41;</span><span class="sy0">;</span><br />
+<br />
+<span class="kw1">void</span> <span class="kw3">setup</span><span class="br0">&#40;</span><span class="br0">&#41;</span><br />
+<span class="br0">&#123;</span><br />
+&nbsp; <span class="co1">// Start the hardware serial port</span><br />
+&nbsp; <span class="kw1">Serial</span>.<span class="kw1">begin</span><span class="br0">&#40;</span><span class="nu0">9600</span><span class="br0">&#41;</span><span class="sy0">;</span><br />
+<br />
+&nbsp; <span class="co1">// Start both software serial ports</span><br />
+&nbsp; portOne.<span class="kw1">begin</span><span class="br0">&#40;</span><span class="nu0">9600</span><span class="br0">&#41;</span><span class="sy0">;</span><br />
+&nbsp; portTwo.<span class="kw1">begin</span><span class="br0">&#40;</span><span class="nu0">9600</span><span class="br0">&#41;</span><span class="sy0">;</span><br />
+<br />
+<span class="br0">&#125;</span><br />
+<br />
+<span class="kw1">void</span> <span class="kw3">loop</span><span class="br0">&#40;</span><span class="br0">&#41;</span><br />
+<span class="br0">&#123;</span><br />
+&nbsp; portOne.<span class="me1">listen</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span><br />
+<br />
+&nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span>portOne.<span class="me1">isListening</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span><br />
+&nbsp; &nbsp;<span class="kw1">Serial</span>.<span class="kw1">println</span><span class="br0">&#40;</span><span class="st0">&quot;Port One is listening!&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span> <br />
+<span class="br0">&#125;</span><span class="kw1">else</span><span class="br0">&#123;</span><br />
+&nbsp; &nbsp;<span class="kw1">Serial</span>.<span class="kw1">println</span><span class="br0">&#40;</span><span class="st0">&quot;Port One is not listening!&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span> <br />
+<span class="br0">&#125;</span><br />
+<br />
+&nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span>portTwo.<span class="me1">isListening</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span><br />
+&nbsp; &nbsp;<span class="kw1">Serial</span>.<span class="kw1">println</span><span class="br0">&#40;</span><span class="st0">&quot;Port Two is listening!&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span> <br />
+<span class="br0">&#125;</span><span class="kw1">else</span><span class="br0">&#123;</span><br />
+&nbsp; &nbsp;<span class="kw1">Serial</span>.<span class="kw1">println</span><span class="br0">&#40;</span><span class="st0">&quot;Port Two is not listening!&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span> <br />
+<span class="br0">&#125;</span><br />
+<br />
+<span class="br0">&#125;</span><br />
+&nbsp;</div></div>
+  <div class='sourceblocklink'><a href='#' type='text/plain'>[Get Code]</a></div>
+</div>
+
+</p>
+<p class='vspace'></p><h4>See also</h4>
+<ul><li><a class='wikilink' href='SoftwareSerialConstructor.html'>SoftwareSerial</a>()
+</li><li><a class='wikilink' href='SoftwareSerialRead.html'>read</a>()
+</li><li><a class='wikilink' href='SoftwareSerialPrint.html'>print</a>()
+</li><li><a class='wikilink' href='SoftwareSerialPrintln.html'>println</a>()
+</li></ul><p><a class='wikilink' href='index.html'>Reference Home</a>
+</p>
+<p class='vspace'></p><p><em>Corrections, suggestions, and new documentation should be posted to the <a class='urllink' href='http://arduino.cc/forum/index.php/board,23.0.html' rel='nofollow'>Forum</a>.</em>
+</p>
+<p class='vspace'></p><p>The text of the Arduino reference is licensed under a
+<a class='urllink' href='http://creativecommons.org/licenses/by-sa/3.0/' rel='nofollow'>Creative Commons Attribution-ShareAlike 3.0 License</a>.  Code samples in the reference are released into the public domain.
+</p>
+</div>
+
+
+  </div>
+
+  <!--PageFooterFmt-->
+  <div id="pagefooter">
+&copy;Arduino | 
+  <a href='#'>Edit Page</a> | <a href='#'>Page History</a> | <a href='#' target='_blank'>Printable View</a> | <a href='http://arduino.cc/en/Site/AllRecentChanges'>All Recent Site Changes</a>
+  </div>
+  <!--/PageFooterFmt-->
+
+</div>
+</body>
+</html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          <html><head>
+      <meta http-equiv='Refresh' Content='0; URL=#' />
+     <title>Redirect</title></head><body></body></html>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+  <title>Arduino Reference - SoftwareSerialOverflow </title>
+  <link rel="shortcut icon" type="image/x-icon" href="http://arduino.cc/en/favicon.png">
+  <link rel='stylesheet' href='arduinoWideRender.css' 
+type='text/css' />
+    <!--HeaderText--><style type='text/css'><!--
+  ul, ol, pre, dl, p { margin-top:0px; margin-bottom:0px; }
+  code { white-space: nowrap; }
+  .vspace { margin-top:1.33em; }
+  .indent { margin-left:40px; }
+  .outdent { margin-left:40px; text-indent:-40px; }
+  a.createlinktext { text-decoration:none; border-bottom:1px dotted gray; }
+  a.createlink { text-decoration:none; position:relative; top:-0.5em;
+    font-weight:bold; font-size:smaller; border-bottom:none; }
+  img { border:0px; }
+  .editconflict { color:green; 
+  font-style:italic; margin-top:1.33em; margin-bottom:1.33em; }
+
+  table.markup { border: 2px dotted #ccf; width:90%; }
+  td.markup1, td.markup2 { padding-left:10px; padding-right:10px; }
+  td.markup1 { border-bottom: 1px solid #ccf; }
+  div.faq { margin-left:2em; }
+  div.faq p.question { margin: 1em 0 0.75em -2em; font-weight:bold; }
+  div.faq hr { margin-left: -2em; }
+   
+    .frame 
+      { border:1px solid #cccccc; padding:4px; background-color:#f9f9f9; }
+    .lfloat { float:left; margin-right:0.5em; }
+    .rfloat { float:right; margin-left:0.5em; }
+a.varlink { text-decoration:none; }
+/**
+ * GeSHi (C) 2004 - 2007 Nigel McNie, 2007 - 2008 Benny Baumann
+ * (http://qbnz.com/highlighter/ and http://geshi.org/)
+ */
+.arduino  {font-family:monospace;}
+.arduino .imp {font-weight: bold; color: red;}
+.arduino .kw1 {color: #CC6600;}
+.arduino .kw2 {color: #006699;}
+.arduino .kw3 {color: #CC6600; font-weight: bold;}
+.arduino .co1 {color: #7E7E7E; font-style: italic;}
+.arduino .co2 {color: #7E7E7E;}
+.arduino .coMULTI {color: #7E7E7E; font-style: italic;}
+.arduino .es0 {color: #000099; font-weight: bold;}
+.arduino .es1 {color: #000099; font-weight: bold;}
+.arduino .es2 {color: #660099; font-weight: bold;}
+.arduino .es3 {color: #660099; font-weight: bold;}
+.arduino .es4 {color: #660099; font-weight: bold;}
+.arduino .es5 {color: #006699; font-weight: bold;}
+.arduino .br0 {color: #000000;}
+.arduino .sy0 {color: #000000;}
+.arduino .st0 {color: #0066CC;}
+.arduino .nu0 {color: #000000;}
+.arduino .nu6 {color: #208080;}
+.arduino .nu8 {color: #208080;}
+.arduino .nu12 {color: #208080;}
+.arduino .nu16 {color:#800080;}
+.arduino .nu17 {color:#800080;}
+.arduino .nu18 {color:#800080;}
+.arduino .nu19 {color:#800080;}
+.arduino .me1 {color: #ff1493;}
+.arduino .me2 {color: #ff1493;}
+.arduino span.xtra { display:block; }
+
+.sourceblocklink {
+  text-align: right;
+  font-size: smaller;
+}
+.sourceblocktext {
+  padding: 0.5em;
+  color: #000000;
+  background-color: #ffffff;
+}
+.sourceblocktext div {
+  font-family: monospace;
+  font-size: small;
+  line-height: 1;
+  height: 1%;
+}
+.sourceblocktext div.head,
+.sourceblocktext div.foot {
+  font: italic medium serif;
+  padding: 0.5em;
+}
+
+--></style>  <meta name='robots' content='index,follow' />
+
+  <meta name="verify-v1" content="TtxFIEJAB6zdJ509wLxjnapQzKAMNm9u0Wj4ho6wxIY=" />
+</head>
+<body>
+<div id="page">
+  <!--PageHeaderFmt-->
+  <div id="pageheader">
+    <div class="title"><a href='http://arduino.cc/en'>Arduino</a></div>
+  </div>
+  <!--/PageHeaderFmt-->
+
+  <!--PageLeftFmt-->
+  <div id="pagenav">
+    <div id="navbar">
+  	<p><a class='wikilink' href='http://arduino.cc/en/Main/Buy'>Buy</a>
+<a class='wikilink' href='http://arduino.cc/en/Main/Software'>Download</a>
+<a class='wikilink' href='Guide_index.html'>Getting Started</a>
+<a class='wikilink' href='http://arduino.cc/en/Tutorial/HomePage'>Learning</a>
+<a class='wikilink' href='index.html'>Reference</a>
+<a class='wikilink' href='http://arduino.cc/en/Main/Hardware'>Hardware</a>
+<a class='wikilink' href='FAQ.html'>FAQ</a>
+</p>
+<p class='vspace'></p>
+
+    </div>
+  </div>
+  <!--/PageLeftFmt-->
+
+  <div id="pagetext">
+  <!--PageText-->
+<div id='wikitext'>
+<p><strong>Reference</strong> &nbsp;  <a class='wikilink' href='index.html'>Language</a> | <a class='wikilink' href='Libraries.html'>Libraries</a> | <a class='wikilink' href='Comparison.html'>Comparison</a> | <a class='wikilink' href='Changes.html'>Changes</a>
+</p>
+<p class='vspace'></p><h2><span class='wikiword'>SoftwareSerial</span>: overflow()</h2>
+<h4>Description</h4>
+<p>Tests to see if a software serial buffer overflow has occurred.  Calling this function clears the overflow flag, meaning that subsequent calls will return false unless another byte of data has been received and discarded in the meantime.
+</p>
+<p class='vspace'></p><p>The software serial buffer can hold 64 bytes.
+</p>
+<p class='vspace'></p><h4>Syntax</h4>
+<p>mySerial.overflow()
+</p>
+<p class='vspace'></p><h4>Parameters</h4>
+<p>none
+</p>
+<p class='vspace'></p><h4>Returns</h4>
+<p>boolean
+</p>
+<p class='vspace'></p><h4>Example</h4>
+<p>
+<div class='sourceblock ' id='sourceblock1'>
+  <div class='sourceblocktext'><div class="arduino"><span class="co2">#include &lt;SoftwareSerial.h&gt;</span><br />
+<br />
+<span class="co1">// software serial : TX = digital pin 2, RX = digital pin 3</span><br />
+SoftwareSerial portOne<span class="br0">&#40;</span><span class="nu0">2</span><span class="sy0">,</span> <span class="nu0">3</span><span class="br0">&#41;</span><span class="sy0">;</span><br />
+<br />
+<span class="kw1">void</span> <span class="kw3">setup</span><span class="br0">&#40;</span><span class="br0">&#41;</span><br />
+<span class="br0">&#123;</span><br />
+&nbsp; <span class="co1">// Start the hardware serial port</span><br />
+&nbsp; <span class="kw1">Serial</span>.<span class="kw1">begin</span><span class="br0">&#40;</span><span class="nu0">9600</span><span class="br0">&#41;</span><span class="sy0">;</span><br />
+<br />
+&nbsp; <span class="co1">// Start software serial port</span><br />
+&nbsp; portOne.<span class="kw1">begin</span><span class="br0">&#40;</span><span class="nu0">9600</span><span class="br0">&#41;</span><span class="sy0">;</span><br />
+<span class="br0">&#125;</span><br />
+<br />
+<span class="kw1">void</span> <span class="kw3">loop</span><span class="br0">&#40;</span><span class="br0">&#41;</span><br />
+<span class="br0">&#123;</span><br />
+&nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span>portOne.<span class="me1">overflow</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span><br />
+&nbsp; &nbsp;<span class="kw1">Serial</span>.<span class="kw1">println</span><span class="br0">&#40;</span><span class="st0">&quot;SoftwareSerial overflow!&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span> <br />
+<span class="br0">&#125;</span></div></div>
+  <div class='sourceblocklink'><a href='#' type='text/plain'>[Get Code]</a></div>
+</div>
+
+</p>
+<p class='vspace'></p><h4>See also</h4>
+<ul><li><a class='wikilink' href='SoftwareSerialConstructor.html'>SoftwareSerial</a>()
+</li><li><a class='wikilink' href='SoftwareSerialRead.html'>read</a>()
+</li><li><a class='wikilink' href='SoftwareSerialPrint.html'>print</a>()
+</li><li><a class='wikilink' href='SoftwareSerialPrintln.html'>println</a>()
+</li></ul><p><a class='wikilink' href='index.html'>Reference Home</a>
+</p>
+<p class='vspace'></p><p><em>Corrections, suggestions, and new documentation should be posted to the <a class='urllink' href='http://arduino.cc/forum/index.php/board,23.0.html' rel='nofollow'>Forum</a>.</em>
+</p>
+<p class='vspace'></p><p>The text of the Arduino reference is licensed under a
+<a class='urllink' href='http://creativecommons.org/licenses/by-sa/3.0/' rel='nofollow'>Creative Commons Attribution-ShareAlike 3.0 License</a>.  Code samples in the reference are released into the public domain.
+</p>
+</div>
+
+
+  </div>
+
+  <!--PageFooterFmt-->
+  <div id="pagefooter">
+&copy;Arduino | 
+  <a href='#'>Edit Page</a> | <a href='#'>Page History</a> | <a href='#' target='_blank'>Printable View</a> | <a href='http://arduino.cc/en/Site/AllRecentChanges'>All Recent Site Changes</a>
+  </div>
+  <!--/PageFooterFmt-->
+
+</div>
+</body>
+</html>
+                    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+  <title>Arduino Reference - SoftwareSerialPeek </title>
+  <link rel="shortcut icon" type="image/x-icon" href="http://arduino.cc/en/favicon.png">
+  <link rel='stylesheet' href='arduinoWideRender.css' 
+type='text/css' />
+    <!--HeaderText--><style type='text/css'><!--
+  ul, ol, pre, dl, p { margin-top:0px; margin-bottom:0px; }
+  code { white-space: nowrap; }
+  .vspace { margin-top:1.33em; }
+  .indent { margin-left:40px; }
+  .outdent { margin-left:40px; text-indent:-40px; }
+  a.createlinktext { text-decoration:none; border-bottom:1px dotted gray; }
+  a.createlink { text-decoration:none; position:relative; top:-0.5em;
+    font-weight:bold; font-size:smaller; border-bottom:none; }
+  img { border:0px; }
+  .editconflict { color:green; 
+  font-style:italic; margin-top:1.33em; margin-bottom:1.33em; }
+
+  table.markup { border: 2px dotted #ccf; width:90%; }
+  td.markup1, td.markup2 { padding-left:10px; padding-right:10px; }
+  td.markup1 { border-bottom: 1px solid #ccf; }
+  div.faq { margin-left:2em; }
+  div.faq p.question { margin: 1em 0 0.75em -2em; font-weight:bold; }
+  div.faq hr { margin-left: -2em; }
+   
+    .frame 
+      { border:1px solid #cccccc; padding:4px; background-color:#f9f9f9; }
+    .lfloat { float:left; margin-right:0.5em; }
+    .rfloat { float:right; margin-left:0.5em; }
+a.varlink { text-decoration:none; }
+/**
+ * GeSHi (C) 2004 - 2007 Nigel McNie, 2007 - 2008 Benny Baumann
+ * (http://qbnz.com/highlighter/ and http://geshi.org/)
+ */
+.arduino  {font-family:monospace;}
+.arduino .imp {font-weight: bold; color: red;}
+.arduino .kw1 {color: #CC6600;}
+.arduino .kw2 {color: #006699;}
+.arduino .kw3 {color: #CC6600; font-weight: bold;}
+.arduino .co1 {color: #7E7E7E; font-style: italic;}
+.arduino .co2 {color: #7E7E7E;}
+.arduino .coMULTI {color: #7E7E7E; font-style: italic;}
+.arduino .es0 {color: #000099; font-weight: bold;}
+.arduino .es1 {color: #000099; font-weight: bold;}
+.arduino .es2 {color: #660099; font-weight: bold;}
+.arduino .es3 {color: #660099; font-weight: bold;}
+.arduino .es4 {color: #660099; font-weight: bold;}
+.arduino .es5 {color: #006699; font-weight: bold;}
+.arduino .br0 {color: #000000;}
+.arduino .sy0 {color: #000000;}
+.arduino .st0 {color: #0066CC;}
+.arduino .nu0 {color: #000000;}
+.arduino .nu6 {color: #208080;}
+.arduino .nu8 {color: #208080;}
+.arduino .nu12 {color: #208080;}
+.arduino .nu16 {color:#800080;}
+.arduino .nu17 {color:#800080;}
+.arduino .nu18 {color:#800080;}
+.arduino .nu19 {color:#800080;}
+.arduino .me1 {color: #ff1493;}
+.arduino .me2 {color: #ff1493;}
+.arduino span.xtra { display:block; }
+
+.sourceblocklink {
+  text-align: right;
+  font-size: smaller;
+}
+.sourceblocktext {
+  padding: 0.5em;
+  color: #000000;
+  background-color: #ffffff;
+}
+.sourceblocktext div {
+  font-family: monospace;
+  font-size: small;
+  line-height: 1;
+  height: 1%;
+}
+.sourceblocktext div.head,
+.sourceblocktext div.foot {
+  font: italic medium serif;
+  padding: 0.5em;
+}
+
+--></style>  <meta name='robots' content='index,follow' />
+
+  <meta name="verify-v1" content="TtxFIEJAB6zdJ509wLxjnapQzKAMNm9u0Wj4ho6wxIY=" />
+</head>
+<body>
+<div id="page">
+  <!--PageHeaderFmt-->
+  <div id="pageheader">
+    <div class="title"><a href='http://arduino.cc/en'>Arduino</a></div>
+  </div>
+  <!--/PageHeaderFmt-->
+
+  <!--PageLeftFmt-->
+  <div id="pagenav">
+    <div id="navbar">
+  	<p><a class='wikilink' href='http://arduino.cc/en/Main/Buy'>Buy</a>
+<a class='wikilink' href='http://arduino.cc/en/Main/Software'>Download</a>
+<a class='wikilink' href='Guide_index.html'>Getting Started</a>
+<a class='wikilink' href='http://arduino.cc/en/Tutorial/HomePage'>Learning</a>
+<a class='wikilink' href='index.html'>Reference</a>
+<a class='wikilink' href='http://arduino.cc/en/Main/Hardware'>Hardware</a>
+<a class='wikilink' href='FAQ.html'>FAQ</a>
+</p>
+<p class='vspace'></p>
+
+    </div>
+  </div>
+  <!--/PageLeftFmt-->
+
+  <div id="pagetext">
+  <!--PageText-->
+<div id='wikitext'>
+<p><strong>Reference</strong> &nbsp;  <a class='wikiliïC‹—î!|≠…dmô|Ká˚®“„ {‹JQ‹j·eEén
+ﬂÏ1%CW¨g]&uZ0†Ò<˚ò◊d<Pó◊Ãá2ãqgÅîê$cﬂúùÒºa›øπ]bNÀﬁãSí‰i!æj	œ∆?:rÿfvr∞ËÃE⁄P∏Di¬<@7Qÿ˛∏˘•B¥ı9äiÈ‘~ˇèÏΩQ0yâÍ`˚Ç=T™ô@•(0\k3€ç%7.nÂªƒãÚÅ‡< ´9úRŒ
+9o†JçKx5¨ë‚	J¯∑∑E§M1ªòCÔÿJxo'JñﬂWÎõÄ  ìúß∏ 8⁄ß.ÿª-(’@ÈÇÎ]üÑ·≈Tlb∑.ÛÉ——∏è´Îh≠gE<Çª«âÿ7{7hu—ƒ*ªMÔí¸ñc^{À ±å È ¬Ö˝OrÖ5˝x\ê´r£*~˝Á@É@°›·‘,^2a≈*‡Åñçﬁ-H˛‚ ŒÌ
+{âÏﬂãa™o5Fÿ–“πì÷∆,Z47˘9Tb^ƒw,ÄK„≥∫[1PEærk•¢Ò~¢à;rBãp…˘)"É°HÒR˛o]yjíªﬁOÇé'ùõØ“ÁwÒwñ|‘$ŒÉÒ6 |æo»‰<ï†5§¬Ùh˘î§∏≥Y9S ñ7        ˘ØB   xÑ‰î◊êvU.	O™∏;≠û´Ái˚ˇã≠ÃØòbá•çå!(™é‘°∂,àı»ó˝
+In#¬
+%@T+¶Ÿ¥ÄÔ2 ·ÅüÄ†Ω∆ıÁ[«Óı_ù”πúP T ò˜9≤c¬6&∂ªb◊∂´}Ìÿ˜∫8AAM>ÈÙ8Ÿ=¡ ¥SéYUEõvΩPQ]ìËD"8® -u!F	=e≥eéIŸoôã:£∑_–ﬁ–◊yó5≤eEC¬Vˆ!kzÓ1ﬁ1gwƒkãb£Œá’IÒAÏKEG∆_ÃÿJ+∑ÎÏ8œ%ê— ¥t∫‰Íﬁ5Ô»=àìãûU81˙îqÑ9™°˛UF◊1ÖL‹¬uÏ≠í∏YExŒ ìÀÀ∂˜-~Û“ÔÃ6ÕÃÅò%±ÑÊH¨∞¢É"Ü™áœ∏˚&Ààx!k§˚<q.åÈ“¸El¶øÙîmÖX‹5¬Ω<pu
+nπf˝fULêá≤Q†ß£Ï#^O`CÇx∫¿§UƒÑUI7PŒVèÆQ˜Ω_ÇÍ¥—åKÙ©˝ØüYæ(≥œ¯∆f‘ÅKx≠}ìBïÛ‰Q&lIi:0aZ¨2F!&∞"††`µ|#')lìïc∆»÷<`o1<·π?ëûëâ%Ày'⁄(A”≥”*Á¶π—‰‘ß†pÄÂB»
+)Á∞«I#“¶&€ÑßòI≠∫Î"ı.'4SY©(zV`@dÓÒ#ΩQïùF˜÷ Îåı øI•∆à∆é¬´Ú∆¨¢a˘5öl20J∫ˇ%¸¡‡v#FúKŒ‘…ñyç*D‡ô§2öÄ·∂Õö»Q˘¨èçﬂ–F¥|6©&eºﬁZôÕ e¥J£ƒs´?TÆ9≤
+ûbÏûØ cÃ#≤ﬂl“#te%[≈Üâñ0Á	ç)Œ±=˜•Ø±æ[∑…ÿ/rÄ XìÌff‚!ç?!4œ¬ò5û©§Èÿ®ŸÕ©ΩŸ¬›ù˘@çÔ“XV8≤∞Ø3pà6<ck«•∆±vÃn‰+ç∏4¶úÏÛW”=zÀ8·â!‰áæT'≠ƒ´HËdv+Ì`ë§~N°bd¿®Ò“õˇ?∂<èn∫#Áæ’ôr„Ah_Mı∫∂%Å^ÿ∞™ ëG†(Öp—Z«/x˚Û¢≥A·ÒüuóË,,¿√≤VB€'y~od‚ ÖﬁÄ¨« }C9ãÊ~îîR Pd(î€™ﬂ˚yê(•ıoŒ}¡s˜ÄfÅ∑ªï„‘çºèÚåî,hÛÈàÔ„Spße»H\Uze™÷˘Vòr¢
+kã’∏!¸ÅRÜ{∆È‡K~„Äa‘w!…Í2Ø∞¬Ïªﬁ3¨ãe∏p∫ß8ØÅ≤8ÁÛ>Ω!îBhvÖ›Å]¥g∞aQ9
+FWí–Dç“V}â¢ÕÑ<QÚ¥πÜÓﬁŸ`/B◊YNﬁ∂dŸÂ5˙æz”∫‡yÒVß5–π∑ÃO¬ì÷m-üãXæ’ãﬁˇ¢/óù“BƒK6\M|üŸ.–(—´Ãwíí∆…ªèl‹òÕ€íá•PŒ	uôn;ı»9ù¢ù-7,nÂ[Ÿ{ÔRÁb∆Ø«í°t¢’W•gÌh-
+‘”Ö∂c∫XÏ˛ù“zâ¢|ã¯µ£Ç
+ù•ÜLæ¸O·§A>˘ÿgÁŸ’Â&GÈµÔ@Óêœ¢ä`î7‰·,ÈS±∑5«)9ÆØ‡!ñEfûËU0ÏÄ
+(€‘qi˝Tß˝Ωµ	g ôtï¸´˛«˝¿ %XŒ˝Uß\∫!©Ca√∑iÔ◊ï`∆cìÑ˛1Xcliçﬁ∫e•RÓZ4iÒﬁÊêJã“ΩΩó…˜FÊH(:öYmìÇ)‘˛Ú‹∞⁄Í"˘GÉˇùwñ§„:?3T-x'œäÔ.ˇ œ¢$ºFÒa∏√….>9≠”»jofYÄX0≠'ã?ièf?PôÅß†®œ™Éea‘⁄Œ`~$·c¬‰éqi√~\ŒÅD7ñ{√N“ıü/Tò∏≈NÇÑËHE´ä›øT3¸≥s4ËA±»·ôÑºk’,ê∏Öö.%_‹Î8Ø3Ò.˛ ∆^çËçrÁÿ;…Œí+≤lÉâØô©? ’.é6Ç1o7è`Ÿñ≠Œﬁ€À9˘qËo‹Ù¥$µæïöôüR”ëÎúµvK0—´õ¨’`C⁄,wØ¡πhπ˙Ø$9√Ï˜u|ı Áõjï¬	fŒ∞ûMÿXRª¥BxÿzÛDË´‹Zòœ˜®£UËy¨ƒ:3Ò≤,ìshƒµÄú”~{s%sÌŒåå‘€ﬁ´–ÑÍT©î VGÄ	ˇÉ®^5*›¿ΩMçîR≥7kI+óÌfƒ∫[X“J‘Ù ZÙÑF¡Tï©/mŸÓgf(?œâ{%åõ0hïáµç«EÎYÔºzKW +à–Êër±}3å*É¸¡›ƒBn8Ïr¢Ñ@ª ëˇhqr“M‚Js&cÖD'¯9ÎwŸd‡ÍN¶≥k©tV¿·yZ˘G&ódì£)¿jW˙A«ÓÍ8¿Öæú¨ﬁÙÖ"π¢Ø”W_ô∆Ø%jtR÷µø}Òw€(÷˜VÍ5\A_œ∞˘á'O‘À8ìãﬂ$œ©˝%|˛ìirƒí°⁄≤r—†Í;t€R≠π™…¥„ê√]Kˇ«™ı„asŸËS¨‹Ç¶!Û4ø9]πıõSßÇO≤®W!äﬂáöËè·¥B"ôÁt™jEYVÌŒ±˙=Öcª`˚#£ÅÈA&¶ñ$ÊØüKŒ!Œ}‹PGèÿAâ‚úëˇçÊ˜@ãñ7≤àπætÃA•Ù…¬·ˆ˘|æFáJA"e1uﬂ®Ä}qæÂ·ÎVÎnñπsõé^•(˛[&ù{@Ëéå«¿w‰⁄z∫è2¡%s˚«/®ü`Áﬂmz>M«ÿùî†PË._[MM–ﬂÔ À`xLÈ7Ø¯Ù≥˚Á≥r›\…º=”z€&	∂⁄¬’1åäÓé?0¶ü	2¢ê]zâ“nM•›´ª%˚kÑ»v1ıWñõ[N`óÓ˙ùÂ”!® ≈´ùÅÿ™èy\üÉ+v0|{Íyk≈&ëÙ_#.ß5êúåÏy/D∏n"µ`ÌåÄ¸K{N …NrD
+4èÚ^†=≥‰¢∏£;0«oÚiïb÷°≠«ùû6Ì) O f˜ﬁŸ≈JoKY†®«Ço Ö!á*ä?)ø˝£ëo‘íÙºç{46õ¨Uy…õÌË{ıÀm9æèìgÒo∂âP'}ög?B‹ûÀ‡MQi+,z3ÔÜæ6Y–Œ"õÙ–Ä≈ˆ∏ÇèîH˝Ÿ•Á|ıˆsBFD7ıoÈËºã{––2Ñ®ÀˆÏC’∏€ﬁ#JÅÎÛW›üÅD5¶ãÔ∞âSÆûﬁSK±£òX¶ñ#”àìqrB
+Bè¡Hƒµ`?˚—/ÀGî`’#ÇÃØx≠œ%ü;ŒªC¬+‹d™Ozß4òjû»Áœñ®»ÌÔ&&ÅäÀ<ÃDßõ4VF|µ“⁄<bK2nQ¯˝ùö∫7cÌC©_aB˙ˆÌDf±¸‰^wKZπ§ßKÕK÷Æ—î1oΩπ\â nb—ÂÑØD¨=Î›`puüï=^m∂™JÔõöæ¯‡KsåF´¯>d8fsµÙ‹˛‰c‰eZ“´”¨Ïa=û1õ≤eW^ “≠ˇØ:º™nErÛi¬s¡%X˘s£«}FP/y´Ω”DeÙ#r‡\Õ]L Ä¡R]ùòa0}û	<W∏Z}·üã
+H\ƒì‘î…'9mAu‡≈˘oäèygfK≤“ùC≠Ë¿ÔÜÕD}Uı∑ÿú-R™&§€Õ˝qœwó®¿R˛Â=®ı¢1JKßc∆Ú∑àM¯Ìæ
+˘£f˙w√YNƒ(x˝ ñjhÚI—E¸¥"fA√¨òÂÖ0ˆPV∑ÂíãA≥§‰ßËé‚3»¡\ıX◊]ü´öÌt»Ê¡Y\cÃXül,Æ¸,=·¨yöW∂ŸÆ‚J{õ˘ÂﬂÅ’ÚX•íÉ†§Ω‰OµÀ»çıê‰ÔÊ-ÈTxWßòx-ôG¬≠
+g–˝ê›)ÿpñ{uhÒÏtVû√ §˘¨lÿ6≤Ó[cFh‡›s´Ã|ºp‰Ëq∫ÙiBÒ˜É_ìâ≠°5â¯≠∑ıπ¡IxÃÔ⁄L∞§˝Ò^nˇMúÍç<z|§9± Hõu˛O˙qÅµÎÖ·îÙœﬁ˘R8~0—ë÷P‹œ≤Ïv⁄^ÿìj"¢ÜgìC†π⁄,$ûq«‘ql∏9xÎ◊4iÆÖ¯cüçwÍ◊◊„∑fıƒ‰r˘&S:û]6Ω<¸–˜Q;W¯œ$*ça¶ﬂ-NàË£¬sTbíH#Wf-¸1ï%¿D∫–rµÎ\ÄV¥`@ùÜ©ﬂD§©C?:Ï¨≤∏;3¡õ_˝¶XÃôÜπ¸É4Pﬂﬂ%J¶

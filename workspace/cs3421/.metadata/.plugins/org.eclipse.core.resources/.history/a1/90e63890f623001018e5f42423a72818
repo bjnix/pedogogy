@@ -1,0 +1,105 @@
+import java.util.Arrays;
+
+
+public class Lab1 {
+	private static char B_0 = '0';
+	private static char B_1 = '1';
+	private static int SIZE;
+
+	public static char [] sum(char [] a, char [] b) {
+
+		char aSign = a[ SIZE ];
+		char bSign = b[ SIZE ];
+		char sign;//sign bit
+		char[] great;//the number with the greater magnitude
+		char [] r;//array to return
+		SIZE = a.length;//size of arrays
+		
+		great = detMag(a, b, aSign, bSign);
+
+		r = new char[ SIZE ];
+
+		for( int j = 0 ; j < SIZE ; j ++ )
+			r[j] = B_0;
+
+
+		if( a[i] == B_1 )
+			sign = a[ SIZE ];
+		else
+			sign = bSign;
+
+	} // end of sum method
+	private static char[] detMag( char[] a, char[] b, char aS, char bS)
+	{
+		
+		char aSign = aS;
+		char bSign = bS;	
+		char[] r = {'2','$','$'};
+		
+		
+		for ( int i = SIZE - 1 ; i > -1 ; i -- )
+		{
+			if ( a[i] == b[i] )
+			{
+				if  (i == 0 )
+				{
+					//if both numbers have been completely read, they are the same magnitude
+
+					if ( ( aSign == B_0 && bSign == B_1  ) ^
+							( aSign == B_1 && bSign == B_0 ) ) 
+					{
+						//if both numbers are the same magnitude but are
+						//opposites, the answer must be zero.
+						
+						return r;
+					}
+					
+				}
+
+				continue;
+			}//end a==b
+
+			if ( a[i] == B_0 && b[i] == B_1 )
+				return b;
+			else if (a[i] == B_1 && b[i] == B_0 )
+				return a;
+			
+		}
+		return null;
+	}
+	private static char[] add( char[] a, char[] b )
+	{
+		boolean carry = false;
+		char[] r = new char[ SIZE ]; //array to return
+		for ( int i = 0 ; i < SIZE - 1 ; i ++)
+		{
+			r[i] = ( ( a[i] == B_0 && b[i] == B_1 ) || ( a[i] == B_1 && b[i] == B_0 ) ) ? B_1 : B_0;
+			if ( carry )
+			{
+				if ( r[i] == B_0 )
+					carry = false;
+				r[i] = (r[i] == B_0) ? B_1 : B_0;
+
+			}
+			else if (a[i] == B_1 && b[i] == B_1) 
+				carry = true;
+
+		}
+		return r;
+	}
+	private static char[] sub( char[] a, char[] b )
+	{
+
+	}
+
+	public static void main(String [] args) {
+
+		char [] x = {'1','1','0','1'};  // 1011 = -3
+		char [] y = {'1','0','0','0'};  // 0001 = 1
+		char [] result = sum(x,y);
+		System.out.println(Arrays.toString(result));
+		// should print ['0','1','0','1'] (i.e., 1010 = -2)
+
+	} // end of main method
+
+} // end of Lab1 class

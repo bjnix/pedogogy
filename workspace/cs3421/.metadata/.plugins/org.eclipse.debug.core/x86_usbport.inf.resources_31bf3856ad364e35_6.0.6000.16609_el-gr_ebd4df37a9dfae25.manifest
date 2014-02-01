@@ -1,0 +1,67 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+      Core Security Technologies - CoreLabs Advisory
+           http://www.coresecurity.com/corelabs/
+
+
+  Sun xVM VirtualBox Privilege Escalation Vulnerability
+
+
+*Advisory Information*
+
+Title: Sun xVM VirtualBox Privilege Escalation Vulnerability
+Advisory ID: CORE-2008-0716
+Advisory URL:
+http://www.coresecurity.com/content/virtualbox-privilege-escalation-vulnerability
+
+Date published: 2008-08-04
+Date of last update: 2008-08-04
+Vendors contacted: Sun Microsystems
+Release mode: Coordinated release
+
+
+*Vulnerability Information*
+
+Class: Insufficient input validation
+
+Remotely Exploitable: No
+Locally Exploitable: Yes
+Bugtraq ID: 30481	
+CVE Name: CVE-2008-3431	
+
+
+*Vulnerability Description*
+
+Virtualization technologies allow users to run different operating
+systems simultaneously on top of the same set of underlying physical
+
+hardware. This provides several benefits to end users and organizations,
+including efficiency gains in the use of hardware resources, reduction
+of operational costs, dynamic re-allocation of computing resources and
+
+rapid deployment and configuration of software development and testing
+environments.
+
+VirtualBox is an open source virtualization technology project
+originally developed by Innotek, a software company based in Germany.
+
+
+In February 2008 Sun Microsystems announced the acquisition of Innotek
+[1] and VirtualBox was integrated into Sun's xVM family of
+virtualization technologies. In May 2008, Sun Microsystems announced
+that the number of downloads of the open source VirtualBox software
+
+package passed the five million mark [2].
+
+When used on a Windows Host Operating System VirtualBox installs a
+kernel driver ('VBoxDrv.sys') to control virtualization of guest
+Operating Systems.
+
+
+An input validation vulnerability was discovered within VirtualBox's
+'VBoxDrv.sys' driver that could allow an attacker, with local but
+un-privileged access to a host where VirtualBox is installed, to execute
+
+arbitrary code within the kernel of the Windows host operating system
+and to gain complete control of a 

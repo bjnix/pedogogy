@@ -1,0 +1,394 @@
+package cs2321;
+
+import java.util.Iterator;
+import net.datastructures.*;
+import cs2321.*;
+
+/**
+ * A sequence that is implemented as an array.
+ * If the capacity is exceeded the capacity will be doubled. 
+ * 
+ * YOUR COMPLEXITY INFO HERE
+ * 
+ * Course: CS2321 Section 01
+ * Assignment: #1
+ * @author Brent Nix
+ */ 
+/* Do not alter the definition of the class.
+ * ie. Do not extend LinkedSequence.
+ */
+public class ArraySequence<E> implements Sequence<E>
+{
+	private int mCurrentSize; //the current amount of positions occupied in the array 
+	private int mMaxSize; //the current size of the array Sequence
+	private ArrSeqPos<E>[] mArray; //the array that is being manipulated
+
+	//constructor
+	public ArraySequence()
+	{
+		//initialization of objects
+		mCurrentSize = 0;
+		mMaxSize = 10;
+		mArray = (ArrSeqPos<E>[])new ArrSeqPos[mMaxSize];
+	}
+
+
+
+	/*# Complete the implementation of all required methods.
+	 *  Be sure to update this file to include:
+	 *      
+	 *      Annotations (@TimeComplexity, @SpaceComplexity, @TimeComplexityAmmortized, @TimeComplexityExpected)
+	 *      that indicate the time and space complexities.
+	 *      
+	 *      Appropriate comments justifying time and space claims (TCJ and SCJ) 
+	 */
+	@TimeComplexity("O(1)")
+	@Override
+	public Position<E> atIndex( int aIndex ) throws BoundaryViolationException
+	{
+		//TCJ: The time cost does not vary with input size,
+		//so Time Cost is constant.
+		if ( ( aIndex < 0 ) || ( aIndex > mCurrentSize ) )//Throw exception if out of index is violating bounds
+        {
+            throw new BoundaryViolationException ( "Index is invalid" );
+        }
+
+		return mArray[aIndex];
+	}
+	@TimeComplexity("O(1)")
+	@Override
+	public int indexOf( Position<E> aPosition ) throws InvalidPositionException
+	{
+		//TCJ: The time cost does not vary with input size.
+		//Because the Position<E> is type-casted to an ArrSeqPos<E> we can use it's index 
+		//to find it without iterating through the list
+			
+		
+		if ((((ArrSeqPos<E>)aPosition).getIndex() > mCurrentSize ) )//throw exception if the position given is invalid
+		{
+			throw new InvalidPositionException( "Position is invalid" );
+		}
+		return ((ArrSeqPos<E>)aPosition).getIndex();
+	}
+	
+	@TimeComplexity("O(1)")
+	@Override
+	public boolean isEmpty()
+	{
+		//TCJ: because a global counter is kept, the size is always known,
+		//and accessing this fact takes 1 step
+		if(mCurrentSize == 0){
+			return true;
+		}
+		else return false;
+	}
+	
+	@TimeComplexity("O(1)")
+	@Override
+	public int size()
+	{
+		//TCJ: because a global counter is kept the size is always known
+		//and accessing this fact takes 1 step
+		return mCurrentSize;
+	}
+
+	@TimeComplexity("O(n)")
+	@Override
+	public void add( int aIndex, E aElement ) throws IndexOutOfBoundsException
+	{
+		//TCJ: because this function has to shift all of the elements following the one
+		//added to make space and it also has to reassign the index values, 
+		//the list has to be traversed once giving this function a best case of O(1)  
+		//(when an element is added to the end) and a worst case(if the element is  
+		//added at index 0) of O(n). at its absolute worst, the array will have to resize adding
+		//another O(n) operation, making this a O(2n) operation.
+		
+		System.out.println("Adding " + aElement);
+		if ( ( aIndex < 0 ) || ( aIndex > mCurrentSize ) )//throw Exception if the index is out of bounds
+        {
+            throw new IndexOutOfBoundsException( "Index is invalid" );
+        }
+		if( mCurrentSize == mMaxSize )//check to see if arraylist is full, 
+			resize();//if so, resize
+		
+		for(int i = mCurrentSize; i > aIndex; i--)
+			{
+			mArray[i] = mArray[i-1];//shift elements
+			mArray[i].setIndex(i+1);//reset indices
+			}
+		
+		mArray[aIndex] = new ArrSeqPos<E> ( aIndex , aElement );//add the new element 
+		
+		mCurrentSize = mCurrentSize + 1;//increment the current size counter
+		
+
+	}
+
+	@TimeComplexity("O(1)")
+	@Override
+	public E get( int aIndex ) throws IndexOutOfBoundsException
+	{
+		//TCJ: The cost does not vary with input size,
+		//therefore we can say it is constant
+		if ( ( aIndex < 0 ) || ( aIndex > mCurrentSize ) )//throw exception if out of bounds
+        {
+            throw new IndexOutOfBoundsException( "Index is invalid" );
+        }
+		
+		return mArray[aIndex].element();
+	}
+	@TimeComplexity("O(n)")
+	@Override
+	public E remove( int aIndex ) throws IndexOutOfBoundsException
+	{
+		//TCJ: because this function has to shift all of the elements following the one
+		//added to make space and it also has to reassign the index values, 
+		//the list has to be traversed once giving this function a best case of O(1)  
+		//(when an element is added to the end) and a worst case(if the element is  
+		//added at index 0) of O(n). 
+		if ( ( aIndex < 0 ) || ( aIndex > mCurrentSize ) )//throw exception if index is out of bounds
+        {
+            throw new IndexOutOfBoundsException( "Index is invalid" );
+        }
+		
+
+		for( int i = aIndex; i<mCurrentSize-1; i++ )
+		{
+			mArray[i] = mArray[i+1];//shift elements
+			mArray[i].setIndex(i);//reassign index values
+			
+		}
+		System.out.println("removing " + mArray);
+		mCurrentSize = mCurrentSize - 1;//decrement the current size
+		return null;
+	}
+
+	@TimeComplexity("O(1)")
+	@Override
+	public E set( int aIndex, E aElement ) throws IndexOutOfBoundsException
+	{
+		// TCJ: The time complexity does not vary with input size,
+		// thus the running time is constant.
+		if ( ( aIndex < 0 ) || ( aIndex > mCurrentSize ) )//throw exception if index is out of bounds
+        {
+            throw new IndexOutOfBoundsException( "Index is invalid" );
+        }
+		mArray[aIndex].setElement(aElement);//set element
+
+		return null;
+	}
+
+	@TimeComplexity("O(n)")
+	@Override
+	public void addAfter( Position<E> aPosition, E aElementToAdd )
+	throws InvalidPositionException
+	{
+		//TCJ: this method is essentially the add() method,
+		//so it has the same time complexity; see add().
+		add(indexOf(aPosition)+1,aElementToAdd);
+
+	}
+
+	@TimeComplexity("O(n)")
+	@Override
+	public void addBefore( Position<E> aPosition, E aElementToAdd )
+	throws InvalidPositionException
+	{
+		//TCJ: this method is essentially the add() method,
+		//so it has the same time complexity; see add().
+		add(indexOf(aPosition),aElementToAdd);
+
+	}
+
+	@TimeComplexity("O(1)")
+	@Override
+	public Position<E> first()throws EmptyListException
+	{
+		// TCJ: The time complexity does not vary with input size,
+		// thus the running time is constant.
+		if ( isEmpty() )
+			throw new EmptyListException( "List is empty" );
+		
+		return mArray[0];
+	}
+
+	@TimeComplexity("O(1)")
+	@Override
+	public Position<E> last()
+	{
+		// TCJ: The time complexity does not vary with input size,
+		// thus the running time is constant. see first()
+		return mArray[mCurrentSize];
+	}
+
+	@TimeComplexity("O(1)")
+	@Override
+	public Position<E> next( Position<E> aPosition )
+	throws InvalidPositionException, BoundaryViolationException
+	{
+		// TCJ: The time complexity does not vary with input size,
+		// thus the running time is constant.
+		int aIndex = indexOf(aPosition)+1;
+		if ( ( aIndex < 0 ) || ( aIndex > mCurrentSize ) )
+        {
+            throw new BoundaryViolationException ( "Index is invalid" );
+        }
+		return mArray[aIndex];
+	}
+
+	@TimeComplexity("O(1)")
+	@Override
+	public Position<E> prev( Position<E> aPosition )
+	throws InvalidPositionException, BoundaryViolationException
+	{
+		// TCJ: The time complexity does not vary with input size,
+		// thus the running time is constant.
+		int aIndex = indexOf(aPosition)-1;
+		if ( ( aIndex < 0 ) || ( aIndex > mCurrentSize ) )
+        {
+            throw new BoundaryViolationException ( "Index is invalid" );
+        }
+		return mArray[aIndex];
+	}
+	@TimeComplexity("O(n)")
+	@Override
+	public E remove( Position<E> aPosition ) throws InvalidPositionException
+	{
+		// TCJ: see remove(int)
+		remove(indexOf(aPosition));
+		return null;
+	}
+	@TimeComplexity("O(1)")
+	@Override
+	public E set( Position<E> aPosition, E aElement )
+	throws InvalidPositionException
+	{
+		// TCJ: The time complexity does not vary with input size,
+		// thus the running time is constant.
+		set(indexOf(aPosition),aElement);
+		return null;
+	}
+	
+	@TimeComplexity("O(1)")
+	@Override
+	public Iterator<E> iterator()
+	{
+		// TCJ: The time complexity does not vary with input size,
+		// thus the running time is constant.		
+		return new ElementIterator<E>( this );
+	} 
+	/**
+	 * This function doubles the size of the array
+	 */
+	@TimeComplexity("O(n)")
+	public void resize()
+	{
+		//TCJ this function has to iterate through the list in order 
+		//to copy from the original to the doubled list
+		//thus making it O(n)
+		mMaxSize = mMaxSize*2;
+		ArrSeqPos<E>[] tmpArray = new ArrSeqPos[mMaxSize];//create temp list
+		for( int i = 0 ; i < mCurrentSize ; i++ )//iterates through the list
+		tmpArray[i] = mArray[i];//and maps the elements into the new list
+		
+		mArray = tmpArray;//map the temporary list to mArray
+		System.out.println("doubling array to " + mMaxSize);
+
+	}
+
+	@Override
+	public void addFirst( E aElementToAdd )
+	{
+		add( 0,aElementToAdd );
+	}
+
+	@Override
+	public void addLast( E aElementToAdd )
+	{
+		add( mCurrentSize, aElementToAdd );
+	}
+
+	@Override
+	public E getFirst() throws EmptyDequeException
+	{
+		
+		return mArray[0].element();
+	}
+
+	@Override
+	public E getLast() throws EmptyDequeException
+	{
+		
+		return mArray[mCurrentSize].element();
+	}
+
+	@Override
+	public E removeFirst() throws EmptyDequeException
+	{
+		remove(0);
+		return null;
+	}
+
+	@Override
+	public E removeLast() throws EmptyDequeException
+	{
+		remove(mCurrentSize);
+		return null;
+	}
+	/**
+	 * Used to test ArraySequence
+	 * @param args
+	 */
+	@TimeComplexity("O(?)")
+	@SpaceComplexity("O(?)")
+	static public void main( String [] args )
+	{
+		ArraySequence<String> lLS = new ArraySequence<String>();
+		        
+        if ( lLS.isEmpty() == false )
+        {
+            System.out.println( "FAILED: isEmpty did not return empty" );
+        }
+        else
+        {
+            System.out.println( "PASSED: isEmpty returned empty" );
+        }
+        lLS.add(0,"0");
+        lLS.add(1,"1");
+        lLS.add(2,"2");
+        lLS.add(3,"3");
+        lLS.add(4,"4");
+        lLS.add(5,"5");
+        lLS.add(6,"6");
+        lLS.add(7,"7");
+        lLS.add(8,"8");
+        lLS.add(9,"9");
+        lLS.add(10,"10");
+        lLS.set( lLS.last(), "6" );
+        lLS.get(lLS.size()-1).equals("6");
+        
+        lLS.remove(3);
+        
+        
+        
+        System.out.println("next" + lLS.next(lLS.atIndex(1)).element());
+        System.out.println("prev" + lLS.prev(lLS.atIndex(3)).element());
+        lLS.set(5, "1000");
+        System.out.println("current size from size()" + lLS.size());
+        for(int i = 0 ; i < lLS.mCurrentSize ; i++)
+        {
+        	System.out.println(lLS.get(i));
+        }
+        if ( lLS.isEmpty() == false )
+        {
+            System.out.println( "PASSED: isEmpty did not return empty" );
+        }
+        else
+        {
+            System.out.println( "FAILED: isEmpty returned empty" );
+        }
+        
+        
+	}
+	
+}

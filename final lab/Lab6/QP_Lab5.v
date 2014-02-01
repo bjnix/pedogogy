@@ -1,0 +1,64 @@
+module QP_Lab5 (CLOCK_50,KEY,HEX0,HEX1,HEX2,HEX3,HEX4,HEX5,HEX6,HEX7,LEDG);
+input 			CLOCK_50;
+input 	[3:0] 	KEY;
+output	[6:0] 	HEX0,HEX1,HEX2,HEX3,HEX4,HEX5,HEX6,HEX7;
+output [3:0] LEDG;
+
+wire	[31:0]	NUM;
+
+
+L5_Nios NIOS(
+  CLOCK_50,
+  KEY[0],
+  KEY[3:1],
+  NUM
+);
+
+assign LEDG = KEY;
+
+HEXdisplay d0(NUM[3:0], HEX0);
+HEXdisplay d1(NUM[7:4], HEX1);
+HEXdisplay d2(NUM[11:8], HEX2);
+HEXdisplay d3(NUM[15:12], HEX3);
+HEXdisplay d4(NUM[19:16], HEX4);
+HEXdisplay d5(NUM[23:20], HEX5);
+HEXdisplay d6(NUM[27:24], HEX6);
+HEXdisplay d7(NUM[31:28], HEX7);
+
+endmodule 
+
+/*****************************/
+/* HEXdisplay				 */
+/* Auth: Andy Rothwell		 */
+/* Func: Displays a 4bit	 */
+/*       binary number on a  */
+/*       HEX display		 */
+/*****************************/
+
+module HEXdisplay (binary, HEX);
+input [3:0] binary; //assuming 3 is MSB and 0 is LSB
+output reg [6:0] HEX;
+//reg [6:0] hex;
+
+always @ (binary) 
+begin
+	case (binary)//I don't feel like simplifying or dealing with Kmaps
+	   0: HEX = 7'b1000000;
+	   1: HEX = 7'b1111001;
+	   2: HEX = 7'b0100100;
+	   3: HEX = 7'b0110000;
+	   4: HEX = 7'b0011001;
+	   5: HEX = 7'b0010010;
+	   6: HEX = 7'b0000010;
+	   7: HEX = 7'b1111000;
+	   8: HEX = 7'b0000000;
+	   9: HEX = 7'b0011000;
+	   10: HEX = 7'b0001000;
+	   11: HEX = 7'b0000011;
+	   12: HEX = 7'b1000110;
+	   13: HEX = 7'b0100001;
+	   14: HEX = 7'b0000110;
+	   15: HEX = 7'b0001110;
+	endcase
+end
+endmodule 

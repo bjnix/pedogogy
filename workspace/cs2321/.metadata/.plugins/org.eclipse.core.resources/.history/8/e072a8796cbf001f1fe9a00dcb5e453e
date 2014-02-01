@@ -1,0 +1,311 @@
+package cs2321;
+
+import java.io.*;
+import java.util.*;
+
+import net.datastructures.Sequence;
+
+
+public class Assignment2 {
+	static public void main( String [] args )
+	{
+		ArraySequence<Integer> arrList = new ArraySequence<Integer>();
+		LinkedSequence<Integer> lnkList = new LinkedSequence<Integer>();
+		long sTime = 0;
+		long sampleT = 0;
+		int n = 0; 
+		FileOutputStream out; // declare a file output object
+		PrintStream p; // declare a print stream object
+		//		//////////////////////////////////////////////////add last
+		//				try
+		//				{
+		//					// Create a new file output stream
+		//					// connected to "myfile.txt"
+		//					out = new FileOutputStream("addLastresultArr.csv");
+		//		
+		//					// Connect print stream to the output stream
+		//					p = new PrintStream( out );
+		//									
+		//					for( int i = 0 ; i < 5000 ; i ++ )
+		//					{
+		//						sTime = System.nanoTime();
+		//						arrList.addLast(n);
+		//						sampleT = System.nanoTime();
+		//						p.println ((sampleT - sTime) + ", " + n);
+		//						n = n + 1;//increment n
+		//					}
+		//					p.close();
+		//				}
+		//				catch (Exception e)
+		//				{
+		//					System.err.println ("Error writing to file");
+		//				}
+		//				/////////////////////////////////////addlast lnked
+		//				try
+		//				{
+		//					n = 0;
+		//					// Create a new file output stream
+		//					// connected to "myfile.txt"
+		//					out = new FileOutputStream("addLastresultLnk.csv");
+		//		
+		//					// Connect print stream to the output stream
+		//					p = new PrintStream( out );
+		//									
+		//					for( int i = 0 ; i < 5000 ; i ++ )
+		//					{
+		//						sTime = System.nanoTime();
+		//						lnkList.addLast(n);
+		//						sampleT = System.nanoTime();
+		//						p.println ((sampleT - sTime) + ", " + n);
+		//						n = n + 1;//increment n
+		//					}
+		//					p.close();
+		//				}
+		//				catch (Exception e)
+		//				{
+		//					System.err.println ("Error writing to file");
+		//				}
+		//				////////////////////////////////////////////add first
+		//				try
+		//				{
+		//					n = 0;
+		//					// Create a new file output stream
+		//					// connected to "myfile.txt"
+		//					out = new FileOutputStream("addFirstresultArr.csv");
+		//		
+		//					// Connect print stream to the output stream
+		//					p = new PrintStream( out );
+		//					
+		//					for( int i = 0 ; i < 5000 ; i ++ )
+		//					{
+		//						sTime = System.nanoTime();
+		//						arrList.addFirst(n);
+		//						sampleT = System.nanoTime();
+		//						p.println ((sampleT - sTime) + ", " + n);
+		//						n = n + 1;//increment n
+		//					}
+		//					p.close();
+		//				}
+		//				catch (Exception e)
+		//				{
+		//					System.err.println ("Error writing to file");
+		//				}
+		//				
+		//				////////////////////////////////////////////add first lnked
+		//				try
+		//				{
+		//					n = 0;
+		//					// Create a new file output stream
+		//					// connected to "myfile.txt"
+		//					out = new FileOutputStream("addFirstresultLnk.csv");
+		//		
+		//					// Connect print stream to the output stream
+		//					p = new PrintStream( out );
+		//					
+		//					for( int i = 0 ; i < 5000 ; i ++ )
+		//					{
+		//						sTime = System.nanoTime();
+		//						lnkList.addFirst(n);
+		//						sampleT = System.nanoTime();
+		//						p.println ((sampleT - sTime) + ", " + n);
+		//						n = n + 1;//increment n
+		//					}
+		//					p.close();
+		//				}
+		//				catch (Exception e)
+		//				{
+		//					System.err.println ("Error writing to file");
+		//				}
+		/////////-------------------addfirst test
+		//		try
+		//		{
+		//			out = new FileOutputStream("Assign2Experiment1.csv");
+		//			p = new PrintStream( out );
+		//
+		//			for( int j = 1 ; j < 101 ; j ++ )
+		//			{
+		//				Vector<Long> AFLinked = new Vector<Long>();
+		//				Vector<Long> AFArr = new Vector<Long>();
+		//
+		//				for( int i = 0 ; i < 5000 ; i ++ )
+		//				{
+		//					sTime = System.nanoTime();
+		//					lnkList = new LinkedSequence<Integer>();
+		//
+		//					for(int k = 0 ; k < j ; k++)
+		//					{
+		//						lnkList.addLast(k);
+		//					}
+		//					sampleT = System.nanoTime();
+		//					AFLinked.add( sampleT - sTime );
+		//
+		//				}
+		//				long AFL = 0;
+		//				for( int i = 0 ; i < 5000 ; i ++ )
+		//					AFL = AFL + AFLinked.elementAt(i);
+		//				double AFl = ((double)AFL/5000);
+		//				for( int i = 0 ; i < 5000 ; i ++ )
+		//				{
+		//					sTime = System.nanoTime();
+		//					arrList = new ArraySequence<Integer>();
+		//
+		//					for(int k = 0 ; k < j ; k++)
+		//					{
+		//						arrList.addLast(k);
+		//					}
+		//					sampleT = System.nanoTime();
+		//					AFArr.add( sampleT - sTime );
+		//
+		//				}
+		//				long AFA = 0;
+		//				for( int i = 0 ; i < 5000 ; i ++ )
+		//					AFA = AFA + AFArr.elementAt(i);
+		//				double AFa = ((double)AFA/5000);
+		//				//				p.println(j + ", " + AFl + ", " + AFa);
+		//				System.out.println(j + ", " + AFl + ", " + AFa);
+		//
+		//
+		//
+		//				p.close();
+		//			}
+		//
+		//		}
+		//		catch (Exception e)
+		//		{
+		//			System.err.println ("Error writing to file");
+		//		}
+		//		//////////////////////////////-----------------------------
+		/* The following timing test was modified from code by
+		 * Chris Brown and Bill Siever.
+		 */
+		// Measure some insertion times. Take repeated samples to find average
+		// time.
+		final int SAMPLES = 10000; // Number of operations to test
+		/*
+		 * # Notice the use of polymorphism here. We're using a "Sequence" rather
+		 * than a "LinkedSequence". This isn't especially important here, but
+		 * could be handy if we want to create a separate "sequenceTest" method
+		 * that would run tests on different implementations of sequences.
+		 */
+		Sequence<Integer>[] sequences = new LinkedSequence[SAMPLES];
+		for ( int i = 0; i < SAMPLES; i++ )
+		{
+			sequences[i] = new LinkedSequence<Integer>();
+		}
+		// Insert N elements into each sequence
+		final int N = 200;
+		System.out.println( "On average, inserting the n-th item takes:" );
+		System.out.println( "  n  | time (ns)" );
+		System.out.println( "----------------" );
+
+		// This loop will print the average time taken to insert an element into
+		// an empty sequence, followed by the average time taken to insert a second
+		// element into a sequence, followed by the average time taken to insert a
+		// third element, etc. Up to the average time taken to insert the Nth
+		// element.
+		for ( int i = 0; i < N; i++ )
+		{
+			long startTime = System.nanoTime();
+			// Do a push for each sample sequence
+			for ( int j = 0; j < SAMPLES; j++ )
+			{
+				sequences[j].addLast( i );
+			}
+			long stopTime = System.nanoTime();
+			System.out.printf( "%4d , %9.5f %n", i + 1, ( stopTime - startTime )
+					/ ( double )SAMPLES );
+		}
+
+	}
+
+	/**
+	 * Used to see if the expected element is at the specified index
+	 * 
+	 * @param aSequence the LinkedSequence of integers to check
+	 * @param aIndex the index to check for the expected value
+	 * @param aExpectedValue the value to check for
+	 * 
+	 * @return True if the expected value is found; False otherwise 
+	 */
+	@TimeComplexity("O(?)")
+	@SpaceComplexity("O(?)")
+	static public boolean checkElementAtIndex( LinkedSequence<Integer> aSequence,
+			int aIndex, int aExpectedValue )
+	{
+		boolean lSuccess = true;
+		if ( aSequence.get( aIndex ) != aExpectedValue )
+		{
+			lSuccess = false;
+			System.out.println( "FAILED: Expected value at index " + aIndex + " was " +
+					aExpectedValue + " and actual value was " +
+					aSequence.get( aIndex ) );
+		}
+		else
+		{
+			System.out.println( "PASSED: Expected value at index " + aIndex +
+					" was " + aSequence.get( aIndex ) );
+		}
+		return lSuccess;
+	}
+
+	/**
+	 * Used to see if the size of the LinkedSequence is as expected.
+	 * 
+	 * @param aSequence the LinkedSequence to check
+	 * @param aExpectedSize the expected number of elements currently contained in the sequence
+	 * 
+	 * @return True if the current size of the LinkedSequence matches the expected size;
+	 *         False otherwise
+	 */
+	@TimeComplexity("O(?)")
+	@SpaceComplexity("O(?)")
+	static public boolean checkExpectedSize( LinkedSequence<Integer> aSequence, int aExpectedSize )
+	{
+		boolean lSuccess = true;
+		if ( aSequence.size() != aExpectedSize )
+		{
+			lSuccess = false;
+			System.out.println( "FAILED: Expected size was " + aExpectedSize +
+					" and actual size was " + aSequence.size() );
+		}
+		else
+		{
+			System.out.println( "PASSED: Expected size was " + aExpectedSize );
+		}
+		return lSuccess;
+	}
+
+	/**
+	 * Used to see if the string output of the LinkedSequence is as expected.
+	 * 
+	 * @param aSequence the LinkedSequence to check
+	 * @param aExpectedSize the expected string output for the sequence
+	 * 
+	 * @return True if the current string output matches the expected string output;
+	 *         False otherwise
+	 */
+	@TimeComplexity("O(?)")
+	@SpaceComplexity("O(?)")
+	static public boolean checkString( LinkedSequence<Integer> aSequence, String aExpectedString )
+	{
+		boolean lSuccess = true;
+		if ( aSequence.toString().compareTo( aExpectedString ) != 0 )
+		{
+			lSuccess = false;
+			System.out.println( "FAILED: Expected list was " + aExpectedString +
+					" and actual list was " + aSequence.toString() );
+		}
+		else
+		{
+			System.out.println( "PASSED: Expected list was " + aExpectedString );
+		}
+		return lSuccess;
+	}
+
+
+}
+
+
+
+
+

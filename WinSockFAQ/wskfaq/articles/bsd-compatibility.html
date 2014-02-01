@@ -1,0 +1,477 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/DTD/strict.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/bitmaps/favicon.png">
+	<link rel="icon" href="/bitmaps/favicon.png" type="image/png">
+	<link href="../faq.css" rel="Stylesheet" type="text/css">
+
+	<title>Winsock Programmer&rsquo;s FAQ: BSD Sockets Compatibility</title>
+
+	<style type="text/css">
+		#next-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: -38px 0;
+		}
+		#prev-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: 0 0;
+		}
+		#stop-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: -76px 0;
+		}
+		.navbar {
+			border: 8px solid #d0d0a0;
+			border-spacing: 0;
+			border-radius: 10px;
+			-moz-border-radius: 10px;
+			-webkit-border-radius: 10px;
+			height: 140px;
+			margin: auto;   /* center on page */
+			margin-top: 10px;
+			text-align: center;
+			width: 95%;
+		}
+		.navbar td {
+			background-color: #006000;
+			border: 10px solid #e0e0c0;
+			color: #ffffee;
+			font-size: 182%;
+			font-family:
+				"verdana",
+				"luxi sans",
+				"helvetica narrow",
+				"arial condensed",
+				"arial",
+				"univers",
+				sans-serif;
+			font-weight: bold;
+			text-align: center;
+		}
+		.navbarcap {
+			background-color: #e0e0c0 !important;
+			cursor: pointer;
+			padding-left: 10px;
+			width: 50px;
+		}
+	</style>
+</head>
+
+<body>
+
+
+
+
+
+
+
+
+	
+
+
+
+
+	
+
+	<!--  **** Navigation Bar ****  -->
+	<table class="navbar">
+		<tr>
+			<td class="navbarcap" onclick="location.href='../articles/sniffer.html'">
+				<a id="prev-link" href="../articles/sniffer.html"></a>
+			</td>
+
+			<td>
+				Winsock Programmer&rsquo;s FAQ<br>
+
+				
+
+				
+				
+				
+					Articles: BSD Sockets Compatibility
+				
+			</td>
+
+			<td class="navbarcap" onclick="location.href='../articles/wscontrol.html'">
+				<a id="next-link" href="../articles/wscontrol.html"></a>
+			</td>
+		</tr>
+	</table>
+
+	<!--  **** Body Container ****  -->
+	<div id="body" style="padding-left: 30px" >
+
+
+<h3>BSD Sockets Compatibility</h3>
+
+<p><i>by Warren Young</i></p>
+
+<p>So you say you&rsquo;re a long-time Unix hacker who&rsquo;s new to
+Windows programming? And you&rsquo;ve heard of this great API called
+Winsock that&rsquo;s compatibile with your beloved BSD sockets,
+but try as you might, you just can&rsquo;t find the <code>readv()</code>
+call? Well bunky, this is the article for you.</p>
+
+<h4>Introduction</h4>
+
+<p>In the beginning, there was chaos in the world of Windows TCP/IP
+APIs.  A program written for, say, FTP Software&rsquo;s TCP/IP stack
+wouldn&rsquo;t run on JSB&rsquo;s stack.</p>
+
+<p>Then, sometime in 1990, a bunch of people got together and decided
+to make one nice, big, compatible API called Windows Sockets that
+would allow a single program to run on any vendor&rsquo;s stack. They
+decided to base this API on the popular BSD sockets model of network
+programming, but for various reasons, there are still many differences
+between Winsock and BSD sockets. This article points out how Winsock
+differs from BSD sockets, and how to translate BSD sockets programs
+to use similar Winsock functionality.</p>
+
+
+
+<h4>The Official Word</h4>
+
+<p>The Winsock API documentation has a section called <a
+href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winsock/winsock/porting_socket_applications_to_winsock.asp">Porting
+Socket Applications to Winsock</a> that covers many of the same issues
+that this article does, and a few others besides.</p>
+
+
+
+<h4>#include Differences</h4>
+
+<p>Under BSD sockets, there are quite a few different header files you
+need to include, depending on what sockets calls you use. A typical BSD
+sockets program has a block of #includes near the top like this:</p>
+
+<p class=inset>#include &lt;sys/types.h&gt;<br>
+               #include &lt;sys/socket.h&gt;<br>
+               #include &lt;netinet/in.h&gt;<br>
+               #include &lt;arpa/inet.h&gt;<br>
+               #include &lt;netdb.h&gt;
+</p>
+
+<p>For Winsock, you don&rsquo;t need any of these. Instead, you
+just need to include winsock.h. (Or, if you need Winsock 2-specific
+functionality, winsock2.h.)</p>
+
+
+
+<h4><code>errno</code> vs. <code>WSAGetLastError()</code></h4>
+
+<p><code>WSAGetLastError()</code> is essentially the same thing as
+Unix&rsquo;s <code>errno</code> global variable. The error constants and
+their values are different; there&rsquo;s a table in the Winsock
+spec where it lists all the error constants, one column of which
+shows the equivalent BSD error constant for a given Winsock error
+constant. Usually the difference is just the addition of "WSA" to the
+beginning of the constant name for the Winsock versions. (E.g. WSAEINTR
+is the Winsock version of BSD&rsquo;s EINTR error constant.)</p>
+
+<p>Another thing to keep in mind is that, although the <code>perror()</code>
+call exists in most Windows compilers' run-time libraries, it
+doesn&rsquo;t work for Winsock calls. (This is a consequence
+of Winsock not returning its error codes in the <code>errno</code>
+variable.) There is a function called <code>WSAGetLastErrorMessage()</code>
+in the <a href="../examples/basics/index.html">basic Winsock examples</a> area of
+the FAQ that you can use to build a <code>perror()</code>-like function.
+It&rsquo;s in the ws-util.cpp module.</a>
+
+
+
+<h4>EAGAIN</h4>
+
+<p>Many Unix programs, especially those with System V roots, check
+for the EAGAIN value in the global <code>errno</code> variable when
+a non-blocking call fails. This is the same thing as BSD&rsquo;s
+EWOULDBLOCK and Winsock&rsquo;s WSAEWOULDBLOCK errors. You&rsquo;ll
+have to check your system&rsquo;s header files, but all Unixes
+I&rsquo;ve checked on this matter #define EAGAIN and EWOULDBLOCK
+to the same value, so you may want to get into the habit of using
+EWOULDBLOCK instead of EAGAIN under Unix, to make transitions to and
+from Winsock easier.</p>
+
+
+
+<h4>Equivalence of File and Socket Handles</h4>
+
+<p>Under Unix, the I/O system calls work with file descriptors and
+socket descriptors equally well. It&rsquo;s common in BSD sockets
+programs to use <code>read()</code> instead of <code>recv()</code> to read
+data from a socket, for example. Under Windows 3.1 and Windows 95
+derivatives, socket descriptors are completely distinct from file
+descriptors. Although the run-time library (RTL) supplied with most
+Windows compilers includes POSIX emulation functions, these are
+designed to work only with files, not sockets.</p>
+
+<p>Windows NT derivatives are more like Unix, in that its native file
+I/O functions also work with sockets: <code>ReadFile()</code> is roughly
+equivalent to Winsock&rsquo;s <code>recv()</code> function, for example.</p>
+
+<p>The Visual C++ RTL emulates POSIX functions, except that
+they&rsquo;re named with a leading underscore: for example,
+<code>_read()</code> instead of <code>read()</code>. The <code>_read()</code> function
+uses <code>ReadFile()</code> internally, so you&rsquo;d think it would work
+with sockets. The problem is, the first argument is an RTL-specific
+handle, not an operating system file handle. If you pass a socket
+handle to <code>_read()</code> or <code>_write()</code>, the RTL will realize that
+it isn&rsquo;t an RTL handle and the call will fail.</p>
+
+<p>Fortunately, there is a bridge function in Visual C++&rsquo;s
+RTL: <code>_open_osfhandle()</code>. (If you&rsquo;re not using Visual
+C++, you&rsquo;ll have to check its RTL source for a similar
+function.) I&rsquo;ve not tried it, but it appears to take an operating
+system file handle (including socket handles) and return a handle you
+can use with the POSIX emulation functions in the RTL. I&rsquo;m told
+that this will work with sanely-coded non-Microsoft Winsock stacks,
+but since I haven&rsquo;t tried it, you should if you want to support
+these alternate stacks.</p>
+
+<p>Again, the <code>_open_osfhandle()</code> workaround only works on
+Windows NT derivatives, because the file I/O functions don&rsquo;t
+work with sockets on the Windows 95 derivatives, so fooling the RTL
+into accepting one doesn&rsquo;t help you.</p>
+
+<p>If these limitations are too much for your program, you may
+want to give one of the Unix emulation systems a try. I&rsquo;ve
+personally used <a href="http://cygwin.com/">Cygwin</a> for this
+purpose, and it works beautifully. Others include Microsoft&rsquo;s
+<a href="http://www.microsoft.com/windows/sfu/">Services
+for Unix</a> and AT&T&rsquo;s <a
+href="http://www.research.att.com/sw/tools/uwin/">UWIN</a>, but
+I&rsquo;ve not used either of them.</p>
+
+<p>All that aside, it&rsquo;s usually much easier to rewrite your
+program to use portable functions like <code>recv()</code> than it is to
+arm-twist the Windows port to work with Unix idioms.</p>
+
+
+
+<h4>Winsock&rsquo;s <code>closesocket()</code> vs. Unix&rsquo;s <code>close()</code></h4>
+
+<p>Winsock defines a different function for closing sockets because
+not all versions of Windows have file descriptor and socket descriptor
+equivalency like Unix. See the discussion in the previous item for
+more on the file/socket handle mismatch issue.</p>
+
+
+
+<h4>Winsock&rsquo;s <code>ioctlsocket()</code> vs. Unix&rsquo;s <code>ioctl()</code></h4>
+
+<p>Unix provides the <code>ioctl()</code> call to allow you to set and get
+various bits of info on a file descriptor, which includes socket
+descriptors. Winsock replicates some common Unix ioctls in the
+<code>ioctlsocket()</code> call, but much is missing.</p>
+
+<p>If you use the <code>SIOCGIFCONF</code> ioctl on Unix to
+get information about the system&rsquo;s network interfaces,
+Winsock 2 provides very similar functionality with its
+<code>SIO_GET_INTERFACE_LIST</code> option for <code>ioctlsocket()</code>.</p>
+
+
+
+<h4><code>fcntl()</code></h4>
+
+<p>The Unix <code>fcntl()</code> call has no direct equivalent
+under Winsock. Where necessary, similar functionality exists
+in Winsock&rsquo;s <code>ioctlsocket()</code> call. For example, the
+equivalent of using Unix&rsquo;s <code>fcntl()</code> to set a socket&rsquo;s
+<tt>O_NONBLOCK</tt> flag is setting the <tt>FIONBIO</tt> flag with
+Winsock&rsquo;s <code>ioctlsocket()</code>.</p>
+
+
+
+<a name="poll"></a>
+<h4><code>poll()</code></h4>
+
+<p>There are several wrappers for
+<code>poll()</code> using <code>select()</code> out there. <a
+href="http://mail.python.org/pipermail/python-list/2001-October/069168.html">Here&rsquo;s
+one</a>. It doesn&rsquo;t attempt to implement any of the special
+<code>poll()</code> features found in a true System V system, such as
+STREAMS support. Also, the code is rather old, written in a K&R
+C style that some newer compilers might reject. Finally, since
+it is built directly on top of <code>select()</code>, it has the same
+<a href="../advanced.html#64sockets">limitations</a>.</p>
+
+<p>Another option is to dig the implementation
+of <code>poll()</code> out of Jarle Aasa&rsquo;s <a
+href="http://adns.jgaa.com/">Win32 port</a> of the adns
+library. This implementation has three limitations: 1) It&rsquo;s <a
+href="http://www.gnu.org/copyleft/gpl.html">GPL</a>&rsquo;d, which
+means you can&rsquo;t use the code in your program unless your program
+is also licensed under the GPL; 2) it&rsquo;s built on the Win32 event
+object mechanism, which has a <a href="../advanced.html#64sockets">hard
+64-object limitation</a>; and 3) it is reportedly not written in a
+way that is easy for third-party programmers to extract and use.</p>
+
+
+
+<h4><code>readv()</code> and <code>writev()</code></h4>
+
+<p>Winsock 2&rsquo;s overlapped I/O mechanism includes scatter/gather
+functionality similar to that provided by <code>readv()</code> and
+<code>writev()</code>.</p>
+
+
+
+<h4><code>dup()</code></h4>
+
+<p>The Unix <code>dup()</code> function duplicates a file handle, and
+of course also works for sockets. Under Winsock 2, you can do the
+same thing with <code>WSADuplicateSocket()</code>. It&rsquo;s a bit more
+involved, but the <code>WSADuplicateSocket()</code> documentation in <a
+href="http://msdn.microsoft.com/">MSDN</a> has a good step-by-step
+example showing how to use this mechansim.</p>
+
+
+
+<h4><code>dup2()</code></h4>
+
+<p>There is partial support for this feature under Winsock, though
+the mechanism is dissimilar to the <code>dup2()</code> feature. Under Unix,
+<code>dup2()</code> takes a handle and duplicates it like <code>dup()</code> does,
+but with a twist: it assigns the new filehandle a value that you
+specify. This is usually used to map a socket to the C language&rsquo;s
+stdin or stdout file descriptors so that you can use standard I/O
+functions like <code>printf()</code> and <code>fgets()</code> with the socket.</p>
+
+<p>Item <a href="http://support.microsoft.com/kb/190351">KB190351</a> in the Microsoft Knowledge Base documents
+a method by which you can redirect a child process&rsquo;s standard
+descriptors to a socket. The limitations are that you cannot do
+this to your own process&rsquo;s descriptors, you cannot redirect
+<i>arbitrary</i> descriptors to a socket (i.e. you can only do it with
+stdin, stdout and stderr), and not all processes are fully compatible
+with this API feature. Still, it at least makes an inetd-like program
+possible under Win32.</p>
+
+
+<h4>Detecting a Dropped Connection</h4>
+
+<p>Under BSD Unixes, if the remote peer closes its connection
+and your program is blocking on <code>recv()</code>, you will get
+a 0 back from <code>recv()</code>. Winsock behaves the same way,
+except that it can also return -1, with <code>WSAGetLastError()</code>
+returning <code>WSAECONNRESET</code>, <code>WSAECONNABORTED</code>
+or <code>WSAESHUTDOWN</code>, to signal the detectable flavors of
+abnormal disconnections.</p>
+
+<p>Under Unix, if you&rsquo;re blocking on <code>send()</code> and your
+program is ignoring the <code>SIGPIPE</code> signal, it will return
+with a -1 when the remote peer disconnects, and <code>errno</code> will
+be <code>EPIPE</code>. Otherwise, your program will be sent the SIGPIPE
+signal, which will terminate your program if you don&rsquo;t handle
+it. Under Winsock, the SIGPIPE/EPIPE functionality does not exist at
+all: <code>send()</code> will either return 0 for a normal disconnect or -1
+for an abnormal disconnect, with <code>WSAGetLastError()</code> returning
+the same errors as in the <code>recv()</code> discussion above.</p>
+
+
+
+<h4>UDP Behavior</h4>
+
+<p>According to Ilpo Ruotsalainen, "...most BSD socket implementations
+do not pass delayed UDP errors (ICMP port unreachable at least, maybe
+others too) to <code>recvfrom()</code> while Winsock 2 [under Windows 2000
+but not Windows 98] does. Linux [behaves like Windows 2000] too,
+but provives SO_BSDCOMPAT <code>setsockopt()</code> for being compatible
+with the BSD style."</p>
+
+<p>In other words, a portable program has to be prepared for
+the possibility of error codes for non-immediate problems from
+<code>recvfrom()</code>, but it can&rsquo;t depend on receiving them.</p>
+
+
+
+<h4>A Cry For Updates</h4>
+
+<p>This article can always use more work. If you can help me out,
+please <a href="/email/">drop me a line</a>! In particular,
+I&rsquo;ll bet that there are several other BSD-only <code>ioctl()</code>
+options that we can duplicate in other ways with Win32 facilities.</p>
+
+<p><font size=-1>Copyright &copy; 1998-2005 by Warren Young. All rights
+reserved.</font></p>
+
+
+
+		</div> <!-- end body div -->
+
+<hr class="noshade">
+
+
+<!--  Navigation footer  -->
+<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer nav"> 
+	<tr>
+		<td align="left" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="../articles/sniffer.html">&lt;&lt;&nbsp;The Straight Dope on Packet Sniffers</a><br>
+			</span>
+		
+		</td>
+
+		<td align="right" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="../articles/wscontrol.html">WsControl() Revealed&nbsp;&gt;&gt;</a>
+			</span>
+		
+		</td>
+	</tr>
+</table>
+
+
+
+
+
+
+	<!--  Document Footer -->
+
+	<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer info"> 
+		<tr>
+			
+				<td align="left" class="thirdwidth">
+					
+					<span class="annotation">Updated Sun Feb 28 2010 07:48 MST</span>
+				</td>
+				<td align="center" class="thirdwidth">
+				
+			
+
+			
+				&nbsp;
+			
+			</td>
+
+			<td align="right" class="thirdwidth">
+				<a href="/">Go to my home page</a>
+			</td>
+		</tr>	
+	</table>
+
+
+	<script type="text/javascript" src="/js/awstats_misc_tracker.js"></script>
+</body>
+</html>
+

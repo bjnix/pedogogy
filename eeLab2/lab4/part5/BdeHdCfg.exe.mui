@@ -1,0 +1,73 @@
+ial:", "This injection looks like a HTTP Splitting Response")
+                if self.options.finalpayload or self.options.finalremote or self.options.doss or self.options.dos or self.options.b64:
+                    self.report("[*] Final Attack: ", attack_url)
+                else:
+                    pass
+                self.report("[-] Method: ind")
+                self.report('-'*50, "\n")
+                if self.options.fileoutput:
+                    fout.write("\n" + "XSSer Security Report: " + str(datetime.datetime.now()) + "\n")
+                    fout.write("---------------------" + "\n")
+                    fout.write("[I] Target: " + line[6] + "\n")
+                    fout.write("[+] Injection: " + str(line[0]) + "\n")
+                    fout.write("[!] Special: " + "This injection looks like a HTTP Splitting Response" + "\n")
+                    if self.options.finalpayload or self.options.finalremote or self.options.doss or self.options.dos or self.options.b64:
+                        fout.write("[*] Final Attack: " + attack_url + "\n")
+                    else:
+                        pass
+                    fout.write("[-] Method: ind" + "\n" + '-'*50 +"\n")
+            elif line[5]["browser"] == "[hashed_precheck_system]":    
+                self.false_positives = self.false_positives + 1
+                self.report("[I] Target:", line[6])
+                self.report("[+] Injection:", str(line[0]))
+                self.report("[!] Checker: This injection looks like a -false positive- result!. Verify it manually!")
+                self.report("[-] Method: hash")
+                self.report('-'*50, "\n")
+                if self.options.fileoutput:
+                    fout.write("\n" + "XSSer Security Report: " + str(datetime.datetime.now()) + "\n")
+                    fout.write("---------------------" + "\n")
+                    fout.write("[I] Target: " + line[6] + "\n")
+                    fout.write("[+] Injection: " + str(line[0]) + "\n")
+                    fout.write("[!] Checker: This injection looks like a -false positive- result!. Verify it manually!" + "\n")
+                    fout.write("[-] Method: hash" + "\n" + '-'*50 +"\n")
+            elif line[5]["browser"] == "[manual_injection]":
+                self.manual_founded = self.manual_founded + 1
+                self.report("[I] Target:", line[6])
+                self.report("[+] Injection:", str(line[0]))
+                self.report("[-] Method: manual")
+                self.report('-'*50, "\n")
+                if self.options.fileoutput:
+                    fout.write("\n" + "XSSer Security Report: " + str(datetime.datetime.now()) + "\n")
+                    fout.write("---------------------" + "\n")
+                    fout.write("[I] Target: " + line[6] + "\n")
+                    fout.write("[+] Injection: " + str(line[0]) + "\n")
+                    fout.write("[-] Method: manual" + "\n" + '-'*50 +"\n")
+            elif line[5]["browser"] == "[Heuristic test]":
+                if str(line[5]["payload"]).strip('XSS') == "\\" or str(line[5]["payload"]).strip('XSS') == "/" or str(line[5]["payload"]).strip('XSS') == ">" or str(line[5]["payload"]).strip('XSS') == "<" or str(line[5]["payload"]).strip('XSS') == ";" or str(line[5]["payload"]).strip('XSS') == "'" or str(line[5]["payload"]).strip('XSS') == '"' or str(line[5]["payload"]).strip('XSS') == "=":
+                    self.report("[I] Target:", line[6])
+                    self.report("[+] Parameter(s):", "[",
+                                str(line[5]["payload"]).strip('XSS') , "]")
+                    self.report("[!] Special:", "This parameter(s) looks like is NOT -completly- FILTERED on target code")
+                    self.report("[-] Method: heuristic")
+                    self.report('-'*50, "\n")
+                    if self.options.fileoutput:
+                        fout.write("\n" + "XSSer Security Report: " + str(datetime.datetime.now()) + "\n")
+                        fout.write("---------------------" + "\n")
+                        fout.write("[I] Target: " + line[6] + "\n")
+                        fout.write("[+] Parameter(s): " + "[" + str(line[5]["payload"]).strip('XSS') + "]" + "\n")
+                        fout.write("[!] Special: " + "This parameter(s) looks like is NOT -completly- FILTERED on target code" + "\n")
+                        fout.write("[-] Method: heuristic" + "\n" + '-'*50 +"\n")
+                else:
+                    pass
+            else:
+                self.auto_founded = self.auto_founded + 1
+                self.report("[I] Target:", line[6])
+                self.report("[+] Injection:", line[0])
+                if self.options.finalpayload or self.options.finalremote or self.options.doss or self.options.dos or self.options.b64:
+                    self.report("[*] Final Attack: ", attack_url)
+                else:
+                    pass
+                self.report("[-] Method: xss")
+                self.report("[-] Browsers:", line[1],  "\n", '-'*50, "\n")
+                if self.options.fileoutput:
+                    fout.write("\n" 

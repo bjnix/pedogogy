@@ -1,0 +1,34 @@
+1)
+	c * i = -147, int 
+	i + m = 2 int 
+	f / c = 0.132653 float 
+	d / s = 0 double 
+	f - d = -1.000000 float
+	(int)f = 6 int 
+
+2)
+	It won't work when the f gets too precise because it rounds the fraction.
+
+3)
+	Name	|	Storage Dur	|	Scope	|	Linkage	|
+	----------------------------------------------------------------
+	| a	|	static		|	file	|	external	|
+	| b 	|	static		|	file	|	external	|
+	| c	|	static		|	file	|	external	|
+	| d	|	auto		|	block	|	none		|
+	| e	|	auto		|	block	|	none		|
+	| f	|	static		|	file	|	internal	|
+	| g	|	auto		|	block	|	none		|
+	| h	|	auto		|	block	|	none		|
+	| i	|	static		|	file	|	none		|
+	| j	|	static		|	file	|	external	|
+	| k	|	auto		|	block	|	none		|
+	----------------------------------------------------------------
+
+4)
+	It won't work, he has to include square in the header of simple.c
+
+5)
+	again it will not work because of the fact that b.c calls a function contained in a.c
+	but yet ir is unaware that a.c exists, it needs to be included in the header.
+	

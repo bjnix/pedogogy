@@ -1,0 +1,69 @@
+package trie;
+import java.io.*;
+import java.util.Scanner;
+
+/*
+ * Interface for TRIE methods
+ * 
+ */ 
+
+
+public interface PasswordTrieInterface 
+{
+	/**
+	 *  This method should take a password and add it to the trie 
+	 *  if the password does not already exist in the TRIE.
+	 *  
+	 *  BONUS:  The add is only successful if the parent node and the children nodes of
+	 *  the node recording the new password do not contain a password.
+	 *  
+	 *  @return "Password:  " + password + " added to the trie." if successful.
+	 *  Or, "Password:  " + password + " not added to the trie." if failure.
+	 *  
+	 *  @param password - String - contents of the password
+	 */
+	public String addPassword(String password);
+
+	/**
+	 *  This method should take a password and remove it from the trie.
+	 *  
+	 *  Branches of the tree should be pruned if they no longer hold passwords.
+	 *  Should print "Branch pruned." using System.out.println if a branch is pruned from the tree.
+	 *  
+	 *  @return "Password:  " + password + " removed from the trie." if successful.
+	 *  Or,  "Password:  " + password + " not removed from the trie." if failure.
+	 *  
+	 *  @param password - String - contents of the password
+	 */
+	public String deletePassword(String password);
+
+	/**
+	 *  This method should take a password and see if it exists in the tree.
+	 * 
+	 *  @return false if the password is not in the tree.
+	 *  Or,  true if the password is in the tree.
+	 *  
+	 *  @param password - String - contents of the password
+	 */
+	public boolean checkPassword(String password);
+
+
+	/**
+	 *  This method prints all the passwords contained in the TRIE to standard out
+	 *  Using System.out.println() print one password per line 
+	 * 
+	 *  If there are no passwords in the tree, the method should print the string:
+	 *  "There are no passwords currently in the trie."
+	 */
+	public void printPasswords();
+
+	/**
+	 *  This method should read in the contents of the file into the password TRIE.
+	 *  The file will only contain one password per line.
+	 *
+	 *  @param filename - String - name of the file to be read from
+	 * @throws FileNotFoundException 
+	 */
+	public void readInFile(String filename) throws FileNotFoundException;
+
+}

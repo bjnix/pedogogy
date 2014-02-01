@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy 1 elements(s) to &apos;ArraySequence/src/net.datastructures&apos;&#x0A;- Original project: &apos;LinkedSequence&apos;&#x0A;- Destination element: &apos;ArraySequence/src/net.datastructures&apos;&#x0A;- Original element: &apos;net.datastructures.EmptyListException.java&apos;" description="Copy compilation unit" destination="=ArraySequence/src&lt;net.datastructures" element1="/src&lt;net.datastructures{EmptyListException.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1283368288121" units="1" version="1.0"/>
+</session>

@@ -1,0 +1,702 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/DTD/strict.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/bitmaps/favicon.png">
+	<link rel="icon" href="/bitmaps/favicon.png" type="image/png">
+	<link href="../faq.css" rel="Stylesheet" type="text/css">
+
+	<title>Winsock Programmer&rsquo;s FAQ: WsControl() Revealed</title>
+
+	<style type="text/css">
+		#next-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: -38px 0;
+		}
+		#prev-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: 0 0;
+		}
+		#stop-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: -76px 0;
+		}
+		.navbar {
+			border: 8px solid #d0d0a0;
+			border-spacing: 0;
+			border-radius: 10px;
+			-moz-border-radius: 10px;
+			-webkit-border-radius: 10px;
+			height: 140px;
+			margin: auto;   /* center on page */
+			margin-top: 10px;
+			text-align: center;
+			width: 95%;
+		}
+		.navbar td {
+			background-color: #006000;
+			border: 10px solid #e0e0c0;
+			color: #ffffee;
+			font-size: 182%;
+			font-family:
+				"verdana",
+				"luxi sans",
+				"helvetica narrow",
+				"arial condensed",
+				"arial",
+				"univers",
+				sans-serif;
+			font-weight: bold;
+			text-align: center;
+		}
+		.navbarcap {
+			background-color: #e0e0c0 !important;
+			cursor: pointer;
+			padding-left: 10px;
+			width: 50px;
+		}
+	</style>
+</head>
+
+<body>
+
+
+
+
+
+
+
+
+	
+
+
+
+
+	
+
+	<!--  **** Navigation Bar ****  -->
+	<table class="navbar">
+		<tr>
+			<td class="navbarcap" onclick="location.href='../articles/bsd-compatibility.html'">
+				<a id="prev-link" href="../articles/bsd-compatibility.html"></a>
+			</td>
+
+			<td>
+				Winsock Programmer&rsquo;s FAQ<br>
+
+				
+
+				
+				
+				
+					Articles: WsControl() Revealed
+				
+			</td>
+
+			<td class="navbarcap" onclick="location.href='../articles/csocket.html'">
+				<a id="next-link" href="../articles/csocket.html"></a>
+			</td>
+		</tr>
+	</table>
+
+	<!--  **** Body Container ****  -->
+	<div id="body" style="padding-left: 30px" >
+
+
+<h3>WsControl() Revealed</h3>
+
+<p>
+	<i>by Tom Sanfilippo (<tt>tsanfilippo at earthlink dot net</tt>)</i>
+</p>
+
+
+<h4>Description</h4>
+
+<p><code>WsControl()</code> is used to get interface info in the Windows
+95 program winipcfg.exe. Apparently it can also be used to set IP
+config information as well. I have not tested setting, but with the
+info below, you should be able to do a lot of query-only calls. In
+theory you can also trace the "set" calls made by winipcfg.exe and
+deduce some of the input parameters for those calls. This is left as
+an exercise for the reader.</p>
+
+<p>In the mode used in winipcfg.exe, <code>WsControl()</code> basically
+gives you access to SNMP query info, such as route table entries,
+interface list entries, adapter description entries, etc.  (Pretty
+exciting!!) However, like others, I needed it for a Windows 95
+application that cannot require Winsock 2. If you can require
+Winsock 2, you are probably better off using <code>WSIoctl()</code> or
+<code>GetInterfaceInfo()</code> to get the info provided by <code>WsControl()</code>
+(at least as much as is exposed by its use in winipcfg.exe).</p>
+
+
+<h5>How It Was Done</h5>
+
+<p>I used a hook DLL to hook and dump all the parameters, then I
+looked for patterns in the input and output. Then I wrote a test
+program to test out the theoretical signatures. I showed this to
+Thomas&nbsp;Divine (<tt>tdivine at pcausa dot com</tt>), and he recognized
+that the parameters I came up with were similar to parameters in a
+WSHelper sample in the NT4 DDK. I then took that sample and was able
+to deduce even more parameters. See the section entitled "Parameter
+Deduction Notes" for more info.</p>
+
+
+<h5>Why Was It Done</h5>
+
+<p>Well, the official line from Microsoft is that if you need this
+information programmatically from a Windows 95 application without
+Winsock 2, then you should have your application run winipcfg.exe in
+batch mode (yes there is a batch mode), and pipe the output to a file,
+then read the file into your application. Being that this would be
+almost as much fun as embedding a Tcl interpreter, I though it would
+be more interesting to see how they did it.</p>
+
+
+<h4>Required Headers</h4>
+
+<p>You need a few header files to make this code compile:</p>
+
+<pre>
+                \ddk\src\network\inc\tdiinfo.h
+                \ddk\src\network\wshsmple\smpletcp.h
+</pre>
+
+<p>[Ed. The author referenced the Windows NT 4.0 DDK for these headers,
+but that is no longer available. You&rsquo;ll have to look on MSDN
+to see if you can find a current DDK that still has these files.]</p>
+
+
+<h4>The <code>WsControl()</code> Call</h4>
+
+<p>The <code>WsControl()</code> function looks something like this:</p>
+
+<pre>
+                int WsControl(
+                    DWORD protocol,
+                    DWORD action,
+                    LPVOID pRequestInfo,
+                    LPDWORD pcbRequestInfoLen,
+                    LPVOID pResponseInfo,
+                    LPDWORD pcbResponseInfoLen
+                );
+</pre>
+
+<h5>Return Value</h5>
+
+<p><code>WsControl()</code> returns 0 on success. Otherwise a non-zero value
+is returned. It might return <code>STATUS_BUFFER_TOO_SMALL</code>
+if the output buffer length (<code>*pcbResponseInfoLen</code>) is too
+small. It doesn&rsquo;t seem to generate errors that can be retrieved
+by <code>WSAGetLastError()</code>.</p>
+
+<h5>Paramters</h5>
+
+<p><code>pTcpRequestInfo</code> is of type
+<code>PTCP_REQUEST_QUERY_INFORMATION_EX</code>, or of type
+<code>PTCP_REQUEST_SET_INFORMATION_EX</code>. For the calls I traced in
+winipcfg.exe, the inputs common to all query calls were:</p>
+
+<pre>
+                protocol = IPPROTO_TCP;
+                action = WSCTL_TCP_QUERY_INFORMATION;
+</pre>
+
+<p>Not all output structures could be found for the queries made
+in winipcfg.exe. As a result, I had to make some up. The made up
+ones are defined in the sample code below. Note: you may be able to
+deduce more of the parameter definitions by looking at the SNMP,
+<code>WSAIoctl()</code>, or IP Helper data structures in the current <a
+href="http://www.microsoft.com/msdownload/platformsdk/sdkupdate/">Platform
+SDK</a>.</p>
+
+<p>Again, many thanks are due to Thomas Divine for pointing out the
+updated wshsmple in the NT4 DDK. The headers in that sample allowed
+the input parameters to finally be discovered.</p>
+
+<h4>Sample Code</h4>
+
+<p>The sample code below works on both Windows 95 and Windows 98. The
+sample emulates all the queries done by winipcfg.exe as it starts
+up.</p>
+
+
+
+
+
+	
+
+
+<hr class="noshade">
+
+<h4 class=lmargin><a href="src/wsctl.cpp">wsctl.cpp</a></h4>
+
+<pre>
+<font color="#444444">// wsctl.cpp</font>
+
+<font color="#444444">// Demonstrates possible calling params for the undocumented wsock32.dll</font>
+<font color="#444444">// api &quot;WsControl&quot;, which is used by winipcfg.exe on win95/98.  wsock32.dll</font>
+<font color="#444444">// is the 32-bit thunk to old winsock implementations (I think).</font>
+
+<font color="#444444">// Gets ip info for the current interface list.</font>
+
+<font color="#444444">// Tom Sanfilippo (tsanfilippo at earthlink dot net)</font>
+<font color="#444444">// December 12, 1999</font>
+
+<font color="#444444">// Thanks are due to Thomas F. Divine (tdivine at pcausa dot com)</font>
+<font color="#444444">// for pointing out the updated wshsmple in the NT4DDK.</font>
+<font color="#444444">// The headers in that sample allowed the input parameters</font>
+<font color="#444444">// to finally be discovered.</font>
+
+<font color="0000ff"><strong>#include <font color="#008000">&lt;windows.h&gt;</font></strong></font>
+<font color="0000ff"><strong>#include <font color="#008000">&lt;stdio.h&gt;</font></strong></font>
+
+<font color="0000ff"><strong>#include <font color="#008000">&lt;winsock.h&gt;</font></strong></font>
+<font color="0000ff"><strong>#include <font color="#008000">&lt;crtdbg.h&gt;</font></strong></font>
+
+<font color="0000ff"><strong>#include <font color="#008000">&quot;tdiinfo.h&quot;</font>    <font color="#444444">// from recent NT4DDK &quot;\ddk\src\network\inc\tdiinfo.h&quot;</font></strong></font>
+<font color="0000ff"><strong>#include <font color="#008000">&quot;smpletcp.h&quot;</font>   <font color="#444444">// from recent NT4DDK &quot;\ddk\src\network\wshsmple\smpletcp.h&quot;</font></strong></font>
+
+<strong>typedef</strong> <strong>int</strong> <font color="4444FF">(</font><font color="#2040a0">__stdcall</font> <font color="4444FF">*</font> <font color="#2040a0">WsControlProc</font><font color="4444FF">)</font> <font color="4444FF">(</font><font color="#2040a0">DWORD</font>, <font color="#2040a0">DWORD</font>, <font color="#2040a0">LPVOID</font>, <font color="#2040a0">LPDWORD</font>,
+                                         <font color="#2040a0">LPVOID</font>, <font color="#2040a0">LPDWORD</font><font color="4444FF">)</font><font color="4444FF">;</font>
+<strong>typedef</strong> <strong>int</strong> <font color="4444FF">(</font><font color="#2040a0">__stdcall</font> <font color="4444FF">*</font> <font color="#2040a0">WSAGetLastErrorProc</font><font color="4444FF">)</font> <font color="4444FF">(</font><strong>void</strong><font color="4444FF">)</font><font color="4444FF">;</font>
+<strong>typedef</strong> <strong>int</strong> <font color="4444FF">(</font><font color="#2040a0">__stdcall</font> <font color="4444FF">*</font> <font color="#2040a0">WSAStartupProc</font><font color="4444FF">)</font> <font color="4444FF">(</font><font color="#2040a0">WORD</font> <font color="#2040a0">wVersionRequested</font>,
+                                          <font color="#2040a0">LPWSADATA</font> <font color="#2040a0">lpWSAData</font><font color="4444FF">)</font><font color="4444FF">;</font>
+<strong>typedef</strong> <strong>int</strong> <font color="4444FF">(</font><font color="#2040a0">__stdcall</font> <font color="4444FF">*</font> <font color="#2040a0">WSACleanupProc</font><font color="4444FF">)</font> <font color="4444FF">(</font><strong>void</strong><font color="4444FF">)</font><font color="4444FF">;</font>
+
+<font color="#2040a0">WsControlProc</font> <font color="#2040a0">WsControl</font> <font color="4444FF">=</font> <font color="#2040a0">NULL</font><font color="4444FF">;</font>
+<font color="#2040a0">WSAGetLastErrorProc</font> <font color="#2040a0">WSAGetLastError1</font> <font color="4444FF">=</font> <font color="#2040a0">NULL</font><font color="4444FF">;</font>
+<font color="#2040a0">WSAStartupProc</font> <font color="#2040a0">WSAStartup1</font> <font color="4444FF">=</font> <font color="#2040a0">NULL</font><font color="4444FF">;</font>
+<font color="#2040a0">WSACleanupProc</font> <font color="#2040a0">WSACleanup1</font> <font color="4444FF">=</font> <font color="#2040a0">NULL</font><font color="4444FF">;</font>
+
+<font color="0000ff"><strong>#define WSCTL_TCP_QUERY_INFORMATION 0</strong></font>
+<font color="0000ff"><strong>#define WSCTL_TCP_SET_INFORMATION   1   <font color="#444444">//??</font></strong></font>
+
+<font color="0000ff"><strong>#define IP_MIB_ROUTETABLE_ENTRY_ID              0x101</strong></font>
+
+<font color="0000ff"><strong>#pragma pack(push,1)</strong></font>
+
+<strong>typedef</strong> <strong>struct</strong> <font color="#2040a0">IPRouteEntry</font> <font color="4444FF"><strong>{</strong></font>
+    <font color="#2040a0">ulong</font> <font color="#2040a0">ire_addr</font><font color="4444FF">;</font>
+    <font color="#2040a0">ulong</font> <font color="#2040a0">ire_index</font><font color="4444FF">;</font>            <font color="#444444">//matches if_index in IFEntry and iae_index in IPAddrEntry</font>
+    <font color="#2040a0">ulong</font> <font color="#2040a0">ire_metric</font><font color="4444FF">;</font>
+    <font color="#2040a0">ulong</font> <font color="#2040a0">ire_unk1</font><font color="4444FF">;</font>             <font color="#444444">//??</font>
+    <font color="#2040a0">ulong</font> <font color="#2040a0">ire_unk2</font><font color="4444FF">;</font>             <font color="#444444">//??</font>
+    <font color="#2040a0">ulong</font> <font color="#2040a0">ire_unk3</font><font color="4444FF">;</font>             <font color="#444444">//??</font>
+    <font color="#2040a0">ulong</font> <font color="#2040a0">ire_gw</font><font color="4444FF">;</font>
+    <font color="#2040a0">ulong</font> <font color="#2040a0">ire_unk4</font><font color="4444FF">;</font>             <font color="#444444">//??</font>
+    <font color="#2040a0">ulong</font> <font color="#2040a0">ire_unk5</font><font color="4444FF">;</font>             <font color="#444444">//??</font>
+    <font color="#2040a0">ulong</font> <font color="#2040a0">ire_unk6</font><font color="4444FF">;</font>             <font color="#444444">//??</font>
+    <font color="#2040a0">ulong</font> <font color="#2040a0">ire_mask</font><font color="4444FF">;</font>
+    <font color="#2040a0">ulong</font> <font color="#2040a0">ire_unk7</font><font color="4444FF">;</font>             <font color="#444444">//??</font>
+<font color="4444FF"><strong>}</strong></font> <font color="#2040a0">IPRouteEntry</font><font color="4444FF">;</font>
+
+<font color="0000ff"><strong>#pragma pack(pop)</strong></font>
+
+<strong>int</strong> <font color="#2040a0">main</font><font color="4444FF">(</font><strong>int</strong> <font color="#2040a0">argc</font>, <strong>char</strong> <font color="4444FF">*</font><font color="4444FF">*</font><font color="#2040a0">argv</font><font color="4444FF">)</font>
+<font color="4444FF"><strong>{</strong></font>
+    <strong>int</strong> <font color="#2040a0">result</font> <font color="4444FF">=</font> <font color="#FF0000">0</font><font color="4444FF">;</font>
+    <font color="#2040a0">HMODULE</font> <font color="#2040a0">hModule</font><font color="4444FF">;</font>
+    <font color="#2040a0">WSADATA</font> <font color="#2040a0">WSAData</font><font color="4444FF">;</font>
+
+    <font color="#2040a0">hModule</font> <font color="4444FF">=</font> <font color="#2040a0">LoadLibrary</font><font color="4444FF">(</font><font color="#008000">&quot;wsock32.dll&quot;</font><font color="4444FF">)</font><font color="4444FF">;</font>
+    <strong>if</strong> <font color="4444FF">(</font><font color="4444FF">!</font><font color="#2040a0">hModule</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+        <font color="#2040a0">fprintf</font><font color="4444FF">(</font><font color="#2040a0">stderr</font>, <font color="#008000">&quot;LoadLibrary failed for wsock32.dll (%ld)<font color="#77dd77">\n</font>&quot;</font>,
+                <font color="#2040a0">GetLastError</font><font color="4444FF">(</font><font color="4444FF">)</font><font color="4444FF">)</font><font color="4444FF">;</font>
+        <strong>return</strong> <font color="#2040a0">EXIT_FAILURE</font><font color="4444FF">;</font>
+    <font color="4444FF"><strong>}</strong></font>
+
+    <font color="#2040a0">WsControl</font> <font color="4444FF">=</font> <font color="4444FF">(</font><font color="#2040a0">WsControlProc</font><font color="4444FF">)</font> <font color="#2040a0">GetProcAddress</font><font color="4444FF">(</font><font color="#2040a0">hModule</font>, <font color="#008000">&quot;WsControl&quot;</font><font color="4444FF">)</font><font color="4444FF">;</font>
+    <strong>if</strong> <font color="4444FF">(</font><font color="4444FF">!</font><font color="#2040a0">WsControl</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+        <font color="#2040a0">fprintf</font><font color="4444FF">(</font><font color="#2040a0">stderr</font>, <font color="#008000">&quot;GetProcAddress failed for WsControl (%ld)<font color="#77dd77">\n</font>&quot;</font>,
+                <font color="#2040a0">GetLastError</font><font color="4444FF">(</font><font color="4444FF">)</font><font color="4444FF">)</font><font color="4444FF">;</font>
+        <font color="#2040a0">FreeLibrary</font><font color="4444FF">(</font><font color="#2040a0">hModule</font><font color="4444FF">)</font><font color="4444FF">;</font>
+        <strong>return</strong> <font color="#2040a0">EXIT_FAILURE</font><font color="4444FF">;</font>
+    <font color="4444FF"><strong>}</strong></font>
+
+    <font color="#2040a0">WSAGetLastError1</font> <font color="4444FF">=</font>
+        <font color="4444FF">(</font><font color="#2040a0">WSAGetLastErrorProc</font><font color="4444FF">)</font> <font color="#2040a0">GetProcAddress</font><font color="4444FF">(</font><font color="#2040a0">hModule</font>, <font color="#008000">&quot;WSAGetLastError&quot;</font><font color="4444FF">)</font><font color="4444FF">;</font>
+    <strong>if</strong> <font color="4444FF">(</font><font color="4444FF">!</font><font color="#2040a0">WSAGetLastError1</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+        <font color="#2040a0">fprintf</font><font color="4444FF">(</font><font color="#2040a0">stderr</font>,
+                <font color="#008000">&quot;GetProcAddress failed for WSAGetLastError (%ld)<font color="#77dd77">\n</font>&quot;</font>,
+                <font color="#2040a0">GetLastError</font><font color="4444FF">(</font><font color="4444FF">)</font><font color="4444FF">)</font><font color="4444FF">;</font>
+        <font color="#2040a0">FreeLibrary</font><font color="4444FF">(</font><font color="#2040a0">hModule</font><font color="4444FF">)</font><font color="4444FF">;</font>
+        <strong>return</strong> <font color="#2040a0">EXIT_FAILURE</font><font color="4444FF">;</font>
+    <font color="4444FF"><strong>}</strong></font>
+
+    <font color="#2040a0">WSAStartup1</font> <font color="4444FF">=</font> <font color="4444FF">(</font><font color="#2040a0">WSAStartupProc</font><font color="4444FF">)</font> <font color="#2040a0">GetProcAddress</font><font color="4444FF">(</font><font color="#2040a0">hModule</font>, <font color="#008000">&quot;WSAStartup&quot;</font><font color="4444FF">)</font><font color="4444FF">;</font>
+    <strong>if</strong> <font color="4444FF">(</font><font color="4444FF">!</font><font color="#2040a0">WSAStartup1</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+        <font color="#2040a0">fprintf</font><font color="4444FF">(</font><font color="#2040a0">stderr</font>, <font color="#008000">&quot;GetProcAddress failed for WSAStartup (%ld)<font color="#77dd77">\n</font>&quot;</font>,
+                <font color="#2040a0">GetLastError</font><font color="4444FF">(</font><font color="4444FF">)</font><font color="4444FF">)</font><font color="4444FF">;</font>
+        <font color="#2040a0">FreeLibrary</font><font color="4444FF">(</font><font color="#2040a0">hModule</font><font color="4444FF">)</font><font color="4444FF">;</font>
+        <strong>return</strong> <font color="#2040a0">EXIT_FAILURE</font><font color="4444FF">;</font>
+    <font color="4444FF"><strong>}</strong></font>
+
+    <font color="#2040a0">WSACleanup1</font> <font color="4444FF">=</font> <font color="4444FF">(</font><font color="#2040a0">WSACleanupProc</font><font color="4444FF">)</font> <font color="#2040a0">GetProcAddress</font><font color="4444FF">(</font><font color="#2040a0">hModule</font>, <font color="#008000">&quot;WSACleanup&quot;</font><font color="4444FF">)</font><font color="4444FF">;</font>
+    <strong>if</strong> <font color="4444FF">(</font><font color="4444FF">!</font><font color="#2040a0">WSACleanup1</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+        <font color="#2040a0">fprintf</font><font color="4444FF">(</font><font color="#2040a0">stderr</font>, <font color="#008000">&quot;GetProcAddress failed for WSACleanup (%ld)<font color="#77dd77">\n</font>&quot;</font>,
+                <font color="#2040a0">GetLastError</font><font color="4444FF">(</font><font color="4444FF">)</font><font color="4444FF">)</font><font color="4444FF">;</font>
+        <font color="#2040a0">FreeLibrary</font><font color="4444FF">(</font><font color="#2040a0">hModule</font><font color="4444FF">)</font><font color="4444FF">;</font>
+        <strong>return</strong> <font color="#2040a0">EXIT_FAILURE</font><font color="4444FF">;</font>
+    <font color="4444FF"><strong>}</strong></font>
+
+    <font color="#2040a0">result</font> <font color="4444FF">=</font> <font color="#2040a0">WSAStartup1</font><font color="4444FF">(</font><font color="#2040a0">MAKEWORD</font><font color="4444FF">(</font><font color="#FF0000">1</font>, <font color="#FF0000">1</font><font color="4444FF">)</font>, <font color="4444FF">&amp;</font><font color="#2040a0">WSAData</font><font color="4444FF">)</font><font color="4444FF">;</font>
+    <strong>if</strong> <font color="4444FF">(</font><font color="#2040a0">result</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+        <font color="#2040a0">fprintf</font><font color="4444FF">(</font><font color="#2040a0">stderr</font>, <font color="#008000">&quot;WSAStartup failed (%ld)<font color="#77dd77">\n</font>&quot;</font>, <font color="#2040a0">result</font><font color="4444FF">)</font><font color="4444FF">;</font>
+        <font color="#2040a0">FreeLibrary</font><font color="4444FF">(</font><font color="#2040a0">hModule</font><font color="4444FF">)</font><font color="4444FF">;</font>
+        <strong>return</strong> <font color="#2040a0">EXIT_FAILURE</font><font color="4444FF">;</font>
+    <font color="4444FF"><strong>}</strong></font>
+
+    <font color="#2040a0">TCP_REQUEST_QUERY_INFORMATION_EX</font> <font color="#2040a0">tcpRequestQueryInfoEx</font><font color="4444FF">;</font>
+
+    <font color="#2040a0">memset</font><font color="4444FF">(</font><font color="4444FF">&amp;</font><font color="#2040a0">tcpRequestQueryInfoEx</font>, <font color="#FF0000">0</font>, <strong>sizeof</strong><font color="4444FF">(</font><font color="#2040a0">tcpRequestQueryInfoEx</font><font color="4444FF">)</font><font color="4444FF">)</font><font color="4444FF">;</font>
+    <font color="#2040a0">tcpRequestQueryInfoEx</font>.<font color="#2040a0">ID</font>.<font color="#2040a0">toi_entity</font>.<font color="#2040a0">tei_entity</font> <font color="4444FF">=</font> <font color="#2040a0">GENERIC_ENTITY</font><font color="4444FF">;</font>
+    <font color="#2040a0">tcpRequestQueryInfoEx</font>.<font color="#2040a0">ID</font>.<font color="#2040a0">toi_entity</font>.<font color="#2040a0">tei_instance</font> <font color="4444FF">=</font> <font color="#FF0000">0</font><font color="4444FF">;</font>
+    <font color="#2040a0">tcpRequestQueryInfoEx</font>.<font color="#2040a0">ID</font>.<font color="#2040a0">toi_class</font> <font color="4444FF">=</font> <font color="#2040a0">INFO_CLASS_GENERIC</font><font color="4444FF">;</font>
+    <font color="#2040a0">tcpRequestQueryInfoEx</font>.<font color="#2040a0">ID</font>.<font color="#2040a0">toi_type</font> <font color="4444FF">=</font> <font color="#2040a0">INFO_TYPE_PROVIDER</font><font color="4444FF">;</font>
+    <font color="#2040a0">tcpRequestQueryInfoEx</font>.<font color="#2040a0">ID</font>.<font color="#2040a0">toi_id</font> <font color="4444FF">=</font> <font color="#2040a0">ENTITY_LIST_ID</font><font color="4444FF">;</font>
+
+    <font color="#2040a0">DWORD</font> <font color="#2040a0">tcpRequestBufSize</font> <font color="4444FF">=</font> <strong>sizeof</strong><font color="4444FF">(</font><font color="#2040a0">tcpRequestQueryInfoEx</font><font color="4444FF">)</font><font color="4444FF">;</font>
+
+    <font color="#444444">//this probably allocates too much space; not sure if MAX_TDI_ENTITIES</font>
+    <font color="#444444">//represents the max number of entities that can be returned or, if it</font>
+    <font color="#444444">//is the highest entity value that can be defined.</font>
+    <font color="#2040a0">DWORD</font> <font color="#2040a0">entityIdsBufSize</font> <font color="4444FF">=</font> <font color="#2040a0">MAX_TDI_ENTITIES</font> <font color="4444FF">*</font> <strong>sizeof</strong><font color="4444FF">(</font><font color="#2040a0">TDIEntityID</font><font color="4444FF">)</font><font color="4444FF">;</font>
+
+    <font color="#2040a0">TDIEntityID</font> <font color="4444FF">*</font><font color="#2040a0">entityIds</font> <font color="4444FF">=</font> <font color="4444FF">(</font><font color="#2040a0">TDIEntityID</font> <font color="4444FF">*</font><font color="4444FF">)</font> <font color="#2040a0">calloc</font><font color="4444FF">(</font><font color="#2040a0">entityIdsBufSize</font>, <font color="#FF0000">1</font><font color="4444FF">)</font><font color="4444FF">;</font>
+
+    <font color="#2040a0">result</font> <font color="4444FF">=</font> <font color="#2040a0">WsControl</font><font color="4444FF">(</font><font color="#2040a0">IPPROTO_TCP</font>,
+                       <font color="#2040a0">WSCTL_TCP_QUERY_INFORMATION</font>,
+                       <font color="4444FF">&amp;</font><font color="#2040a0">tcpRequestQueryInfoEx</font>,
+                       <font color="4444FF">&amp;</font><font color="#2040a0">tcpRequestBufSize</font>, <font color="#2040a0">entityIds</font>, <font color="4444FF">&amp;</font><font color="#2040a0">entityIdsBufSize</font><font color="4444FF">)</font><font color="4444FF">;</font>
+
+    <strong>if</strong> <font color="4444FF">(</font><font color="#2040a0">result</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+        <font color="#2040a0">fprintf</font><font color="4444FF">(</font><font color="#2040a0">stderr</font>, <font color="#008000">&quot;%s(%d) WsControl failed (%ld)<font color="#77dd77">\n</font>&quot;</font>, <font color="#2040a0">__FILE__</font>,
+                <font color="#2040a0">__LINE__</font>, <font color="#2040a0">WSAGetLastError1</font><font color="4444FF">(</font><font color="4444FF">)</font><font color="4444FF">)</font><font color="4444FF">;</font>
+        <font color="#2040a0">WSACleanup1</font><font color="4444FF">(</font><font color="4444FF">)</font><font color="4444FF">;</font>
+        <font color="#2040a0">FreeLibrary</font><font color="4444FF">(</font><font color="#2040a0">hModule</font><font color="4444FF">)</font><font color="4444FF">;</font>
+        <strong>return</strong> <font color="#2040a0">EXIT_FAILURE</font><font color="4444FF">;</font>
+    <font color="4444FF"><strong>}</strong></font>
+
+    <font color="#444444">//...after the call we compute:</font>
+    <font color="#2040a0">DWORD</font> <font color="#2040a0">entityCount</font> <font color="4444FF">=</font> <font color="#2040a0">entityIdsBufSize</font> / <strong>sizeof</strong><font color="4444FF">(</font><font color="#2040a0">TDIEntityID</font><font color="4444FF">)</font><font color="4444FF">;</font>
+
+    <font color="#2040a0">DWORD</font> <font color="#2040a0">i</font><font color="4444FF">;</font>
+    <font color="#2040a0">DWORD</font> <font color="#2040a0">ifCount</font> <font color="4444FF">=</font> <font color="#FF0000">0</font><font color="4444FF">;</font>
+
+    <font color="#444444">//print out the interface info for the generic interfaces</font>
+    <strong>for</strong> <font color="4444FF">(</font><font color="#2040a0">i</font> <font color="4444FF">=</font> <font color="#FF0000">0</font><font color="4444FF">;</font> <font color="#2040a0">i</font> <font color="4444FF">&lt;</font> <font color="#2040a0">entityCount</font><font color="4444FF">;</font> <font color="#2040a0">i</font><font color="4444FF">+</font><font color="4444FF">+</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+
+        <strong>if</strong> <font color="4444FF">(</font><font color="#2040a0">entityIds</font><font color="4444FF">[</font><font color="#2040a0">i</font><font color="4444FF">]</font>.<font color="#2040a0">tei_entity</font> <font color="4444FF">=</font><font color="4444FF">=</font> <font color="#2040a0">IF_ENTITY</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+
+            <font color="4444FF">+</font><font color="4444FF">+</font><font color="#2040a0">ifCount</font><font color="4444FF">;</font>
+
+            <font color="#444444">//see if the iterface supports snmp mib-2 info</font>
+            <font color="#2040a0">memset</font><font color="4444FF">(</font><font color="4444FF">&amp;</font><font color="#2040a0">tcpRequestQueryInfoEx</font>, <font color="#FF0000">0</font>,
+                   <strong>sizeof</strong><font color="4444FF">(</font><font color="#2040a0">tcpRequestQueryInfoEx</font><font color="4444FF">)</font><font color="4444FF">)</font><font color="4444FF">;</font>
+            <font color="#2040a0">tcpRequestQueryInfoEx</font>.<font color="#2040a0">ID</font>.<font color="#2040a0">toi_entity</font> <font color="4444FF">=</font> <font color="#2040a0">entityIds</font><font color="4444FF">[</font><font color="#2040a0">i</font><font color="4444FF">]</font><font color="4444FF">;</font>
+            <font color="#2040a0">tcpRequestQueryInfoEx</font>.<font color="#2040a0">ID</font>.<font color="#2040a0">toi_class</font> <font color="4444FF">=</font> <font color="#2040a0">INFO_CLASS_GENERIC</font><font color="4444FF">;</font>
+            <font color="#2040a0">tcpRequestQueryInfoEx</font>.<font color="#2040a0">ID</font>.<font color="#2040a0">toi_type</font> <font color="4444FF">=</font> <font color="#2040a0">INFO_TYPE_PROVIDER</font><font color="4444FF">;</font>
+            <font color="#2040a0">tcpRequestQueryInfoEx</font>.<font color="#2040a0">ID</font>.<font color="#2040a0">toi_id</font> <font color="4444FF">=</font> <font color="#2040a0">ENTITY_TYPE_ID</font><font color="4444FF">;</font>
+
+            <font color="#2040a0">ULONG</font> <font color="#2040a0">entityType</font><font color="4444FF">;</font>
+            <font color="#2040a0">DWORD</font> <font color="#2040a0">entityTypeSize</font> <font color="4444FF">=</font> <strong>sizeof</strong><font color="4444FF">(</font><font color="#2040a0">entityType</font><font color="4444FF">)</font><font color="4444FF">;</font>
+
+            <font color="#2040a0">result</font> <font color="4444FF">=</font> <font color="#2040a0">WsControl</font><font color="4444FF">(</font><font color="#2040a0">IPPROTO_TCP</font>,
+                               <font color="#2040a0">WSCTL_TCP_QUERY_INFORMATION</font>,
+                               <font color="4444FF">&amp;</font><font color="#2040a0">tcpRequestQueryInfoEx</font>,
+                               <font color="4444FF">&amp;</font><font color="#2040a0">tcpRequestBufSize</font>,
+                               <font color="4444FF">&amp;</font><font color="#2040a0">entityType</font>, <font color="4444FF">&amp;</font><font color="#2040a0">entityTypeSize</font><font color="4444FF">)</font><font color="4444FF">;</font>
+
+            <strong>if</strong> <font color="4444FF">(</font><font color="#2040a0">result</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+                <font color="#2040a0">fprintf</font><font color="4444FF">(</font><font color="#2040a0">stderr</font>, <font color="#008000">&quot;%s(%d) WsControl failed (%ld)<font color="#77dd77">\n</font>&quot;</font>,
+                        <font color="#2040a0">__FILE__</font>, <font color="#2040a0">__LINE__</font>, <font color="#2040a0">WSAGetLastError1</font><font color="4444FF">(</font><font color="4444FF">)</font><font color="4444FF">)</font><font color="4444FF">;</font>
+                <font color="#2040a0">WSACleanup1</font><font color="4444FF">(</font><font color="4444FF">)</font><font color="4444FF">;</font>
+                <font color="#2040a0">FreeLibrary</font><font color="4444FF">(</font><font color="#2040a0">hModule</font><font color="4444FF">)</font><font color="4444FF">;</font>
+                <strong>return</strong> <font color="#2040a0">EXIT_FAILURE</font><font color="4444FF">;</font>
+            <font color="4444FF"><strong>}</strong></font>
+
+            <strong>if</strong> <font color="4444FF">(</font><font color="#2040a0">entityType</font> <font color="4444FF">=</font><font color="4444FF">=</font> <font color="#2040a0">IF_MIB</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font> <font color="#444444">// Supports MIB-2 interface.</font>
+
+                <font color="#444444">//get snmp mib-2 info</font>
+                <font color="#2040a0">tcpRequestQueryInfoEx</font>.<font color="#2040a0">ID</font>.<font color="#2040a0">toi_class</font> <font color="4444FF">=</font> <font color="#2040a0">INFO_CLASS_PROTOCOL</font><font color="4444FF">;</font>
+                <font color="#2040a0">tcpRequestQueryInfoEx</font>.<font color="#2040a0">ID</font>.<font color="#2040a0">toi_id</font> <font color="4444FF">=</font> <font color="#2040a0">IF_MIB_STATS_ID</font><font color="4444FF">;</font>
+
+                <font color="#444444">//note: win95 winipcfg use 130 for MAX_IFDESCR_LEN while</font>
+                <font color="#444444">//ddk\src\network\wshsmple\SMPLETCP.H defines it as 256</font>
+                <font color="#444444">//we are trying to dup the winipcfg parameters for now</font>
+                <font color="#2040a0">DWORD</font> <font color="#2040a0">ifEntrySize</font> <font color="4444FF">=</font> <strong>sizeof</strong><font color="4444FF">(</font><font color="#2040a0">IFEntry</font><font color="4444FF">)</font> <font color="4444FF">+</font> <font color="#FF0000">128</font> <font color="4444FF">+</font> <font color="#FF0000">1</font><font color="4444FF">;</font>
+                <font color="#2040a0">IFEntry</font> <font color="4444FF">*</font><font color="#2040a0">ifEntry</font> <font color="4444FF">=</font> <font color="4444FF">(</font><font color="#2040a0">IFEntry</font> <font color="4444FF">*</font><font color="4444FF">)</font> <font color="#2040a0">calloc</font><font color="4444FF">(</font><font color="#2040a0">ifEntrySize</font>, <font color="#FF0000">1</font><font color="4444FF">)</font><font color="4444FF">;</font>
+
+                <font color="#2040a0">result</font> <font color="4444FF">=</font> <font color="#2040a0">WsControl</font><font color="4444FF">(</font><font color="#2040a0">IPPROTO_TCP</font>,
+                                   <font color="#2040a0">WSCTL_TCP_QUERY_INFORMATION</font>,
+                                   <font color="4444FF">&amp;</font><font color="#2040a0">tcpRequestQueryInfoEx</font>,
+                                   <font color="4444FF">&amp;</font><font color="#2040a0">tcpRequestBufSize</font>,
+                                   <font color="#2040a0">ifEntry</font>, <font color="4444FF">&amp;</font><font color="#2040a0">ifEntrySize</font><font color="4444FF">)</font><font color="4444FF">;</font>
+
+                <strong>if</strong> <font color="4444FF">(</font><font color="#2040a0">result</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+                    <font color="#2040a0">fprintf</font><font color="4444FF">(</font><font color="#2040a0">stderr</font>, <font color="#008000">&quot;%s(%d) WsControl failed (%ld)<font color="#77dd77">\n</font>&quot;</font>,
+                            <font color="#2040a0">__FILE__</font>, <font color="#2040a0">__LINE__</font>, <font color="#2040a0">WSAGetLastError1</font><font color="4444FF">(</font><font color="4444FF">)</font><font color="4444FF">)</font><font color="4444FF">;</font>
+                    <font color="#2040a0">WSACleanup1</font><font color="4444FF">(</font><font color="4444FF">)</font><font color="4444FF">;</font>
+                    <font color="#2040a0">FreeLibrary</font><font color="4444FF">(</font><font color="#2040a0">hModule</font><font color="4444FF">)</font><font color="4444FF">;</font>
+                    <strong>return</strong> <font color="#2040a0">EXIT_FAILURE</font><font color="4444FF">;</font>
+                <font color="4444FF"><strong>}</strong></font>
+
+                <font color="#444444">//print interface index and description</font>
+                <font color="4444FF">*</font><font color="4444FF">(</font><font color="#2040a0">ifEntry</font><font color="4444FF">-</font><font color="4444FF">&gt;</font><font color="#2040a0">if_descr</font> <font color="4444FF">+</font> <font color="#2040a0">ifEntry</font><font color="4444FF">-</font><font color="4444FF">&gt;</font><font color="#2040a0">if_descrlen</font><font color="4444FF">)</font> <font color="4444FF">=</font> <font color="#FF0000">0</font><font color="4444FF">;</font>
+                <font color="#2040a0">fprintf</font><font color="4444FF">(</font><font color="#2040a0">stdout</font>, <font color="#008000">&quot;IF Index %lu  %s<font color="#77dd77">\n</font>&quot;</font>, <font color="#2040a0">ifEntry</font><font color="4444FF">-</font><font color="4444FF">&gt;</font><font color="#2040a0">if_index</font>,
+                        <font color="#2040a0">ifEntry</font><font color="4444FF">-</font><font color="4444FF">&gt;</font><font color="#2040a0">if_descr</font><font color="4444FF">)</font><font color="4444FF">;</font>
+
+            <font color="4444FF"><strong>}</strong></font>
+        <font color="4444FF"><strong>}</strong></font>
+    <font color="4444FF"><strong>}</strong></font>
+
+    <font color="#444444">//find the ip interface</font>
+    <strong>for</strong> <font color="4444FF">(</font><font color="#2040a0">i</font> <font color="4444FF">=</font> <font color="#FF0000">0</font><font color="4444FF">;</font> <font color="#2040a0">i</font> <font color="4444FF">&lt;</font> <font color="#2040a0">entityCount</font><font color="4444FF">;</font> <font color="#2040a0">i</font><font color="4444FF">+</font><font color="4444FF">+</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+
+        <strong>if</strong> <font color="4444FF">(</font><font color="#2040a0">entityIds</font><font color="4444FF">[</font><font color="#2040a0">i</font><font color="4444FF">]</font>.<font color="#2040a0">tei_entity</font> <font color="4444FF">=</font><font color="4444FF">=</font> <font color="#2040a0">CL_NL_ENTITY</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+
+            <font color="#444444">//get ip interface info</font>
+            <font color="#2040a0">memset</font><font color="4444FF">(</font><font color="4444FF">&amp;</font><font color="#2040a0">tcpRequestQueryInfoEx</font>, <font color="#FF0000">0</font>,
+                   <strong>sizeof</strong><font color="4444FF">(</font><font color="#2040a0">tcpRequestQueryInfoEx</font><font color="4444FF">)</font><font color="4444FF">)</font><font color="4444FF">;</font>
+            <font color="#2040a0">tcpRequestQueryInfoEx</font>.<font color="#2040a0">ID</font>.<font color="#2040a0">toi_entity</font> <font color="4444FF">=</font> <font color="#2040a0">entityIds</font><font color="4444FF">[</font><font color="#2040a0">i</font><font color="4444FF">]</font><font color="4444FF">;</font>
+            <font color="#2040a0">tcpRequestQueryInfoEx</font>.<font color="#2040a0">ID</font>.<font color="#2040a0">toi_class</font> <font color="4444FF">=</font> <font color="#2040a0">INFO_CLASS_GENERIC</font><font color="4444FF">;</font>
+            <font color="#2040a0">tcpRequestQueryInfoEx</font>.<font color="#2040a0">ID</font>.<font color="#2040a0">toi_type</font> <font color="4444FF">=</font> <font color="#2040a0">INFO_TYPE_PROVIDER</font><font color="4444FF">;</font>
+            <font color="#2040a0">tcpRequestQueryInfoEx</font>.<font color="#2040a0">ID</font>.<font color="#2040a0">toi_id</font> <font color="4444FF">=</font> <font color="#2040a0">ENTITY_TYPE_ID</font><font color="4444FF">;</font>
+
+            <font color="#2040a0">ULONG</font> <font color="#2040a0">entityType</font><font color="4444FF">;</font>
+            <font color="#2040a0">DWORD</font> <font color="#2040a0">entityTypeSize</font> <font color="4444FF">=</font> <strong>sizeof</strong><font color="4444FF">(</font><font color="#2040a0">entityType</font><font color="4444FF">)</font><font color="4444FF">;</font>
+
+            <font color="#2040a0">result</font> <font color="4444FF">=</font> <font color="#2040a0">WsControl</font><font color="4444FF">(</font><font color="#2040a0">IPPROTO_TCP</font>,
+                               <font color="#2040a0">WSCTL_TCP_QUERY_INFORMATION</font>,
+                               <font color="4444FF">&amp;</font><font color="#2040a0">tcpRequestQueryInfoEx</font>,
+                               <font color="4444FF">&amp;</font><font color="#2040a0">tcpRequestBufSize</font>,
+                               <font color="4444FF">&amp;</font><font color="#2040a0">entityType</font>, <font color="4444FF">&amp;</font><font color="#2040a0">entityTypeSize</font><font color="4444FF">)</font><font color="4444FF">;</font>
+
+            <strong>if</strong> <font color="4444FF">(</font><font color="#2040a0">result</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+                <font color="#2040a0">fprintf</font><font color="4444FF">(</font><font color="#2040a0">stderr</font>, <font color="#008000">&quot;%s(%d) WsControl failed (%ld)<font color="#77dd77">\n</font>&quot;</font>,
+                        <font color="#2040a0">__FILE__</font>, <font color="#2040a0">__LINE__</font>, <font color="#2040a0">WSAGetLastError1</font><font color="4444FF">(</font><font color="4444FF">)</font><font color="4444FF">)</font><font color="4444FF">;</font>
+                <font color="#2040a0">WSACleanup1</font><font color="4444FF">(</font><font color="4444FF">)</font><font color="4444FF">;</font>
+                <font color="#2040a0">FreeLibrary</font><font color="4444FF">(</font><font color="#2040a0">hModule</font><font color="4444FF">)</font><font color="4444FF">;</font>
+                <strong>return</strong> <font color="#2040a0">EXIT_FAILURE</font><font color="4444FF">;</font>
+            <font color="4444FF"><strong>}</strong></font>
+
+            <strong>if</strong> <font color="4444FF">(</font><font color="#2040a0">entityType</font> <font color="4444FF">=</font><font color="4444FF">=</font> <font color="#2040a0">CL_NL_IP</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>   <font color="#444444">// Entity implements IP.</font>
+
+                <font color="#444444">//get ip snmp info</font>
+                <font color="#2040a0">tcpRequestQueryInfoEx</font>.<font color="#2040a0">ID</font>.<font color="#2040a0">toi_class</font> <font color="4444FF">=</font> <font color="#2040a0">INFO_CLASS_PROTOCOL</font><font color="4444FF">;</font>
+                <font color="#2040a0">tcpRequestQueryInfoEx</font>.<font color="#2040a0">ID</font>.<font color="#2040a0">toi_id</font> <font color="4444FF">=</font> <font color="#2040a0">IP_MIB_STATS_ID</font><font color="4444FF">;</font>
+
+                <font color="#2040a0">IPSNMPInfo</font> <font color="#2040a0">ipSnmpInfo</font><font color="4444FF">;</font>
+                <font color="#2040a0">DWORD</font> <font color="#2040a0">ipSnmpInfoSize</font> <font color="4444FF">=</font> <strong>sizeof</strong><font color="4444FF">(</font><font color="#2040a0">ipSnmpInfo</font><font color="4444FF">)</font><font color="4444FF">;</font>
+
+                <font color="#2040a0">result</font> <font color="4444FF">=</font> <font color="#2040a0">WsControl</font><font color="4444FF">(</font><font color="#2040a0">IPPROTO_TCP</font>,
+                                   <font color="#2040a0">WSCTL_TCP_QUERY_INFORMATION</font>,
+                                   <font color="4444FF">&amp;</font><font color="#2040a0">tcpRequestQueryInfoEx</font>,
+                                   <font color="4444FF">&amp;</font><font color="#2040a0">tcpRequestBufSize</font>,
+                                   <font color="4444FF">&amp;</font><font color="#2040a0">ipSnmpInfo</font>, <font color="4444FF">&amp;</font><font color="#2040a0">ipSnmpInfoSize</font><font color="4444FF">)</font><font color="4444FF">;</font>
+
+                <strong>if</strong> <font color="4444FF">(</font><font color="#2040a0">result</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+                    <font color="#2040a0">fprintf</font><font color="4444FF">(</font><font color="#2040a0">stderr</font>, <font color="#008000">&quot;%s(%d) WsControl failed (%ld)<font color="#77dd77">\n</font>&quot;</font>,
+                            <font color="#2040a0">__FILE__</font>, <font color="#2040a0">__LINE__</font>, <font color="#2040a0">WSAGetLastError1</font><font color="4444FF">(</font><font color="4444FF">)</font><font color="4444FF">)</font><font color="4444FF">;</font>
+                    <font color="#2040a0">WSACleanup1</font><font color="4444FF">(</font><font color="4444FF">)</font><font color="4444FF">;</font>
+                    <font color="#2040a0">FreeLibrary</font><font color="4444FF">(</font><font color="#2040a0">hModule</font><font color="4444FF">)</font><font color="4444FF">;</font>
+                    <strong>return</strong> <font color="#2040a0">EXIT_FAILURE</font><font color="4444FF">;</font>
+                <font color="4444FF"><strong>}</strong></font>
+
+                <font color="#444444">//print ip snmp info</font>
+                <font color="#2040a0">fprintf</font><font color="4444FF">(</font><font color="#2040a0">stdout</font>, <font color="#008000">&quot;IP NumIfs: %lu<font color="#77dd77">\n</font>&quot;</font>, <font color="#2040a0">ipSnmpInfo</font>.<font color="#2040a0">ipsi_numif</font><font color="4444FF">)</font><font color="4444FF">;</font>
+                <font color="#2040a0">fprintf</font><font color="4444FF">(</font><font color="#2040a0">stdout</font>, <font color="#008000">&quot;IP NumAddrs: %lu<font color="#77dd77">\n</font>&quot;</font>,
+                        <font color="#2040a0">ipSnmpInfo</font>.<font color="#2040a0">ipsi_numaddr</font><font color="4444FF">)</font><font color="4444FF">;</font>
+                <font color="#2040a0">fprintf</font><font color="4444FF">(</font><font color="#2040a0">stdout</font>, <font color="#008000">&quot;IP NumRoutes: %lu<font color="#77dd77">\n</font>&quot;</font>,
+                        <font color="#2040a0">ipSnmpInfo</font>.<font color="#2040a0">ipsi_numroutes</font><font color="4444FF">)</font><font color="4444FF">;</font>
+
+                <font color="#444444">//get ip address list</font>
+                <font color="#2040a0">tcpRequestQueryInfoEx</font>.<font color="#2040a0">ID</font>.<font color="#2040a0">toi_id</font> <font color="4444FF">=</font>
+                    <font color="#2040a0">IP_MIB_ADDRTABLE_ENTRY_ID</font><font color="4444FF">;</font>
+
+                <font color="#2040a0">DWORD</font> <font color="#2040a0">ipAddrEntryBufSize</font> <font color="4444FF">=</font> <strong>sizeof</strong><font color="4444FF">(</font><font color="#2040a0">IPAddrEntry</font><font color="4444FF">)</font> <font color="4444FF">*</font> <font color="#2040a0">ifCount</font><font color="4444FF">;</font>
+                <font color="#2040a0">IPAddrEntry</font> <font color="4444FF">*</font><font color="#2040a0">ipAddrEntry</font> <font color="4444FF">=</font> <font color="4444FF">(</font><font color="#2040a0">IPAddrEntry</font>
+                                            <font color="4444FF">*</font><font color="4444FF">)</font> <font color="#2040a0">calloc</font><font color="4444FF">(</font><font color="#2040a0">ipAddrEntryBufSize</font>,
+                                                      <font color="#FF0000">1</font><font color="4444FF">)</font><font color="4444FF">;</font>
+
+                <font color="#2040a0">result</font> <font color="4444FF">=</font> <font color="#2040a0">WsControl</font><font color="4444FF">(</font><font color="#2040a0">IPPROTO_TCP</font>,
+                                   <font color="#2040a0">WSCTL_TCP_QUERY_INFORMATION</font>,
+                                   <font color="4444FF">&amp;</font><font color="#2040a0">tcpRequestQueryInfoEx</font>,
+                                   <font color="4444FF">&amp;</font><font color="#2040a0">tcpRequestBufSize</font>,
+                                   <font color="#2040a0">ipAddrEntry</font>, <font color="4444FF">&amp;</font><font color="#2040a0">ipAddrEntryBufSize</font><font color="4444FF">)</font><font color="4444FF">;</font>
+
+                <strong>if</strong> <font color="4444FF">(</font><font color="#2040a0">result</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+                    <font color="#2040a0">fprintf</font><font color="4444FF">(</font><font color="#2040a0">stderr</font>, <font color="#008000">&quot;%s(%d) WsControl failed (%ld)<font color="#77dd77">\n</font>&quot;</font>,
+                            <font color="#2040a0">__FILE__</font>, <font color="#2040a0">__LINE__</font>, <font color="#2040a0">WSAGetLastError1</font><font color="4444FF">(</font><font color="4444FF">)</font><font color="4444FF">)</font><font color="4444FF">;</font>
+                    <font color="#2040a0">WSACleanup1</font><font color="4444FF">(</font><font color="4444FF">)</font><font color="4444FF">;</font>
+                    <font color="#2040a0">FreeLibrary</font><font color="4444FF">(</font><font color="#2040a0">hModule</font><font color="4444FF">)</font><font color="4444FF">;</font>
+                    <strong>return</strong> <font color="#2040a0">EXIT_FAILURE</font><font color="4444FF">;</font>
+                <font color="4444FF"><strong>}</strong></font>
+
+                <font color="#444444">//print ip address list</font>
+                <font color="#2040a0">DWORD</font> <font color="#2040a0">j</font><font color="4444FF">;</font>
+                <strong>for</strong> <font color="4444FF">(</font><font color="#2040a0">j</font> <font color="4444FF">=</font> <font color="#FF0000">0</font><font color="4444FF">;</font> <font color="#2040a0">j</font> <font color="4444FF">&lt;</font> <font color="#2040a0">ifCount</font><font color="4444FF">;</font> <font color="#2040a0">j</font><font color="4444FF">+</font><font color="4444FF">+</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+
+                    <strong>unsigned</strong> <strong>char</strong> <font color="4444FF">*</font><font color="#2040a0">addr</font> <font color="4444FF">=</font> <font color="4444FF">(</font><strong>unsigned</strong> <strong>char</strong>
+                                           <font color="4444FF">*</font><font color="4444FF">)</font> <font color="4444FF">&amp;</font><font color="#2040a0">ipAddrEntry</font><font color="4444FF">[</font><font color="#2040a0">j</font><font color="4444FF">]</font>.<font color="#2040a0">iae_addr</font><font color="4444FF">;</font>
+                    <strong>unsigned</strong> <strong>char</strong> <font color="4444FF">*</font><font color="#2040a0">mask</font> <font color="4444FF">=</font> <font color="4444FF">(</font><strong>unsigned</strong> <strong>char</strong>
+                                           <font color="4444FF">*</font><font color="4444FF">)</font> <font color="4444FF">&amp;</font><font color="#2040a0">ipAddrEntry</font><font color="4444FF">[</font><font color="#2040a0">j</font><font color="4444FF">]</font>.<font color="#2040a0">iae_mask</font><font color="4444FF">;</font>
+
+                    <font color="#2040a0">fprintf</font><font color="4444FF">(</font><font color="#2040a0">stdout</font>, <font color="#008000">&quot;IF Index %ld  &quot;</font>
+                            <font color="#008000">&quot;Address %ld.%ld.%ld.%ld  &quot;</font>
+                            <font color="#008000">&quot;Mask %ld.%ld.%ld.%ld<font color="#77dd77">\n</font>&quot;</font>,
+                            <font color="#2040a0">ipAddrEntry</font><font color="4444FF">[</font><font color="#2040a0">j</font><font color="4444FF">]</font>.<font color="#2040a0">iae_index</font>,
+                            <font color="#2040a0">addr</font><font color="4444FF">[</font><font color="#FF0000">0</font><font color="4444FF">]</font>, <font color="#2040a0">addr</font><font color="4444FF">[</font><font color="#FF0000">1</font><font color="4444FF">]</font>, <font color="#2040a0">addr</font><font color="4444FF">[</font><font color="#FF0000">2</font><font color="4444FF">]</font>, <font color="#2040a0">addr</font><font color="4444FF">[</font><font color="#FF0000">3</font><font color="4444FF">]</font>,
+                            <font color="#2040a0">mask</font><font color="4444FF">[</font><font color="#FF0000">0</font><font color="4444FF">]</font>, <font color="#2040a0">mask</font><font color="4444FF">[</font><font color="#FF0000">1</font><font color="4444FF">]</font>, <font color="#2040a0">mask</font><font color="4444FF">[</font><font color="#FF0000">2</font><font color="4444FF">]</font>, <font color="#2040a0">mask</font><font color="4444FF">[</font><font color="#FF0000">3</font><font color="4444FF">]</font><font color="4444FF">)</font><font color="4444FF">;</font>
+                <font color="4444FF"><strong>}</strong></font>
+
+                <font color="#444444">//get route table</font>
+                <font color="#2040a0">tcpRequestQueryInfoEx</font>.<font color="#2040a0">ID</font>.<font color="#2040a0">toi_id</font> <font color="4444FF">=</font>
+                    <font color="#2040a0">IP_MIB_ROUTETABLE_ENTRY_ID</font><font color="4444FF">;</font>
+
+                <font color="#2040a0">DWORD</font> <font color="#2040a0">ipRouteEntryBufSize</font> <font color="4444FF">=</font> <strong>sizeof</strong><font color="4444FF">(</font><font color="#2040a0">IPRouteEntry</font><font color="4444FF">)</font> <font color="4444FF">*</font>
+                    <font color="#2040a0">ipSnmpInfo</font>.<font color="#2040a0">ipsi_numroutes</font><font color="4444FF">;</font>
+                <font color="#2040a0">IPRouteEntry</font> <font color="4444FF">*</font><font color="#2040a0">ipRouteEntry</font> <font color="4444FF">=</font> <font color="4444FF">(</font><font color="#2040a0">IPRouteEntry</font>
+                                              <font color="4444FF">*</font><font color="4444FF">)</font>
+                    <font color="#2040a0">calloc</font><font color="4444FF">(</font><font color="#2040a0">ipRouteEntryBufSize</font>, <font color="#FF0000">1</font><font color="4444FF">)</font><font color="4444FF">;</font>
+
+                <font color="#2040a0">result</font> <font color="4444FF">=</font> <font color="#2040a0">WsControl</font><font color="4444FF">(</font><font color="#2040a0">IPPROTO_TCP</font>,
+                                   <font color="#2040a0">WSCTL_TCP_QUERY_INFORMATION</font>,
+                                   <font color="4444FF">&amp;</font><font color="#2040a0">tcpRequestQueryInfoEx</font>,
+                                   <font color="4444FF">&amp;</font><font color="#2040a0">tcpRequestBufSize</font>,
+                                   <font color="#2040a0">ipRouteEntry</font>, <font color="4444FF">&amp;</font><font color="#2040a0">ipRouteEntryBufSize</font><font color="4444FF">)</font><font color="4444FF">;</font>
+
+                <strong>if</strong> <font color="4444FF">(</font><font color="#2040a0">result</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+                    <font color="#2040a0">fprintf</font><font color="4444FF">(</font><font color="#2040a0">stderr</font>, <font color="#008000">&quot;%s(%d) WsControl failed (%ld)<font color="#77dd77">\n</font>&quot;</font>,
+                            <font color="#2040a0">__FILE__</font>, <font color="#2040a0">__LINE__</font>, <font color="#2040a0">WSAGetLastError1</font><font color="4444FF">(</font><font color="4444FF">)</font><font color="4444FF">)</font><font color="4444FF">;</font>
+                    <font color="#2040a0">WSACleanup1</font><font color="4444FF">(</font><font color="4444FF">)</font><font color="4444FF">;</font>
+                    <font color="#2040a0">FreeLibrary</font><font color="4444FF">(</font><font color="#2040a0">hModule</font><font color="4444FF">)</font><font color="4444FF">;</font>
+                    <strong>return</strong> <font color="#2040a0">EXIT_FAILURE</font><font color="4444FF">;</font>
+                <font color="4444FF"><strong>}</strong></font>
+
+                <font color="#444444">//print route table</font>
+                <strong>for</strong> <font color="4444FF">(</font><font color="#2040a0">j</font> <font color="4444FF">=</font> <font color="#FF0000">0</font><font color="4444FF">;</font> <font color="#2040a0">j</font> <font color="4444FF">&lt;</font> <font color="#2040a0">ipSnmpInfo</font>.<font color="#2040a0">ipsi_numroutes</font><font color="4444FF">;</font> <font color="#2040a0">j</font><font color="4444FF">+</font><font color="4444FF">+</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+
+                    <strong>unsigned</strong> <strong>char</strong> <font color="4444FF">*</font><font color="#2040a0">addr</font> <font color="4444FF">=</font> <font color="4444FF">(</font><strong>unsigned</strong> <strong>char</strong>
+                                           <font color="4444FF">*</font><font color="4444FF">)</font> <font color="4444FF">&amp;</font><font color="#2040a0">ipRouteEntry</font><font color="4444FF">[</font><font color="#2040a0">j</font><font color="4444FF">]</font>.<font color="#2040a0">ire_addr</font><font color="4444FF">;</font>
+                    <strong>unsigned</strong> <strong>char</strong> <font color="4444FF">*</font><font color="#2040a0">gw</font> <font color="4444FF">=</font> <font color="4444FF">(</font><strong>unsigned</strong> <strong>char</strong>
+                                         <font color="4444FF">*</font><font color="4444FF">)</font> <font color="4444FF">&amp;</font><font color="#2040a0">ipRouteEntry</font><font color="4444FF">[</font><font color="#2040a0">j</font><font color="4444FF">]</font>.<font color="#2040a0">ire_gw</font><font color="4444FF">;</font>
+                    <strong>unsigned</strong> <strong>char</strong> <font color="4444FF">*</font><font color="#2040a0">mask</font> <font color="4444FF">=</font> <font color="4444FF">(</font><strong>unsigned</strong> <strong>char</strong>
+                                           <font color="4444FF">*</font><font color="4444FF">)</font> <font color="4444FF">&amp;</font><font color="#2040a0">ipRouteEntry</font><font color="4444FF">[</font><font color="#2040a0">j</font><font color="4444FF">]</font>.<font color="#2040a0">ire_mask</font><font color="4444FF">;</font>
+
+                    <font color="#2040a0">fprintf</font><font color="4444FF">(</font><font color="#2040a0">stdout</font>,
+                            <font color="#008000">&quot;Route %ld.%ld.%ld.%ld  &quot;</font>
+                            <font color="#008000">&quot;IF %ld  &quot;</font>
+                            <font color="#008000">&quot;GW %ld.%ld.%ld.%ld  &quot;</font>
+                            <font color="#008000">&quot;Mask %ld.%ld.%ld.%ld  &quot;</font>
+                            <font color="#008000">&quot;Metric %ld<font color="#77dd77">\n</font>&quot;</font>,
+                            <font color="#2040a0">addr</font><font color="4444FF">[</font><font color="#FF0000">0</font><font color="4444FF">]</font>, <font color="#2040a0">addr</font><font color="4444FF">[</font><font color="#FF0000">1</font><font color="4444FF">]</font>, <font color="#2040a0">addr</font><font color="4444FF">[</font><font color="#FF0000">2</font><font color="4444FF">]</font>, <font color="#2040a0">addr</font><font color="4444FF">[</font><font color="#FF0000">3</font><font color="4444FF">]</font>,
+                            <font color="#2040a0">ipRouteEntry</font><font color="4444FF">[</font><font color="#2040a0">j</font><font color="4444FF">]</font>.<font color="#2040a0">ire_index</font>,
+                            <font color="#2040a0">gw</font><font color="4444FF">[</font><font color="#FF0000">0</font><font color="4444FF">]</font>, <font color="#2040a0">gw</font><font color="4444FF">[</font><font color="#FF0000">1</font><font color="4444FF">]</font>, <font color="#2040a0">gw</font><font color="4444FF">[</font><font color="#FF0000">2</font><font color="4444FF">]</font>, <font color="#2040a0">gw</font><font color="4444FF">[</font><font color="#FF0000">3</font><font color="4444FF">]</font>,
+                            <font color="#2040a0">mask</font><font color="4444FF">[</font><font color="#FF0000">0</font><font color="4444FF">]</font>, <font color="#2040a0">mask</font><font color="4444FF">[</font><font color="#FF0000">1</font><font color="4444FF">]</font>, <font color="#2040a0">mask</font><font color="4444FF">[</font><font color="#FF0000">2</font><font color="4444FF">]</font>, <font color="#2040a0">mask</font><font color="4444FF">[</font><font color="#FF0000">3</font><font color="4444FF">]</font>,
+                            <font color="#2040a0">ipRouteEntry</font><font color="4444FF">[</font><font color="#2040a0">j</font><font color="4444FF">]</font>.<font color="#2040a0">ire_metric</font><font color="4444FF">)</font><font color="4444FF">;</font>
+                <font color="4444FF"><strong>}</strong></font>
+            <font color="4444FF"><strong>}</strong></font>
+        <font color="4444FF"><strong>}</strong></font>
+    <font color="4444FF"><strong>}</strong></font>
+
+    <font color="#2040a0">WSACleanup1</font><font color="4444FF">(</font><font color="4444FF">)</font><font color="4444FF">;</font>
+    <font color="#2040a0">FreeLibrary</font><font color="4444FF">(</font><font color="#2040a0">hModule</font><font color="4444FF">)</font><font color="4444FF">;</font>
+    <strong>return</strong> <font color="#2040a0">EXIT_SUCCESS</font><font color="4444FF">;</font>
+<font color="4444FF"><strong>}</strong></font>
+
+<font color="#444444">//end of code</font>
+
+</pre>
+
+<hr class="noshade">
+
+<p>[Ed. Tom included a bunch of notes from tracing calls winipcfg.exe
+made. For various reasons, I&rsquo;ve made them available <a
+href="wscontrol-notes.txt">in a separate file</a>.]</p>
+
+<p><font size=-1>Copyright &copy; 1999 by Tom Sanfilippo. All rights
+reserved.</font></p>
+
+
+
+		</div> <!-- end body div -->
+
+<hr class="noshade">
+
+
+<!--  Navigation footer  -->
+<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer nav"> 
+	<tr>
+		<td align="left" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="../articles/bsd-compatibility.html">&lt;&lt;&nbsp;BSD Sockets Compatibility</a><br>
+			</span>
+		
+		</td>
+
+		<td align="right" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="../articles/csocket.html">CSocket Considered Harmful&nbsp;&gt;&gt;</a>
+			</span>
+		
+		</td>
+	</tr>
+</table>
+
+
+
+
+
+
+	<!--  Document Footer -->
+
+	<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer info"> 
+		<tr>
+			
+				<td align="left" class="thirdwidth">
+					
+					<span class="annotation">Updated Sun Oct 25 2009 01:54 MDT</span>
+				</td>
+				<td align="center" class="thirdwidth">
+				
+			
+
+			
+				&nbsp;
+			
+			</td>
+
+			<td align="right" class="thirdwidth">
+				<a href="/">Go to my home page</a>
+			</td>
+		</tr>	
+	</table>
+
+
+	<script type="text/javascript" src="/js/awstats_misc_tracker.js"></script>
+</body>
+</html>
+

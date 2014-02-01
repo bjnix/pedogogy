@@ -1,0 +1,626 @@
+# -*- coding: binary -*-
+##
+# $Id: ipv6.rb 15548 2012-06-29 06:08:20Z rapid7 $
+##
+
+module Msf
+
+###
+#
+# This module provides common tools for IPv6
+#
+###
+module Exploit::Remote::Ipv6
+
+	#
+	# Initializes an instance of an exploit module that captures traffic
+	#
+	def initialize(info = {})
+		super
+		register_options(
+			[
+				OptString.new('INTERFACE', [false, 'The name of the interface']),
+				OptString.new("SMAC", [ false, "The source MAC address"]),
+				OptAddress.new("SHOST", [ false, "The source IPv6 address" ] ),
+				OptInt.new("TIMEOUT", [ true, "Timeout when waiting for host response.", 5])
+			], Msf::Exploit::Remote::Ipv6
+		)
+
+		begin
+			require 'pcaprub'
+			@pcaprub_loaded = true
+		rescue ::Exception => e
+			@pcaprub_loaded = false
+			@pcaprub_error  = e
+		end
+	end
+
+
+	#
+	# Shortcut method for resolving our local interface name
+	#
+	def ipv6_interface(opts={})
+		opts['INTERFACE'] || datastore['INTERFACE'] || ::Pcap.lookupdev
+	end
+
+	#
+	# Shortcut method for determining our link-local address
+	#
+	def ipv6_link_address(opts={})
+		Rex::Socket.ipv6_link_address(ipv6_interface(opts))
+	end
+
+	#
+	# Shortcut method for determining our MAC address
+	#
+	def ipv6_mac(opts={})
+		Rex::Socket.ipv6_mac(ipv6_interface(opts))
+	end
+
+	#
+	# Opens a pcaprub capture interface to inject packets, and sniff ICMPv6 packets
+	#
+
+	def open_icmp_pcap(opts = {})
+		check_pcaprub_loaded
+
+		dev = ipv6_interface(opts)
+		len = 65535
+		tim = 0
+		@ipv6_icmp6_capture = ::Pcap.open_live(dev, len, true, tim)
+		@ipv6_icmp6_capture.setfilter("icmp6")
+	end
+
+	#
+	# Close the capture interface
+	#
+	def close_icmp_pcap()
+		check_pcaprub_loaded
+
+		return if not @ipv6_icmp6_capture
+		@ipv6_icmp6_capture = nil
+		GC.start()
+	end
+
+	#
+	# Send out a ICMPv6 neighbor solicitation, and
+	# return the associated MAC address
+	#
+	def solicit_ipv6_mac(dhost, opts = {})
+		check_pcaprub_loaded
+
+		dhost_intf = dhost + '%' + ipv6_interface(opts)
+
+		smac = opts['SMAC'] || datastore['SMAC'] || ipv6_mac
+		shost = opts['SHOST'] || datastore['SHOST'] || Rex::Socket.source_address(dhost_intf)
+		timeout = opts['TIMEOUT'] || datastore['TIMEOUT'] || 3
+
+		open_icmp_pcap()
+
+		p2 = PacketFu::IPv6Packet.new
+		p2.eth_saddr = smac
+		p2.eth_daddr = ipv6_soll_mcast_mac(dhost)
+		p2.ipv6_saddr = shost
+		p2.ipv6_daddr = ipv6_soll_mcast_addr6(dhost)
+		p2.ipv6_hop = 255
+		p2.ipv6_next = 0x3a
+		p2.payload = ipv6_neighbor_solicitation(
+			IPAddr.new(dhost).to_i,
+			p2.eth_src
+		)
+		p2.ipv6_len = p2.payload.size
+		ipv6_checksum!(p2)
+
+		@ipv6_icmp6_capture.inject(p2.to_s)
+
+		# Wait for a response
+		max_epoch = ::Time.now.to_i + timeout
+		while(::Time.now.to_i < max_epoch)
+			pkt_bytes = @ipv6_icmp6_capture.next()
+			next if not pkt_bytes
+			pkt = PacketFu::Packet.parse(pkt_bytes) rescue nil
+			next unless pkt
+			next unless pkt.is_ipv6?
+			next unless pkt.ipv6_next == 0x3a
+			next unless pkt.payload
+			next if pkt.payload.empty?
+			next unless pkt.payload[0,1] == "\x88" # Neighbor advertisement
+			if(IPAddr.new(pkt.ipv6_daddr).to_i == IPAddr.new(shost).to_i and
+				 IPAddr.new(pkt.ipv6_saddr).to_i == IPAddr.new(dhost).to_i)
+				 ipv6opts = pkt.payload[24,pkt.payload.size]
+				 next unless ipv6opts
+				 parsed_opts = ipv6_parse_options(ipv6opts)
+				 parsed_opts.each do |opt|
+					 if opt[0] == 2
+						 addr = PacketFu::EthHeader.str2mac(opt.last)
+						 close_icmp_pcap()
+						 return(addr)
+					 end
+				 end
+				 close_icmp_pcap
+				 return(pkt.eth_saddr)
+			end
+		end
+		close_icmp_pcap
+		return nil
+	end
+
+	#
+	# Send a ICMPv6 Echo Request, and wait for the
+	# associated ICMPv6 Echo Response
+	#
+	def ping6(dhost, opts={})
+		check_pcaprub_loaded
+
+		dhost_intf = dhost + '%' + ipv6_interface(opts)
+
+		smac = opts['SMAC'] || datastore['SMAC'] || ipv6_mac
+		shost = opts['SHOST'] || datastore['SHOST'] || Rex::Socket.source_address(dhost_intf)
+		dmac = opts['DMAC'] || solicit_ipv6_mac(dhost)
+		timeout = opts['TIMEOUT'] || datastore['TIMEOUT']
+		wait = opts['WAIT']
+
+
+		if(wait.eql?(nil))
+			wait = true
+		end
+
+		dmac.eql?(nil) and return false
+
+		open_icmp_pcap()
+
+		# Create ICMPv6 Request
+		p = PacketFu::IPv6Packet.new
+		p.eth_saddr = smac
+		p.eth_daddr = dmac
+		p.ipv6_saddr = shost
+		p.ipv6_daddr = dhost
+		p.ipv6_next = 0x3a
+		icmp_id = rand(65000)
+		icmp_seq = 1
+		icmp_payload = Rex::Text.rand_text(8)
+		p.payload = ipv6_icmpv6_echo_request(icmp_id,icmp_seq,icmp_payload)
+		p.ipv6_len = p.payload.to_s.size
+		ipv6_checksum!(p)
+
+		@ipv6_icmp6_capture.inject(p.to_s)
+
+		if(wait.eql?(true))
+			print_status("Waiting for ping reply...")
+			print_line("")
+			# Wait for a response
+			max_epoch = ::Time.now.to_i + timeout
+			while(::Time.now.to_i < max_epoch)
+				pkt = @ipv6_icmp6_capture.next()
+				next if not pkt
+				response_pkt = PacketFu::Packet.parse(pkt) rescue nil
+				next unless response_pkt
+				next unless response_pkt.is_ipv6?
+				next unless response_pkt.payload
+				next if response_pkt.payload.empty?
+				next unless response_pkt.payload[0,1] == "\x81" # Echo reply
+				if( response_pkt.ipv6_daddr == p.ipv6_saddr and
+				 	response_pkt.ipv6_saddr == p.ipv6_daddr and
+				 	response_pkt.ipv6_daddr == p.ipv6_saddr and
+				 	response_pkt.payload[4,2] == p.payload[4,2] and # Id
+				 	response_pkt.payload[6,2] == p.payload[6,2] # Seq
+					)
+					close_icmp_pcap()
+					return(true)
+				end
+
+			end # End while
+		end
+
+		close_icmp_pcap()
+		return(false)
+	end
+
+	#
+	# Helper methods that haven't made it upstream yet. Mostly packet data
+	# packers, also a checksum calculator.
+	#
+
+	def ipv6_icmpv6_echo_request(id,seq,data)
+		type = 0x80
+		code = 0
+		checksum = 0
+		id ||= rand(0x10000)
+		seq ||= rand(0x10000)
+		[type,code,checksum,id,seq,data].pack("CCnnna*")
+	end
+
+	# Simple tlv parser
+	def ipv6_parse_options(data)
+		pos = 0
+		opts = []
+		while pos < data.size
+			type, len = data[pos,2].unpack("CC")
+			this_opt = [type,len]
+			this_opt << data[pos+2, (pos-2 + (len * 8))]
+			opts << this_opt
+			pos += this_opt.pack("CCa*").size
+		end
+		opts
+	end
+
+	# From Jon Hart's Racket::L3::Misc#linklocaladdr(), which
+	# is from Daniele Bellucci
+	def ipv6_linklocaladdr(mac)
+		mac = mac.split(":")
+		mac[0] = (mac[0].to_i(16) ^ (1 << 1)).to_s(16)
+		["fe80", "", mac[0,2].join, mac[2,2].join("ff:fe"), mac[4,2].join].join(":")
+	end
+
+	# From Jon Hart's Racket::L3::Misc#soll_mcast_addr6(),
+	# which is from DDniele Belluci
+	def ipv6_soll_mcast_addr6(addr)
+		h = addr.split(':')[-2, 2]
+		m = []
+		m << 'ff'
+		m << (h[0].to_i(16) & 0xff).to_s(16)
+		m << ((h[1].to_i(16) & (0xff << 8)) >> 8).to_s(16)
+		m << (h[1].to_i(16) & 0xff).to_s(16)
+		'ff02::1:' + [m[0,2].join, m[2,2].join].join(':')
+	end
+
+	# From Jon Hart's Racket::L3::Misc#soll_mcast_mac()
+	def ipv6_soll_mcast_mac(addr)
+		h = addr.split(':')[-2, 2]
+		m = []
+		m << 'ff'
+		m << (h[0].to_i(16) & 0xff).to_s(16)
+		m << ((h[1].to_i(16) & (0xff << 8)) >> 8).to_s(16)
+		m << (h[1].to_i(16) & 0xff).to_s(16)
+		'33:33:' + m.join(':')
+	end
+
+	# Usual ghetto strategy from PacketFu
+	def ipv6_checksum!(pkt)
+		check_data = pkt.headers.last[:ipv6_src].to_s.unpack("n8")
+		check_data << pkt.headers.last[:ipv6_dst].to_s.unpack("n8")
+		check_data << pkt.ipv6_len
+		check_data << [0,58]
+		check_payload = pkt.payload.size % 2 == 0 ? pkt.payload : pkt.payload + "\x00"
+		check_data << check_payload.unpack("n*")
+		check_data.flatten!
+		checksum = check_data.inject(0) {|sum,x| sum += x}
+		checksum = checksum % 0xffff
+		checksum = 0xffff - checksum
+		checksum == 0 ? 0xffff : checksum
+		pkt.payload[2,2] = [checksum].pack("n")
+		pkt
+	end
+
+	# Takes a neighbor and smac as arguments, The Neighbor
+	# value must be an int, while the smac must be a string.
+	# Very rudimentary and temporary.
+	def ipv6_neighbor_solicitation(neigh,smac)
+		target = neigh.to_s(16).scan(/../).map {|x| x.to_i(16)}.pack("C*")
+		type = 135
+		code = 0
+		checksum = 0
+		reserved = 0
+		opt_type = 1
+		opt_len = 1
+		[type, code, checksum, reserved,
+			target, opt_type, opt_len, smac
+		].pack("CCnNa16CCa6")
+	end
+
+
+	def check_pcaprub_loaded
+		unless @pcaprub_loaded
+			print_status("The Pcaprub module is not available: #{@pcaprub_error}")
+			raise RuntimeError, "Pcaprub not available"
+		else
+			true
+	end
+
+end
+
+end
+end
+
+                                                                                # -*- coding: binary -*-
+###
+#
+# This mixn provides methods for interacting with a JDK installation to perform
+# functions such as dynamic compilation and jar signing.
+#
+# Dependencies:
+#       - JDK6
+#       - rjb (rjb.rubyforge.org)
+#		- the $JAVA_HOME variable must point to the JDK
+#
+# Nathan Keltner <natron@metasploit.com>
+#
+###
+
+require 'msf/core'
+
+module Msf
+module Exploit::Java
+
+	def initialize(info = {})
+		super
+
+		register_advanced_options(
+			[
+				OptString.new( 'JavaCache', 	[true, 'Java cache location',
+					File.join(Msf::Config.config_directory, "javacache")]),
+				OptString.new( 'AddClassPath', 	[false, 'Additional java classpath', nil]),
+			], self.class)
+
+		begin
+			require 'rjb'
+			@rjb_loaded = true
+			init_jvm
+		rescue ::Exception => e
+			@rjb_loaded = false
+			@jvm_init   = false
+			@java_error  = e
+		end
+	end
+
+	def init_jvm(jvmoptions = nil)
+		if (not ENV['JAVA_HOME'])
+			raise RuntimeError, 'JAVA_HOME is not set'
+		end
+
+		toolsjar = File.join(ENV['JAVA_HOME'], "lib", "tools.jar")
+		if (not File.exists? toolsjar)
+			raise RuntimeError, 'JAVA_HOME does not point to a valid JDK installation.'
+		end
+
+		# Instantiate the JVM with a classpath pointing to the JDK tools.jar
+		# and our javatoolkit jar.
+		classpath  = File.join(Msf::Config.install_root, "data", "exploits", "msfJavaToolkit.jar")
+		classpath += ":" + toolsjar
+		classpath += ":" + datastore['ADDCLASSPATH'] if datastore['ADDCLASSPATH']
+
+		Rjb::load(classpath, jvmargs=[])
+
+		@jvm_init = true
+	end
+
+	def query_jvm
+		return @jvmInit
+	end
+
+	def save_to_file(classnames, codez, location)
+		path = File.join( Msf::Config.install_root, "external", "source", location )
+
+		if not File.exists? path
+			Dir.mkdir(path)
+		end
+
+		i = 0
+		classnames.each { |fil|
+			file = File.join( path, fil + ".java")
+			fp   = File.open( file, "wb" )
+			print_status "Writing #{fil} to " + file
+			fp.puts codez[i]
+			i += 1
+			fp.close
+		}
+	end
+
+	def compile(classnames, codez, compile_options=nil)
+		if !@rjb_loaded or !@jvm_init
+			raise RuntimeError, "Could not load rjb and/or the JVM: " + @java_error.to_s
+		end
+
+		if compile_options.class.to_s != "Array" && compile_options
+			raise RuntimeError, "Compiler options must be of type Array."
+		end
+
+		compile_options = [] if compile_options.nil?
+
+		# Create the directory if it doesn't exist
+		Dir.mkdir(datastore['JavaCache']) if !File.exists? datastore['JavaCache']
+
+		# For compatibility, some exploits need to have the target and source version
+		# set to a previous JRE version.
+		std_compiler_opts = [ "-target", "1.3", "-source", "1.3", "-d", datastore['JavaCache'] ]
+
+		compile_options += std_compiler_opts
+
+		java_compiler_klass = Rjb::import('javaCompile.CompileSourceInMemory')
+
+		# If we were passed arrays
+		if classnames.class == [].class && codez.class == [].class
+			# default compile class
+			begin
+			# Sames as java_compiler_klass.CompileFromMemory(	String[] classnames,
+			#						String[] codez, String[] compilerOptions)
+				success = java_compiler_klass._invoke('CompileFromMemory',
+					# Signature explained: [ means array, Lpath.to.object; means object
+					# Thus, this reads as call the method with 3 String[] args.
+					'[Ljava.lang.String;[Ljava.lang.String;[Ljava.lang.String;',
+					classnames, codez, compile_options)
+			rescue Exception => e
+				print_error "Received unknown error: " + e
+			end
+		else
+			raise RuntimeError, "The Java mixin received unknown argument-type combinations and cannot continue."
+		end
+		if !success
+			raise RuntimeError, "Compile failed."
+		end
+	end
+
+	def build_jar(output_jar, in_files)
+		if output_jar.class != "".class || in_files.class != [].class
+			raise RuntimeError, "Building a jar requires an output_jar and an Array of in_files."
+		end
+
+		# Add paths
+		in_files	= in_files.map { |file| File.join(datastore['JavaCache'], file) }
+
+		create_jar_klass = Rjb::import('javaCompile.CreateJarFile')
+		file_class	 = Rjb::import('java.io.File')
+
+		file_out_jar	= file_class.new_with_sig('Ljava.lang.String;', File.join(datastore['JavaCache'], output_jar) )
+		files_in	= Array.new
+
+		in_files.each { |file| files_in << file_class.new_with_sig('Ljava.lang.String;', file) }
+		create_jar_klass._invoke('createJarArchive', 'Ljava.io.File;[Ljava.io.File;', file_out_jar, files_in)
+	end
+
+	#
+	# http://www.defcon.org/images/defcon-17/dc-17-presentations/defcon-17-valsmith-metaphish.pdf
+	#
+	def sign_jar(cert_cn, unsiged_jar, signed_jar, cert_alias="signFiles", msf_keystore="msfkeystore",
+			msf_store_pass="msfstorepass", msf_key_pass="msfkeypass")
+
+		# Dependent on $JAVA_HOME/lib/tools.jar that comes with the JDK.
+		signer_klass 	= Rjb::import('javaCompile.SignJar')
+
+		# Check if the keystore exists from previous run.  If it does, delete it.
+		msf_keystore	= File.join(datastore['JavaCache'], msf_keystore)
+		File.delete msf_keystore if File.exists? msf_keystore
+
+		# Rjb pukes on a CN with a comma in it so bad that it crashes to shell
+		# and turns input echoing off.  Simple fix for this ugly bug is
+		# just to get rid of commas which kinda sucks but whatever.  See #1543.
+		keytool_opts	= [
+			"-genkey", "-alias", cert_alias, "-keystore", msf_keystore,
+			"-storepass", msf_store_pass, "-dname", "CN=#{cert_cn.gsub(",",'')}",
+			"-keypass", "msfkeypass"
+		]
+
+		# Build the cert keystore
+		signer_klass._invoke('KeyToolMSF','[Ljava.lang.String;',keytool_opts)
+
+		jarsigner_opts	= [
+			"-keystore", msf_keystore, "-storepass", msf_store_pass,
+			"-keypass", msf_key_pass, "-signedJar",
+			File.join(datastore['JavaCache'], signed_jar), 	 # Signed Jar
+			File.join(datastore['JavaCache'], unsiged_jar),  # Input Jar we're signing
+			cert_alias  # The cert we're using
+		]
+		signer_klass._invoke('JarSignerMSF','[Ljava.lang.String;',jarsigner_opts)
+
+		# There are warnings in the source for KeyTool/JarSigner warning that security providers
+		# are not released, and if you are calling .main(foo) from another app, you need to release
+		# them manually.  This is not done here, and should Rjb be used for anything in the future,
+		# this may need to be cleaned up.
+	end
+
+end
+end
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    # -*- coding: binary -*-
+module Msf
+
+require 'rex/payloads/win32/kernel'
+
+module Exploit::KernelMode
+
+	#
+	# The way that the kernel-mode mixin works is by replacing the payload
+	# to be encoded with one that encapsulates the kernel-mode payload as
+	# well.
+	#
+	def encode_begin(real_payload, reqs)
+		super
+
+		reqs['EncapsulationRoutine'] = Proc.new { |reqs_, raw|
+			encapsulate_kernel_payload(reqs_, raw)
+		}
+	end
+
+	#
+	# Increase the default delay by five seconds since some kernel-mode
+	# payloads may not run immediately.
+	#
+	def wfs_delay
+		super + 5
+	end
+
+protected
+
+	#
+	# Encapsulates the supplied raw payload within a kernel-mode payload.
+	#
+	def encapsulate_kernel_payload(reqs, raw)
+		new_raw = nil
+		ext_opt = reqs['ExtendedOptions'] || {}
+
+		# Prepend and append any buffers that were specified in the extended
+		# options.  This can be used do perform stack adjustments and other
+		# such things against the user-mode payload rather than the
+		# encapsulating payload.
+		raw =
+			(ext_opt['PrependUser'] || '') +
+			raw +
+			(ext_opt['AppendUser'] || '')
+
+		# If this is a win32 target platform, try to encapsulate it in a
+		# win32 kernel-mode payload.
+		if target_platform.supports?(Msf::Module::PlatformList.win32)
+			ext_opt['UserModeStub'] = raw
+
+			new_raw = Rex::Payloads::Win32::Kernel.construct(ext_opt)
+		end
+
+		# If we did not generate a new payload, then something broke.
+		if new_raw.nil?
+			raise RuntimeError, "Could not encapsulate payload in kernel-mode payload"
+		else
+			dlog("Encapsulated user-mode payload size #{raw.length} in kernel-mode payload size #{new_raw.length}", 'core', LEV_1)
+		end
+
+		new_raw
+	end
+
+end
+
+end
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             .   Ê  ..  ²  bin ³  ext   lib Ÿ  tasks      testS  CHANGELOG.ja.rdoc   T  CHANGELOG.rdoc  U  C_CODING_STYLE.rdoc V  Manifest.txtW  README.ja.rdoc  X  README.rdoc Y  RakefileZ nokogiri_help_responses.md                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      e0ß=æXïÂ)@}Ê-9H¶
+à”Ìv3ÂÎFÃØÖtmå,‡ƒ­ÈµMX|Å‰Ïp+[cY:’2SÀŸØŠuº„	oËé”˜ãz†Û“FG`²ùÒ¤­lŞœÉ¼™à‡Z“à’ê¢Ö¼ÚNXæ:‹xú6±vk¨Í¤‚~få‡½UjÔ8‹8~mg¦DFuA‰‡Vù¸h–`âPe–V•E¹ ‚ªû¶Çå‹4Sı?G£«”köšIò`OÈ¤g{ÂØTT3şÈ‡~{ªÏ³Í-.o2Ø2'ü½n7ÇµË²ÖB\½¾@¾¥ÂÕŠ!âÉ{üL¤Ü×ñ8lkI\b¼„Úmô óTé²ø×-Ÿ‹æÈ°@Iá|ÄÌ¢p%¹î$hÔ‰ÇèM^J8:µ(Ñı2‰Ùh4üõÊşw
+¦!z£v uä25„¸	ÖÓµšO¢'ø9óÍùªî}Ş/hÖ%í°?í®6|çÄˆé$ÿ/k7Hz’K°£WŠ0‡m®)õ š)½Lœ/CÓ“IG¡/;br_íu³Ìàñ"¬]A-ÃíRMÁ«¨$ãj£¯œ€Uw‘‡¾{¾ZÎC­ÃQ‹A´1×ò²Pi“`Ñféõuşe@¸Ğİãà„QËÌ).ŸBã~n×Õ=ğlìfX¬­x Jµß9W _Œ ‡ˆÎEí›z#¤~óR1šşÂ\ƒ£'åé
+–Dğ²©©kÒ×º‘R²VÃ¼JŞí»Îf‰Äë†“¾ ¶ñˆÇ(ªc!/_1!“–=âƒ"°vîŠÆ7¨oàç—[tØ1–	YÿòÏH4êz:nfo2Í¸f­®Â°ƒôsO5Ïœ”B)ÃW€xŒ'GLÅ`É»œí®	{uİò·‰·2¹ØÎÙÁƒDƒLïF–¥Zõ N‹ó]|âÀØÑìáËëèh[|öYRñ¨XrÕ^Inß3â(ÒÍ²H‘ltSç%<Ú;-¬öFË@Wu0ò¶t@Üê[43Ã“m^X'fdµR·zêÄ×º×P”Ép´5°GH0%1Ô	Ÿ‰É÷ò Bë¸X8Füe7Çn ,Ëï s%a1L9‰Í¦6¬4i&Y?Ú{uÚk1g¦ªÿGÍ:ÿDàQÊPun“vôÙ>ŞgŞ”aQí†Ôj÷oBõôÈúÖd<Ü_I¸¼«ÇßûÑÆëìi85ünÂ_y`´&®kÜRgLzG¢ŠìáÜóÒ_ô"Ë³Á†"¦ëZóioœ¡§R/ÏùœƒCğŒ–p±ûÀ[NçÁßŸŞß)÷ğaÌÀæaÒ1]üÙ×ÎW <d‹\–¡ÎÃÚ’š°Ï/!Ë¼öÈÃÁY¼ó[\ÿ ªÏòÚE5*{?ä§­B«';öÀ…üÜÌIUÒ,õ_Ê’ÑèØ–ÉÛ#·ÏGâíeÏZ®Y'å«Ú1¦˜ª©Ø’oÅoØRàSåüÄ/?¥oµÃ	9e‹U<ä½¹p2ˆÒ…Â}÷¶uâ8&€ÅÛ€œ¦ë@¥ßÚ\;ıf™QšæEë|Ld4™7 W'O°Ğf¡è>S53´ğl_™•¸Gˆ3bà—‘€\Ç*äH(Ğ o*­Äò
+6‹OC²v²]¡!£K‰ñc‹Å%[sòMa}|g(³ T
+ÛnñZCÜˆÃ{VJİ\rx(\1"vë¾ª%µWÍ¦C.»ğÅÏKÄ4y>áÔjk®xsF©ÈÊ¯ÈR/^y“ˆˆ° 6„0Ä$ö’Şı}W^Ø£ÜMÿ5í´eË¹Y(=GX•Ë’C.Ä¾,lá{\…´cÍŞJŠ÷[áä¾´²"ŠÑI¦Áò‹–Á“œCw8#/{Lú3&4û‚¢U~„Î1«6”S´@£ü¸‹e» Àš}¤©IfsbºÉj„-±x	`Å®’ŞÖê”Š&ËmLÛ[©ôNŞ&íüˆİOÇ%¤&K#‡Ç´dİÀÜÅ‹ÌÇl’şPÃƒÎàClÇ¦Eşs÷ä&•=gyÆx˜\|ÈË¢èq5?ôñ`rûspãàò<,(
+Í CAì|Ô2­cÆbTŒ‰êçÊŸwí…â‰µ}×È²ËØ	í—È
+Œ˜ÔXñè‹p¿7|:ÏÇ]ön¡Z] ârk3ÌòVÜhb>eTúZa±â	Ä[aÏqümQ\º“ki!bRt¦ãIÜ/à—“©í¯ÊÊ‘<fˆ…ÚîAè¹hNıS áæ£H“¬ËĞVÄ/gˆüTˆÁ!>ÛêCV·RŞ0.@ErP)g…ŸxÈ÷ªøäàü‚SâÌW¥ğ‹ifR+~›7Fy>÷­@h¤¦[÷'>1hÈjÀCX!eƒšˆTt<DŠH£8¸­Ø·şÛ´³&G¯òÌu‰¶¶æ8oıK½MGÆ´-Áû°üÒU‚Ùà£ÍñÍÄ1àÅ*6¹MV¶
+Õ‰±¥}Â¶ğ?¥¤œ­ö¡b˜q!»@“ü\’pß TXı†¹<8‡ÚÀK2'!.­a1.+:ŠŞƒT_M½‚§o@Ò4 7S„½¦ØœD§ËÔÈ¸Iıø \Ë 6.k¦Ì¶ƒ«xòXî<í†"}ÀM@ÍĞLËòŠX›gà„
+)F7(LŠÓ¥BÜ5Q¯ù7SÒƒîí$‚¯™úãáèe™Meü4ìáæÒîÚ2Ì»³ÀeîÓ‰È ï\jğŠ¨ÌU¤3ıaé‹Vv.ûÎG÷¤ãëàèŞÚ ƒ =‹o›äQÖúô‘$¦/œJÆyÈLZâ¯÷Óûø@TøP‡Ö0õ’_ºá­mÕû^'‚¬Ö‚}U¡BE¬¿
+p>°\õûÚ¬ÑÂON#“Pÿ@LŒ0^íaNùW; «}¶9kú¢¡ZùöÓv Ï¯éx4ñü6Á”~ĞT$ÂlÄ{#à^Ü’#g¨š½`ÇtV¬œ8?¥ONM>ã(w›ì†ù‚ëÆÏ‚Ç30¼»FŸü_ikôñ0Y…”¥ûÕSQ½`ÙÛsÒêS}^	bö%èŠš12®tRq í2şšjıNşCe2–¥~M£ÁĞŠx'ÕŠ&¢ÌìØH“(ù;wrø‘üu)Y†ºyvèòÊ™¦­mUš˜#’¯0NM˜ØVŸ÷i;Íx9±¾©¤¢…Ş2;P×iÑš/sÜ¡º%%lÓI¹!Ûû–{ğ
+Õ	Ï">iÌ	mra€zzJyNŠş'¸­°UÊôVRuõçJéM"8hŸŠ=m/b~d+À±RIƒÅÀZ9±| ª¤¼>ğ¢œH=Mº3)ªD*‘«üŠŸğyÅmıÍvt¼{¬lG¦øx‰@Ë,kuvÎß½ÀLI&N}x¥ô².çg»x_%¹j
+»ûÔ[G/ÕÀóRbLöR cÜé•ËÈc§m¢9›c$sVt*(‰ask…—÷;ân)†]®ÃçÍ"w÷‹OÚß‘Ş&Fñ9ZÛ:6*¡…Gû‰ğíumò«=—›¬õ]6tM©d4D Æõ\@r£aˆñ¯:öˆá¦ƒ‚}­Š A+'ıf!¥åg˜±u®*An +h­‚wmçÙ‚ºòˆ­Cğ®F=cÂÓˆ§8"Ô´'Xı“*J"AÛKU­ôJ ­„3Âè©LFó1¼Õ=ûHì>¶²	t210Nâéï¤T¿O“?]n¯ÀÇ\#$vafbCmR¾·÷z¯z>€Ieí•È>ïúßc»ÂÉ7.§jĞ>äùs^€• ©mË–Œ³((e'P5ü´–³¬Ñ#ÃánŞ“oö•ìVH5ªÖ§™{¥–S¢|¸:”0]	VˆQOt#—wÈf‘W§wÍûˆ`ğ¥ú+`Á¡9O$úÚdò¹»n=§uâ\hêˆL••ƒ7İ|Y$`q!÷†œP4A¹ˆGÌàŒæ0×—˜zòŒç¿WÃ-ë…±‡áÍ0Õœ‡‡®jêƒ)¶G’TaõçDæT¨më2§œGrO~T£PI€WJÓ0ÙhÑãKzUê˜³}ËÔ)tjıîê=¤kKŸMX°îƒÁ3\À¬‚÷ÌßºÌS*¹MFüèÑªÅÆ¹
+’½“™ptHL,o×YÏ¸ŞTE†~ù2uKœD5DÙïg›|ÆV£fIî‰¥8½¥!¸a5aÚ¿ Àº ù!ù…ñŞ¯K±-BéGÖ;‹UgVò«]ø.]ƒ1­¿ËJ[^hEü„Ã»È×È«È>ÌÛªñ0BXLî©!$¸ĞYôÕò•O,µÉJşj‘Î¿Ê›%Êğ«Áæ5¤5§ruıàtl¨£•KE8$cä8ñl5qé6éÕl™ëšibq4VB™_9‡<“œıx2àŞlh„Îífı©Y¸oÕÇÙuq÷–ìUÁ¸ˆ¹qˆáR[±ñºĞÓŸíä¯sÿ…ü&]cê¹ÙG©ğæ±$g!Ø%É|Ow±İó»†ÄAIœl´*ßÎK|Ex=›"Œ\
+_9²Võ;Õ3¥õÙJùx°.a”åer~œ*,VL¤Î«›{ÒåCìBYÙlÕS1Û[t«T¢i!@ªö¦|ÜˆímY‰Ÿ˜Î/KÀ**_·W[nKÆ#¶¢šT¸‰ÏÆ¤LĞjõùº¶ÎLéàUÕãI"ê¨ˆ|Ínò†ˆ.ßûc}W6¦÷œòûğËø—*ú£ÚUú .;Á”öü²È­MóùÚ˜€	jzÊ*ÕŸz«WÚˆ”QQşScğ ‘{EëhëP{Ó?v9•Â?Üâ]k°¹z’’«YPÿ‰I8,ÛCT7ægº}›(üF¼H1Ì(¸Vz>‹r©ÊcZ÷IVÏœ!dA»í’…3W´~ƒh1I‡?¯"—ˆ2m¦önÎLƒ¢Æ
+]Gk~ÅÜúÏ!Âø1ÆiI„’f‰­	j£œvk$ÓXÛ«¨²jº"@¬Smù±(ÉÄ &”o¤Úõíúh(k ?Çp{òŞg×.ÓU‹H5û)ácÆ*_Mqv•NÑÓ­Qü@ºtYº“<vV{Eæ"œ{-Wµt£,Ñ[½¯AnåÉ„3ÒL)\“ƒtôù´;PÁéäx¬ÄK›œoy¨y9L³O¯ğÔ<
+Ã½ÓL(hc½=KÎ…jÃª8;ŞŠYßXØáÌÍ[ÆÊ9ìTBn	÷Xºƒd°§1ú_Ù;{Ù»úåJ‘d}J„víu“şü•˜¶#ğâZäJ¬³•qô<38HzÇfózZT¤Äû[ïo1Ï$	(?šŸÎì®H‘$:0ïa{ìØ¦‚P¶y’¯îªÑ{I,ë'ï1”=ë¶¥´f
+ˆ¢ºİªaw¹;
+ç›
+Å¿Î±y¹°¶m{íGŠ¤™ï9H~˜šYë.¨upï
+c0E»J±§é5>Á©ÚIZ¾è¯Ów‰±t°…ªå ù…26Æ„äªÛfJÈx-ÁŠ‹•‹µÁ[ÁLIªúÑÕïåz¢Ï;|xÑV[ï3¥KœBªæ9lò} ê?«Š‘ı,hĞk5Ã™ïŒÖ‘/Ÿ°5C6ô8¦ézâI<Ë¨]ëÊK£ßr‡¸´D†bw½õz›ö_:@Ä‰ZXYj~B¦±/ŠÔPãv—ßl8ëì!4KŠèV²­²ıNwÖä.`x©W»B¦Ù…üáF%†0nC-¡»uQ÷÷*fk:oo–ç³‘\.õá•h·püMØˆÖj £yÎ‹hJ‡R1ïÖp‹g·‰Šmé©„À‘,ŒK˜©¸£Ö½W·É+ù?9üYáÕÇ}U÷¤?G½`3Ú	Š!pjlèyb±@¤ê®5ğÀ,«•ÁÉ7?ĞAĞkÛ	±ZÈôæ´q¹í:õAû,.EÆÿfy+<,ŠÜU“mÁÄÖéÓòLı9 OºÛ
+wT+‰æB1íÅYPäİ~8õÈyuÎNîB‹{{¿_õ˜G#Õ/ï¿‚ÛÏ6şú1ª¨€ï§ıÄºş|+Î¥.»‚¬øöCª³ü¡C6¢ÎUä,ÇvèDşOGÑ¬Æ‡­+ïÍ”s€İC€º·¤Ÿº%A·@EIÌÅ¥Ò;ŠDëÃIËÃ`„zi•÷>a‡³ç;±Ô=±|d«äp`nØdË&Ö/‹í…:ğ¿ÔÓà}F,¿.™‰wì>§Ş¶û%öş¸E£v™z_n3*‹ı¼¤Kı(4’"fË½q6šn–Á>‹¤6ğƒÌ%ÁOÄOğ«®ÜøÌf,.:PHvì«ï&Œš¸]¸ŞëƒH!M9ù¬÷c²`à*Mƒ
+\Õ•}WfäSœ»+t&8°Ì:i°Íä?œÉËsî(únÓæJ„]˜eŞÕüªµçMÛîA2)­và2ò·¬äûdq„úGû„ 1Ó/Ô\ö‰‰¸å4ÄZ7h~Ÿ:·Rè7¡á›æÑrş’EÚt´¦úi¸\#XDÒÅ"pšò¥ƒò’b7ÀBĞx1µVäœ; å¸Ö"¹4«7›¢’|wSi;ÙW<‡H¯¦5]{ÎuùˆqÓÙÙC‘bŒ:ñÛ5¥šÁéš5kğïI­Oî¤îzAÊ/Ú¥àM|§ÙØ: “¨tæVN 5GÊOœ¨«Ÿ¦‡ğu»@0‡ÑKµP‡›Å ‚  	]Üœ ! ‚rù  ¿2  ”¨   Q         ! Æ;?¸¹}È¢ÌE¥XšÓ¸^{ÉéDÚ©L»m$ÍÜeÊÎ¾5¶¡*[·÷%'<UÃÄä§+•ÌÁzg*vÜÅ»š`¼‰ğ¥67‡Š"ÌFå%«	œY4n§¯ulÃL>O‹&ºwè-Vy40?FÃ‰İ¹¦{
+’µ’K8³
+S­#CÓ´K!|ù*“÷Ô,qö'^v6Z2—Ú™TØ‹Z:ÓíÅÂ¸ÕÈ5ÚßT›XÿŠ`é©´¹vÏ×›¤;>ˆ©Ä‘“âklP—Ş3?7•(Bí\Ka¸NQŞ<œR«¼ÙòÄ¬¡&Èg1–Bø>zÚµg$—V:q³9 ÷™ˆ{ò²¯^j„ôHØ]ãæÆè]º„ÆÒ…ŒÓ‚íÃ¤;ï¥¨¼†Š³pJ½ü6t2AĞÏLƒWmu†Êf9ñË_Ò÷«ºĞt*PróçY(¦ìø£6ÌW¾ÑÍO}©…;ÑïÊr:“•Â¶h-abóú‡í|ºBpap‚Èò]òá45àô~œ=%æ—SŠ©;¦ÕíR,Á+6 X„æQê}}R|	†¹`ÌˆÖYû· U-ÔrºÎ8Ï,ÜDÿ%º‚uùs!€¸ÚFãÀ³n©•°xnÏÛêÍt¥áÙ—°ß’Šù9~§…¹ŸiÂd5‹×;i„-Ó~­Ì0S,§´ä¹*6”öY½0h+ja½/}şûÔ2NVÛ×R1ı#úrÃáÖ	T"Ô:&w?ØÕ[ÇıÑ‹ìÄ(ªf²„áÁéŠB‚«s1Ü],ú6e…&’uÿJp%vñ›Éón	óÇüôÏĞö)q’ÿ—(
+îQ¿Õs•pÛBÿZñÄÌ£]ó¹_·ëàµ]!ÂuÜ`Œöu¸Ìß`‡`ª™ÓBòæÄ¡’œ´âş¥ÌDÄ‘øpç,.ZT„nÜõ£šÇ%uøÚó6ÓcKq
+ ›î¨f5-•
+3UÊÄH1ñ-İù§l¾½	¸3Ì«øé/Ø¾d#ÿØ4—P®wc6)zwz\ÜÕ"[è—9…Tæù}5¯1)©S\ŠiĞ1L	Kˆ:CF	_?®êD5ğdœetuOEÎ(áĞç`C[[áæe§ğ¶bb3è(XÅ(I‡Òinå?ušşÄ[uMßÌ<ƒ'<Ÿa±ã{§?G‘Û~ğ·—¸^‹ô…d*,c"RQ»Bë,M®/ş{-Ñ9’óQ0™ƒÊáõ’Î•Ò ,ãùé:Sn/Ğ”ñŠ«JãÆ½\Z _ÿ³UÛÒÚ†ÿw¨äB nÓ_^>õjÌ¼×g@
+Ín¨*YCİ¯ÎN=jÁŸaÉ>£)x™“¸AğU6õizxiÌä "'z»X=ä€·'ÃW¡ryW¨’©:ª.$ëHÇ³æŠXqö 2ø¤ä£¬Ä'6ùƒo²Š÷ÊÕÀ Æ‡ÏÅÙÖé5lC¤ø1»àDp‹åÉâàfVÚ¦[À´+ŞwÕI°1à;Lï‹²İZZ ÆÈÅ,ÆÜPÜù]xğ„Ñ¡©†ëÑµÒxµİ©Pü0~Ş¡k|OøÖ”]h5|,A™æôuTÒq–ãuÜıÃSîÑVà¨ê å:‘Â«…q,Bla$¯Âk¥¡§v§2SğlÖkD¬DA£š/4F(	äÖ~Æ“iíº_Ä{ñ·­
+$;pqTLZäU&µä½x‚æ\#N!qñ‚Vát¼— ÑDéYÄÿ? ´C©9¯&>UŸW&ñq¦E'ÎñYœÜˆW	†ñojQâMcp•²ÿÎpá]%¯Tj—‘Ğ€YuÅº¥¦Ø“œ@Ï:DäX]w/Kpş›Ñ-/Ê˜Zz%zwèwª\u›lğ´Ï$Në<;ÅÖâ{x±7ó¨÷®¢:Ï éİ£²!°B¶€_dşÕŠKµjvfGìÃ|‘‡‘ú½—½O3z i)®É÷vGêà}üg4fòóW	{1¡ÙÂrË0O£p‚âvØéö€
+î§7ò°à8T£bïaEK
+5kË±ú2ƒıi©7çtÂ¦I³–rÛ,+Š†IF;b'›íeüÎpOµZF°{Õ­Î ¾†Zõ®Y6D±H<ìÜ”}Óá˜ĞD·~mŞ´s'6“>Õêá–ØV{Y"Ö!ŒƒÊÊ
+ôd,ş=­
+Y‹&ÃŸİô‰´ğÙe›!(æâé-Öİ¬–ÓFÍ¶ æbIú	_œ´WÚJæÑ]7è_¦é”XK–ÕÏ/?_|·½‹üb0u åÕ^‹h£[~.¤Ğ´¹ZUd]è—‚	³l±ª+q‡t†á´Ø¸XÁ&(nÔ Û_ƒÉ‡ «v—Ó”j`„-p»h¡>ÚmÒ}~*nê©Ÿ}M‚»øi­#—‡‡	N¬ÔÃ\*êl)†z˜cœ'­CA_Ş>5±)sOCÔ'–KA3îï‘&¥¨êg}Nú$Ë…²öfüW¿ŒmÑÜ‡®<qCÛ1˜lîÒ‰äcß6€Òß›8•Fcge¬™?lwŠbjk¬êN¤Œç¨ÆL€1TxtŠ3õ›)ÙK ¸ËDü‘
+°òâ"fé}¥èÿö½»¡êéì÷qHÉ:¾!¶Ğ›ñÒ@_ÜKĞªœs3j)<^°+‚†i}GİDêóBûèÖ½şÌ%Õş× §$mô?ß xÜsÙ‡Hø1C¤ëŠ×÷ç%}Å­P¨¾r.©#5Ø˜v,N… ‰œ/à˜ğöRÌXÉÊ’‚İè*!Õ/ßx5U/WÓLMMÍˆ|Q?ó˜0í/CY1Cí‚Å—ÄUÛ'YÙ—xùÏk¢ØÂ$Œi_tş´O°L—µë=¨Ušs	egRËéU>¤‹Gõ‚3°“bÜ¾Wºä‚ä'ÍÆş¾^Ş Q“i@fÎÑ	¾d®õ‚0è­&ã'1#%¸(VQ!´Õ©QOfÍxF“!åOoi!éÿó˜û§)úİ%ÕÙJq¦ôû'±m&óÅ<.^İ¿x §À”#¦E:ÕA¡t5¹å½ˆ2×xyY%+¾»S´gU¹Hl¼sw£Ò3å$¥»8a5xş<')˜Æş¡ºµ«Î…!ü_£e‹Û»e±oMîßp×ùwrwç&ÇFR·sÉ|í­>[ÁÚØÕ"àí
+üõ£.¿[³*E>-\´1‚)[t¢öõEV°WšáepÒp›5„ç®“NÍOÛRNÜ3ßLc§ÈÓÜ­ÜBUŒëêÿı½uıÖK-6QÍÔb½8®3´ôÒæK+Ê/Ô/bIˆÌ8çØÓ<¥à)ü²}¦+ºä6ÉÍçZ*#)I•ÁîÑ7UQ>lm`á³˜ó³""ïa©RáºV~†îù›·XsG#ãqæuşí+ :.¦éŸaÖü>·Ã`9§öœ,\RúgıÒşúD¤û=èS6$zŒ0k¿{0A2 ;ëJ¤òGô%œQ°"#¼jí¦“˜aÊàí6?İo¿ù"2a¯ÀZ‚;*Ñ¥úM¼=9û‘"ˆF€íıÂ#6àÜhÎÓÌÌ¯ëĞ•n«¥?hÂo–¦ÿ&cYÏ¬ ©s!k‘·O¤Ô´·/OQu'…‡ïÕî`kÊtB8]–“íA1¾Ç!áòĞÉöäğŠis!†¶Ä>‹yŞÎæ¬¨|¶C;çş¶PKer&ÿèÒ§âú„—lù	›™öhäÍMÑşî·ÕÊ?0°:}|ÆàPw6–
+¥Oü6îEr£óŸ²ÕáğPÂÆc™ØóÂ$a´ ´uì•?«>äíR C(kúçzÛ^¤¾69]Ş:áİ ¾pÉ¼µª<§€Sá›|ÃA•gi¯€	PCI?™"}ë%	äÈµÇcfGKZ@Eñ…ì°2>&dZu–+o°5}Ş——X69ÅöüJŸóğs=Vu›àã÷"¤Ï:nÜpŠ·WL­kl(Ã1`K¢Ø^iŞeÕ3²‰ÊßÉ‰Ämê'…¶+Ã®ª¢tãB~Emxî7ÔS;]|“Š!˜ˆÚb¥!ü
+åêøX2 dæCS_ÎĞ˜çg¬Â„E&4'³$NZLÚUß¾™¤•êè©âG®4sd	ÃVë›”p#½gÓàï¿¹ÒîšÖ\Ò)q¶ò~<cyjüLü¶5‹%aGLÌÒ‡FŞh5•Ü%£"ä=4ò3BğsJ'ÀÓ,!ÄRõùWRW*6bí•²éÂ¦Ü‰K¬ú©Ğ\–Bµ¥Â‡!~ü²ıe£TîFB<€ß;É€«°ßH.H­eÌ¾£¸"ÏØ…M,ÇNÎÉí…;VÁ“IS!J4¯»ù€m‘AO/-ûdŠÙ…qª¸¯YZBÚó {CD¹?à"Ğe&VœĞÌqcÔW(¼¨ëä¡Œ®ì­á?cìóò@T”‘.…Çs×}Ïiuô1âÿÕ2sJ:[‹ƒÖ§BàÀrø+>¢›R})-ëåÛ¥åJ«´­y?ä9Î÷?eËÅÆ°€HQ!ØŒ@°'®H…o'c†ï¤#St·Ïıÿî€0`ó
+½Z)WÑ†ã®nùHÂÆ²d!ìƒÈê¶&jËJ<¥¸"„öË†:¦!à@¾“~ANÙø¬T’Â™óÙÑÊ¼ûH²pŸOÇA]&¹[R¸Ä3»	Y'G~°•Úä×ÅëMÚãÉq9ˆ™Kz¿‡m{\ó±+¯¼"¤­á2ZEPeK½ğ²…ó×unÍOŠÜFK£]en›à=Cwfşe™’³Y”±ÒÈ¯&ĞdSpuğ¥°ıàğå
+¾&Ê*èšÏ‡Ş5ƒlÃK¿R¹:uÒ¦¹ÑŸ n;ÂŞ,èÉœnÍ$’2ON_¢68"¬.~Ş•l®5
+M˜´²v÷Të
+™x•â«µLól­sZëÙMMgey{v‰›?İà:"*¦e·±ÿÊq±p?…êY°ÄË‚PÄ4:”Ú¾%¤yùıŞ¼’“İhJi³ñ
+KÑ*°¹şyÔ;–ú %“ööOÑŒ‹Sûêõß»´¹hš¤ù>nš&#Ko™\vãD„~ã1coP_Ó¼á`ZoÆÄ“6’=ñr±Ó£¼Œ7œ©Tå´ÛŞ!ú~ß1pkg²Šd ş'âr1 1NU”ˆ:&e[‘Šş†Ã—eiøİÖ·Êc!i ç6ÈÍ:­dÂo+È!g9æwú€ûNˆJmÎÒÍd¥	Bü.;¤œ?8E‚ô8ƒ¿CÙQ<L\“‡µØçJ»¥<Äù‰ãKViÛ6
+PÈOé=.Ób§şDˆó8Åh)ºÏ‘'1ñÌ±Üj³À¡ « êyknÊñí±şû¾qü¶~4åóPæFáÂnñHq‘E¢LŞaS—{RŸœÉq]ŠéˆÖ­2¶XpqeF«Zåèİş{UŞùFlS‘A‘¶=½–`ã‰º±~Ñ*%’ßeX<ÇÏWÚ¬ò½1’PQš‚ì9®ÍiIï$¼ºö'³Î(êÚ¹9¸	~Yj(Œ/´µ™Ùõã«2.?ÏïçZ¤¥Iã‹ä\ú(0¤SØ‘¡rÖz8Ò#û®çPÓUHG¥`!Ï,šìj:¦?|FÒ·GŞ€–=)”@®*®$Õj7ãÏ¾Îô ¼=„j[H/å¬Ò¿VRÓSƒíŞÄé|ı†Vg¹-ÒY%|û¡b©p¿5crÙ¥Œ³‡¥K!d¢›ªoöÛq™üù–ôSo¢P½vÌ‘L–’Øì-ÑóÚV’ÏR`S1ító‘Ùïhù¯¾NÛ¹ı¿;îjvŸUê°pU<HfôYÁk,«Ê`Ïı–Ñ	s>ì(¶+”v86O5ËtÅ]®c5PÅ-õ^¿İCˆ!wï—ä`O£Ïw—ÿfİ/Ìd°pşK¢äi3Í€c‘ö•Ã¢ê†\$îì7álVÁ;M*èœ¤Ş‘.ƒ›óEß¹³Í1ÁÏq Ç_v0<³sÌ¾¬–4âçâ·…IPM²²]‘¥!„Î,™+ SiÒøÙlÑŞËŸÔÛßÔé	ÁÁöÅböO  rìR
+}ÊÈh4ªÀì–E3A •äÕ¹Y¤Pãç‘©èkI÷˜¯³´Ç_\Ôƒ£,úK²$Kb'şÂ«pZÁ4 +É»3 %áCq1ÎA[væ¾DCêÃö2„0O]˜bĞÍ}ûœ©şN‘ê^2Ï0¥xdš(ü‚ŸÙªšÔvd%Hù_a³Úz?R î’ø69ÿQ"æ"Qúª]uw'Ü.©Eu^ƒÍGYügtBî¹Âóİš¿êsnş'—“¿mY¿œSıĞBÈc¾SäF®Ğ¸ iŞã;·€=ì€ŸéšïtTN‘Ï
+wÿ&Èw•eÌMÎ]'Qİë	‹;8×Ù1¨6Ã%Ï[øÃß¾· -o—P®©İ"À[Q¿ÚºÅÙfF®½P|Ø
+í>î4È‡¤¦1Ô¡F©7

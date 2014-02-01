@@ -1,0 +1,699 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/DTD/strict.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/bitmaps/favicon.png">
+	<link rel="icon" href="/bitmaps/favicon.png" type="image/png">
+	<link href="../faq.css" rel="Stylesheet" type="text/css">
+
+	<title>Winsock Programmer&rsquo;s FAQ: Which I/O Strategy Should I Use?</title>
+
+	<style type="text/css">
+		#next-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: -38px 0;
+		}
+		#prev-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: 0 0;
+		}
+		#stop-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: -76px 0;
+		}
+		.navbar {
+			border: 8px solid #d0d0a0;
+			border-spacing: 0;
+			border-radius: 10px;
+			-moz-border-radius: 10px;
+			-webkit-border-radius: 10px;
+			height: 140px;
+			margin: auto;   /* center on page */
+			margin-top: 10px;
+			text-align: center;
+			width: 95%;
+		}
+		.navbar td {
+			background-color: #006000;
+			border: 10px solid #e0e0c0;
+			color: #ffffee;
+			font-size: 182%;
+			font-family:
+				"verdana",
+				"luxi sans",
+				"helvetica narrow",
+				"arial condensed",
+				"arial",
+				"univers",
+				sans-serif;
+			font-weight: bold;
+			text-align: center;
+		}
+		.navbarcap {
+			background-color: #e0e0c0 !important;
+			cursor: pointer;
+			padding-left: 10px;
+			width: 50px;
+		}
+	</style>
+</head>
+
+<body>
+
+
+
+
+
+
+
+
+	
+
+
+
+
+	
+
+	<!--  **** Navigation Bar ****  -->
+	<table class="navbar">
+		<tr>
+			<td class="navbarcap" onclick="location.href='../articles/impatient.html'">
+				<a id="prev-link" href="../articles/impatient.html"></a>
+			</td>
+
+			<td>
+				Winsock Programmer&rsquo;s FAQ<br>
+
+				
+
+				
+				
+				
+					Articles: Which I/O Strategy Should I Use?
+				
+			</td>
+
+			<td class="navbarcap" onclick="location.href='../articles/effective-tcp.html'">
+				<a id="next-link" href="../articles/effective-tcp.html"></a>
+			</td>
+		</tr>
+	</table>
+
+	<!--  **** Body Container ****  -->
+	<div id="body" style="padding-left: 30px" >
+
+
+<h3>Which I/O Strategy Should I Use?</h3>
+
+<p><i>by Warren Young</i></p>
+
+<P>There are several different conventions for communicating with
+Winsock, and each method has distinct advantages. The question of
+the hour is, what are these advantages, and how does someone choose
+the convention that makes the most sense for their application? The
+choices are:</p>
+
+<ul>
+    <li><b><a href="../glossary.html#blocking">Blocking</a> sockets</b> - By default,
+    a Winsock call blocks, meaning that it will not return until it
+    has completed its task or has failed while trying.
+
+  <p>
+    <li><b>Pure <a href="../glossary.html#non-blocking">Non-blocking</a> sockets</b>
+    - Calls on non-blocking sockets return immediately, even if they
+    cannot complete their task immediately. Although this allows the
+    program to do other things while the network operations finish,
+    it requires that the program repeatedly <a href="../glossary.html#poll">poll</a> to find
+    out when each request has finished.
+
+  <p>
+    <li><b><a href="../glossary.html#asynchronous">Asynchronous</a> sockets</b> -
+    These are non-blocking sockets, except that you don&rsquo;t have
+    to poll: the stack sends the program a special window message
+    whenever something "interesting" happens.
+
+  <p>
+    <li><b><code>select()</code></b> - The <code>select()</code> function call is
+    a way to block a thread until something interesting happens on
+    any of a group of sockets. It is usually used with non-blocking
+    sockets, in order to avoid polling.
+
+  <p>
+    <li><b>Event objects</b> - Used with <code>WSAEventSelect()</code>,
+    this mechanism is similar to the <code>select()</code> method, but a
+    bit more efficient. It also only works on platforms with Winsock,
+    whereas <code>select()</code> works on any platform with BSD sockets.
+
+  <p>
+    <li><b>Overlapped I/O</b> - One of
+    <a href="../general.html#ws2additions">Winsock 2</a>&rsquo;s major
+    features is that it ties sockets into Win32&rsquo;s unified
+    I/O mechanism. In particular, you can now use overlapped I/O on
+    sockets, which is intrinsically more efficient than the above
+    options.
+</ul>
+
+<p>Further confusing the issue are threads, because each of the above
+mechanisms changes in nature when used with threads.</p>
+
+<p>In trying to find an answer to the "which I/O strategy" question,
+it becomes apparent that there are only a few major kinds of programs,
+and the successful ones follow the same patterns. From those patterns
+and practical experience &mdash; some personal and some borrowed
+&mdash; I have derived the following set of heuristics. None of these
+heuristics are absolute laws, no one isolated heuristic is sufficient,
+and the heuristics sometimes conflict. When two heuristics conflict,
+you need to decide which is more important to your application and
+ignore the other. However, beware of ignoring a heuristic simply
+because violating it does not create noticeable consequences for your
+program. If you get into the habit of ignoring a certain heuristic,
+it becomes useless.</p>
+
+<p>The heuristics are ordered in terms of compatibility, then speed,
+and finally functionality. Compatibility is first, because if a
+given I/O strategy won&rsquo;t work on the platforms you need to
+support, it doesn&rsquo;t matter how fast or functional it is. Speed
+is next because performance requirements are easy to determine,
+and often important. Functionality is last, because once you decide
+the compatibility and speed issues, your choices become much more
+subjective.</p>
+
+
+
+
+
+
+
+<!-- ----------------------------------------------------------------- -->
+
+<h4>Heuristic 1: Narrow your choices by deciding which operating systems
+you need to support.</h4>
+
+<p>There are many versions of Windows, but when it comes to the
+network stack, you can put most of them into one of two groups:
+the Windows 95 derivatives and the Windows NT 4.0 derivatives.
+This article treats everything else &mdash; Windows NT 3.x, Win16,
+Windows CE and <a href="../articles/othersys.html">non-Windows platforms</a>
+&mdash; separately.</p>
+
+<p>Your code may also need to be compatible with POSIX-based systems.
+This includes Unix, Linux, MacOS X, QNX, and BeOS. Although there
+are a few different network and threading APIs used by the various
+POSIX-based systems, I&rsquo;ll only talk about BSD sockets and POSIX
+threads in this article.</p>
+
+<p>None of these operating systems have exactly the same set of
+networking features. You can exploit this fact to rule out I/O
+strategies that not all of your target operating systems support.</p>
+
+<table border=0 cellspacing=0 cellpadding=5>
+    <tr valign=bottom align=center>
+        <td width=100>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td bgcolor="#F4D7AA"><b>Win9x</b></td>
+        <td bgcolor="#F4D7AA"><b>WinCE</b></td>
+        <td bgcolor="#F4D7AA"><b>WinNT 4+</td>
+        <td bgcolor="#F4D7AA"><b>WinNT 3.x</b></td>
+        <td bgcolor="#F4D7AA"><b>Win16</b></td>
+        <td bgcolor="#F4D7AA"><b>Unix</b></td>
+    </tr>
+
+    <tr>
+        <td>&nbsp;</td>
+        <td bgcolor="#F4D7AA" align=right><b>Blocking Sockets</b></td>
+        <td bgcolor="#FBFDB0" align=center>yes</td>
+        <td bgcolor="#FBFDB0" align=center>yes</td>
+        <td bgcolor="#FBFDB0" align=center>yes</td>
+        <td bgcolor="#FBFDB0" align=center>yes</td>
+        <td bgcolor="#FBFDB0" align=center>yes</td>
+        <td bgcolor="#FBFDB0" align=center>yes</td>
+    </tr>
+
+    <tr>
+        <td>&nbsp;</td>
+        <td bgcolor="#F4D7AA" align=right><b>Non-blocking Sockets</b></td>
+        <td bgcolor="#FBFDB0" align=center>yes</td>
+        <td bgcolor="#FBFDB0" align=center>yes</td>
+        <td bgcolor="#FBFDB0" align=center>yes</td>
+        <td bgcolor="#FBFDB0" align=center>yes</td>
+        <td bgcolor="#FBFDB0" align=center>yes</td>
+        <td bgcolor="#FBFDB0" align=center>yes</td>
+    </tr>
+
+    <tr>
+        <td>&nbsp;</td>
+        <td bgcolor="#F4D7AA" align=right><b>Asynchronous Sockets</b></td>
+        <td bgcolor="#FBFDB0" align=center>yes</td>
+        <td bgcolor="#FBFDB0" align=center>no</td>
+        <td bgcolor="#FBFDB0" align=center>yes</td>
+        <td bgcolor="#FBFDB0" align=center>yes</td>
+        <td bgcolor="#FBFDB0" align=center>yes</td>
+        <td bgcolor="#FBFDB0" align=center>no</td>
+    </tr>
+
+    <tr>
+        <td>&nbsp;</td>
+        <td bgcolor="#F4D7AA" align=right><b>Event Objects</b></td>
+        <td bgcolor="#FBFDB0" align=center>yes</td>
+        <td bgcolor="#FBFDB0" align=center>no</td>
+        <td bgcolor="#FBFDB0" align=center>yes</td>
+        <td bgcolor="#FBFDB0" align=center>no</td>
+        <td bgcolor="#FBFDB0" align=center>no</td>
+        <td bgcolor="#FBFDB0" align=center>no</td>
+    </tr>
+
+    <tr>
+        <td>&nbsp;</td>
+        <td bgcolor="#F4D7AA" align=right><b>Overlapped I/O</b></td>
+        <td bgcolor="#FBFDB0" align=center>yes<sup>1</sup></td>
+        <td bgcolor="#FBFDB0" align=center>no</td>
+        <td bgcolor="#FBFDB0" align=center>yes</td>
+        <td bgcolor="#FBFDB0" align=center>no</td>
+        <td bgcolor="#FBFDB0" align=center>no</td>
+        <td bgcolor="#FBFDB0" align=center>no<sup>2</sup></td>
+    </tr>
+
+    <tr>
+        <td>&nbsp;</td>
+        <td bgcolor="#F4D7AA" align=right><b>Threads</b></td>
+        <td bgcolor="#FBFDB0" align=center>yes</td>
+        <td bgcolor="#FBFDB0" align=center>yes</td>
+        <td bgcolor="#FBFDB0" align=center>yes</td>
+        <td bgcolor="#FBFDB0" align=center>yes</td>
+        <td bgcolor="#FBFDB0" align=center>no</td>
+        <td bgcolor="#FBFDB0" align=center>yes<sup>3</sup></td>
+    </tr>
+</table>
+
+<ol>
+  <p>
+    <li>Win9x does not support overlapped I/O in the kernel.  Where
+    overlapped I/O calls work on Win9x, it is because the mechanism
+    is emulated at the API layer. (This applies to Winsock, file and
+    serial/parallel port I/O at least.) This means that programs that
+    only use overlapped I/O functionality guaranteed by the Winsock
+    spec will run fine on Win9x. If, on the other hand, you stray into
+    functionality that only WinNT 4+ provides, your application will
+    fail on Win9x. One example of this is calling <code>ReadFile()</code>
+    with a socket: this works fine on NT4+, but will fail on Win9x.
+
+  <p>
+    <li>If you only need scatter/gather I/O support, BSD sockets
+    provides this functionality in the <code>readv()</code> and <code>writev()</code>
+    calls. There is no standard Unix mechanism that provides similar
+    efficiencies to Win32&rsquo;s overlapped I/O. Some Unixes provide
+    the <code>aio_*()</code> family of functions (called asynchronous I/O,
+    but not related to Winsock&rsquo;s asynchronous I/O), but this
+    is not implemented widely at the moment.
+
+  <p>
+    <li>Although all current Unixes support POSIX threads, there
+    are still a lot of older Unix machines out there with broken,
+    nonstandard or nonexistent threading. You will have to choose a
+    subset of all the Unixes if you want to use the same threading
+    code on all Unixes.  You&rsquo;ll definitely be writing different
+    threading code for Windows, since its threading API is completely
+    different.
+
+</ol>
+
+<!-- ----------------------------------------------------------------- -->
+
+<h4>Heuristic 2: Avoid <tt>select()</tt>.</h4>
+
+<p><code>select()</code> is the least efficient way to manage non-blocking
+I/O, because there is a lot of overhead associated with the
+function. Most of this overhead is a linear function of the number
+of connections: double the number of connections, and you double the
+processing time.</p>
+
+<p>About the only time you should use <code>select()</code> is for
+compatibility reasons: it&rsquo;s the only non-blocking I/O strategy
+that works on all versions of Windows (including CE) and on virtually
+all POSIX-based systems. If your program only needs to work on non-CE
+versions of Windows, there are better alternatives.</p>
+
+
+<!-- ----------------------------------------------------------------- -->
+
+<h4>Heuristic 3: Asynchronous sockets work best with low volumes of data.</h4>
+
+<p>Asynchronous Winsock I/O (<code>WSAAsyncSelect()</code>) isn&rsquo;t the
+most efficient I/O strategy, but it&rsquo;s not the least efficient,
+either. It&rsquo;s a fine way to go in a program that deals with low
+volumes of data. As the volume of data goes up, the overhead becomes
+more significant.</p>
+
+
+<!-- ----------------------------------------------------------------- -->
+
+<h4>Heuristic 4: For high-performance servers, prefer
+overlapped I/O.</h4>
+
+<p>Of all the various I/O strategies, overlapped I/O has the highest
+performance. (I/O completion ports are even more efficient, but are
+nonstandard vis-a-vis Winsock proper, so I don&rsquo;t cover them in
+the FAQ.) With careful use of overlapped I/O (and boatloads of memory
+in the server!) you can support <a href="../advanced.html#maxsockets">tens
+of thousands of connections</a> with a single server. No other I/O
+strategy comes close to the scalability of overlapped I/O.</p>
+
+
+<!-- ----------------------------------------------------------------- -->
+
+<h4>Heuristic 5: To support a moderate number of
+connections, consider asynchronous sockets and event objects.</h4>
+
+<p>If your server only has to support a moderate number of connections
+&mdash; up to 100 or so &mdash; you may not need overlapped
+I/O. Overlapped I/O is not easy to program, so if you don&rsquo;t
+need its efficiencies, you can save yourself a lot of trouble by
+using a simpler I/O strategy.</p>
+
+<p>Programmed correctly, asynchronous sockets are a reasonable choice
+for a dedicated server supporting a moderate number of connections. The
+main problem with doing this is that many servers don&rsquo;t have
+a user interface, and thus no message loop. A server without a UI
+using asynchronous sockets would have to create an invisible window
+solely to support its asynchronous sockets. If your program already
+has a user interface, though, asynchronous sockets can be the least
+painful way to add a network server feature to it.</p>
+
+<p>Another reasonable choice for handling a moderate number of
+connections is event objects. These are very efficient in and of
+themselves. The main problem you run into with them is that you
+cannot block on more than 64 event objects at a time. To block on
+more, you need to create multiple threads, each of which blocks on a
+subset of the event objects. Before choosing this method, consider
+that handling 1024 sockets requires 16 threads. Any time you have
+many more active threads than you have processors in the system,
+you start causing serious performance problems.</p>
+
+<p>One caution: it&rsquo;s very easy to underestimate the number of
+simultaneous connections you will get on a public Internet server. It
+may make sense to design for massive scalability even if your estimates
+don&rsquo;t currently predict thousands of simultaneous clients.</p>
+
+
+<!-- ----------------------------------------------------------------- -->
+
+<h4>Heuristic 6: Low-traffic servers can use most any
+I/O strategy.</h4>
+
+<p>For low-traffic servers, there isn&rsquo;t much call to be
+super-efficient.  Perhaps your server just doesn&rsquo;t see high
+traffic, or perhaps it&rsquo;s running a Windows 95 derivative and
+so it limited to <a href="../advanced.html#maxsockets">100 sockets</a>
+at a time by the OS.  Suitable strategies for 1-100 connections are
+event objects, non-blocking sockets with <code>select()</code>, asynchronous
+sockets, and threads with blocking sockets.</p>
+
+<p>We&rsquo;ve covered the first three methods already, so let&rsquo;s
+consider threads with blocking sockets. This is often the simplest
+way by far to write a server. You just have a main loop that accepts
+connections and spins each new connection off to its own thread, where
+it&rsquo;s handled with blocking sockets. Blocking sockets have several
+advantages. They are efficient, because when a thread blocks, the
+operating system immediately lets other threads run. Also, synchronous
+code is more straightforward than equivalent non-synchronous code.</p>
+
+<p>There are two main problems with thread-per-connection
+servers. First, threads often require a lot of synchronization work,
+which is hard to get right; this may outstrip the simplicity benefits
+of using blocking sockets. Second, threads don&rsquo;t scale well
+at all: as the number of threads increases, the operating system
+overhead associated with context switches between the threads becomes
+significant.  This method is only suitable for a fairly small number
+of connections, or a greater number of connections that are mostly
+idle.</p>
+
+
+<!-- ----------------------------------------------------------------- -->
+
+<h4>Heuristic 7: Do not block inside a user interface
+thread.</h4>
+
+<p>This heuristic sounds more like a straightforward rule of
+Windows programming, but I bring it up because most programs are
+single-threaded.  In a single-threaded GUI program, any time you call
+a Winsock function that blocks the UI thread, buttons can&rsquo;t be
+pressed, menus won&rsquo;t pull down, scroll bars won&rsquo;t move,
+keypresses are ignored...your UI freezes.</p>
+
+
+<!-- ----------------------------------------------------------------- -->
+
+<h4>Heuristic 8: For GUI client programs, prefer
+asynchronous sockets.</h4>
+
+<p>There are two reasons for this heuristic:</p>
+
+<ol>
+
+    <li>Asynchronous sockets were designed from the start to work
+    well with GUI programs. You already have a window loop going,
+    and you already have window management code in the rest of the
+    program. Adding asynchronous network I/O is about as easy as
+    adding a dialog to your program.<pbr>
+
+    <li>All of the alternatives require at least one additional
+    thread to handle the networking in order to satisfy the previous
+    heuristic. With asynchronous sockets, you can handle both the
+    network and the UI with a single thread. Since window messages
+    are handled one at a time in the order they arrive, everything
+    is automatically synchronized.<pbr>
+
+</ol>
+
+
+<!-- ----------------------------------------------------------------- -->
+
+<h4>Heuristic 9: Threads are rarely helpful in client
+programs.</h4>
+
+<p>When a programmer first learns about threads, he is eager to
+try them out in his own programs. He sees that they have several
+advantages, but he doesn&rsquo;t yet see the drawbacks. Unfortunately
+for the soon-to-be-educated newbie, these drawbacks can have very
+significant consequences.</p>
+
+<p>One real benefit of threads is that a thread doing I/O on a
+blocking socket has a linear control flow, and is therefore easier
+to understand. Asynchronous code is more spread out, so it is harder
+to write and debug.</p>
+
+<p>Another perceived benefit of threads is a kind of encapsulation:
+a programmer can split a program up into a number of threads, each of
+which has a single well-defined task. But, this is only valid if each
+thread is mostly independent from the rest of the program. If not,
+the threads will have to share data through a common data structure,
+destroying any potential encapsulation.</p>
+
+<p>In the end, the biggest problem with threads is also related to
+shared data structures: synchronization. This issue is covered better
+elsewhere, so I won&rsquo;t spend many words on it here. In short,
+synchronization is hard to get right: poorly-synchronized threads
+are subject to serialization delays, context switching overhead,
+deadlocks, race conditions and corrupted data. These are hard problems,
+and for most programs the benefits are not large enough to make them
+worth overcoming.</p>
+
+<p>A saner alternative is to use asynchronous I/O. This buys you the
+synchronization benefits described in the previous heuristic. You
+can even partition the application in a similar manner to threads
+by creating an invisible window for each socket. If you have two
+different types of sockets, each socket can have its notifications
+sent to a different type of window. In straight API terms it means
+a separate <code>WndProc()</code> for each type of socket. In terms of
+frameworks like MFC, you can put the code for each type of socket in
+a different subclass of <code>CWnd</code>.</p>
+
+
+<!-- ----------------------------------------------------------------- -->
+
+<h4>Heuristic 10: Use threads only when their effect on
+the rest of the program is easily contained.</h4>
+
+<p>The previous heuristic cautions that threads are often very hard
+to program correctly, but the truth is that they are sometimes very
+useful. You can make an educated guess about whether threads will
+improve the program by doing a bit of design work: is there a clean
+interface between each thread and the rest of the program? If so,
+synchronization becomes simple. If not, you&rsquo;re going to end up
+with a mess that crashes and destroys data unpredictably.</p>
+
+<p>Examples where threads are viable are:</p>
+
+<ol>
+
+    <li><b>An FTP server.</b> One way to write an FTP server is to
+    let the main thread accept the incoming network connections,
+    and send each one to a separate thread. Then, each thread can
+    process the incoming FTP commands, send any required replies,
+    and terminate when the session closes. Because each thread never
+    has to interact with any other, and they all act alike, this is
+    an ideal application of threads. (But, keep in mind the previous
+    server-related heuristics: one thread per client severely limits
+    your server&rsquo;s scalability.)<pbr>
+
+    <li><b>A web browser.</b> When you download a file with a modern
+    web browser, the file comes down in the background, so that you
+    can continue browsing. That download stream is most likely handled
+    by a dedicated thread.<pbr>
+
+    <li><b>An email program.</b> In an email program, the primary
+    focus is usually on reading and writing email. However, when
+    an email message needs to be sent, it is best not to interrupt
+    the user&rsquo;s work. You can send that message with a separate
+    network thread, since the process affects the rest of the program
+    only minimally.<pbr>
+
+    <li><b>A stock ticker.</b> Reduced to basics, a stock ticker simply
+    displays a small amount of continuous real-time data in a pleasing
+    and useful format. When the amount of network data involved is low,
+    the thread synchronization overhead becomes negligible. Plus,
+    this kind of application only has a single data structure that
+    needs protection; the really big synchronization problems appear
+    when multiple data structures need to be protected.<pbr>
+
+</ol>
+
+
+<!-- ----------------------------------------------------------------- -->
+
+<h4>Heuristic 11: Design around your protocol.</h4>
+
+<p>Some network protocols are inherently synchronous, and others are
+not. An example of a synchronous protocol is the POP3 e-mail protocol:
+send a user name, get a response, send a password, get a response,
+send a request to get the list of emails, get a response...  With POP,
+you have to send these commands in a specific order: you can&rsquo;t
+send the password before the user name, and you can&rsquo;t get the
+list of emails without sending the user name and password. Writing
+a POP client with a non-synchronous socket type would require also
+writing a state machine.</p>
+
+<p>On the other hand, if your protocol is non-synchronous, you might
+as well use non-synchronous sockets. Non-synchronous protocols tend
+to resemble a set of function calls. Consider, for example, a program
+to retrieve data from a networked SQL database: send a SQL statement,
+and retrieve the result set. At the end of each "function call", the
+program is back to its original state: you don&rsquo;t need to maintain
+a state machine to keep track of where you are in the protocol.</p>
+
+
+<!-- ----------------------------------------------------------------- -->
+
+<h4>Heuristic 12: Blocking sockets are simpler,
+non-blocking sockets are more powerful.</h4>
+
+<p>This heuristic is almost a restatement of all the above material. It
+just bears repeating that, while blocking sockets are attractive for
+their simplicity, you may find that their disadvantages eventually
+force you to redesign your program to use some form of non-blocking
+sockets. This is especially true if your program will be supporting
+more than one socket. (Virtuall all server programs fall into this
+category.)  The only reasonable way to use multiple blocking sockets
+at once is to use threads, but with non-blocking sockets, you have
+many more design options.</p>
+
+
+<!-- ----------------------------------------------------------------- -->
+
+<h4>Conclusion</h4>
+
+<p>It is my hope that you find these heuristics helpful. Although
+you may not agree with each of them, I think that they will at least
+make you think about your own choices. Design is a highly subjective
+enterprise, and this list is based mainly on my own thoughts and
+preferences.</p>
+
+<p>Special thanks go to Philippe Jounin for his comments on the 1998
+version of this paper. The 2000 version reflects my greater experience,
+as well as commentary from David Schwartz and Alun Jones, both of
+whom expanded my ideas of the proper way to build a Winsock server.</p>
+
+<p><font size=-1>Copyright &copy; 1998-2004 by Warren Young. All
+rights reserved.</font></p>
+
+
+
+		</div> <!-- end body div -->
+
+<hr class="noshade">
+
+
+<!--  Navigation footer  -->
+<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer nav"> 
+	<tr>
+		<td align="left" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="../articles/impatient.html">&lt;&lt;&nbsp;Winsock for the Impatient</a><br>
+			</span>
+		
+		</td>
+
+		<td align="right" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="../articles/effective-tcp.html">How to Use TCP Effectively&nbsp;&gt;&gt;</a>
+			</span>
+		
+		</td>
+	</tr>
+</table>
+
+
+
+
+
+
+	<!--  Document Footer -->
+
+	<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer info"> 
+		<tr>
+			
+				<td align="left" class="thirdwidth">
+					
+					<span class="annotation">Updated Sun Oct 25 2009 01:54 MDT</span>
+				</td>
+				<td align="center" class="thirdwidth">
+				
+			
+
+			
+				&nbsp;
+			
+			</td>
+
+			<td align="right" class="thirdwidth">
+				<a href="/">Go to my home page</a>
+			</td>
+		</tr>	
+	</table>
+
+
+	<script type="text/javascript" src="/js/awstats_misc_tracker.js"></script>
+</body>
+</html>
+

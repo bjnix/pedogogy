@@ -1,0 +1,38 @@
+undergraduate
+CS1121
+Introduction to Computer Science II
+2 0 1
+AB
+none
+undergraduate
+CS1090
+Introduction to Computer Science II
+3 0 0
+A
+CS1121
+graduate
+CS5091
+Computer Science Seminar
+1 0 0 seminar
+none
+none
+undergraduate
+CS2500
+Introduction to Computer Science II
+3 0 0
+none
+CS1121 CS1090
+graduate
+CS5082
+Computer Science Seminar
+1 0 0 seminar
+none
+none
+undergraduate
+CS3525
+Introduction to Computer Science II
+2 0 1
+AB
+CS1121 CS1090 CS2500
+done
+

@@ -1,0 +1,96 @@
+module part2(SW,KEY,HEX3,HEX2,HEX1,HEX0);
+	input [1:0] SW;
+	input [1:0] KEY;
+	output [6:0] HEX3,HEX2,HEX1,HEX0;
+	wire [15:0] out;
+	wire [15:0] in;
+	
+	//HEX0
+	t_FlipFlop t0(SW[1],KEY[0],SW[0],out[0]);
+	assign in[0] = out[0] & SW[1]; 
+	t_FlipFlop t1(in[0],KEY[0],SW[0],out[1]);
+	assign in[1] = out[1] & in[0]; 
+	t_FlipFlop t2(in[1],KEY[0],SW[0],out[2]);
+	assign in[2] = out[2] & in[1]; 
+	
+	t_FlipFlop t3(in[2],KEY[0],SW[0],out[3]);
+	assign in[3] = out[3] & in[2];
+	
+	//HEX1 
+	t_FlipFlop t4(in[3],KEY[0],SW[0],out[4]);
+	assign in[4] = out[4] & in[3];
+	t_FlipFlop t5(in[4],KEY[0],SW[0],out[5]);
+	assign in[5] = out[5] & in[4];
+	t_FlipFlop t6(in[5],KEY[0],SW[0],out[6]);
+	assign in[6] = out[6] & in[5];
+	t_FlipFlop t7(in[6],KEY[0],SW[0],out[7]);
+	assign in[7] = out[7] & in[6];
+	
+	//HEX2
+	t_FlipFlop t8(in[7],KEY[0],SW[0],out[8]);
+	assign in[8] = out[8] & in[7];
+	t_FlipFlop t9(in[8],KEY[0],SW[0],out[9]);
+	assign in[9] = out[9] & in[8];
+	t_FlipFlop t10(in[9],KEY[0],SW[0],out[10]);
+	assign in[10] = out[10] & in[9];
+	t_FlipFlop t11(in[10],KEY[0],SW[0],out[11]);
+	assign in[11] = out[11] & in[10];
+	
+	//HEX3
+	t_FlipFlop t12(in[11],KEY[0],SW[0],out[12]);
+	assign in[12] = out[12] & in[11];
+	t_FlipFlop t13(in[12],KEY[0],SW[0],out[13]);
+	assign in[13] = out[13] & in[12];
+	t_FlipFlop t14(in[13],KEY[0],SW[0],out[14]);
+	assign in[14] = out[14] & in[13];
+	t_FlipFlop t15(in[14],KEY[0],SW[0],out[15]);
+	assign in[15] = out[15] & in[14];
+	
+	//displays 
+	char_7seg S1(out[3:0],HEX0);	
+	char_7seg S2(out[7:4],HEX1);
+	char_7seg S3(out[11:8],HEX2);
+	char_7seg S4(out[15:12],HEX3);
+	
+endmodule
+module t_FlipFlop( enable,clk,reset,q );
+input enable, clk, reset; 
+output reg q;
+//Internal vars
+
+always @ ( negedge clk )begin
+	if (enable & ~reset)
+		q = q+1;
+	else if (reset)
+		q = 0;
+end
+
+endmodule 
+
+module char_7seg( C,Display );
+	input[3:0]C;            //input code
+	output reg[6:0]Display; //output 7-seg code
+	
+//assigns numbers to displays based on 4 bit input
+	always@(C)
+		case(C)
+			4'b0000 : Display=7'b1000000; //0
+			4'b0001 : Display=7'b1111001; //1
+			4'b0010 : Display=7'b0100100; //2
+			4'b0011 : Display=7'b0110000; //3
+			4'b0100 : Display=7'b0011001; //4
+			4'b0101 : Display=7'b0010010; //5
+			4'b0110 : Display=7'b0000010; //6
+			4'b0111 : Display=7'b1111000; //7
+			4'b1000 : Display=7'b0000000; //8
+			4'b1001 : Display=7'b0010000; //9
+			4'b1010 : Display=7'b0100000; //a
+			4'b1011 : Display=7'b0000011; //b
+			4'b1100 : Display=7'b1000110; //c
+			4'b1101 : Display=7'b0100001; //d
+			4'b1110 : Display=7'b0000100; //e
+			4'b1111 : Display=7'b0001110; //f
+		endcase
+	
+endmodule
+	

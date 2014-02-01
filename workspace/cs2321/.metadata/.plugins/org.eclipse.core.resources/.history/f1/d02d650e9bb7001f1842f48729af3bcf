@@ -1,0 +1,35 @@
+package cs2321;
+
+import net.datastructures.Position;
+
+public class ArrSeqPos<E> implements Position<E>{
+	
+	
+	ArrSeqPos(int Ind, E Elem){
+		Index = Ind;
+		Element = Elem;
+		
+	}
+	int Index;
+	E Element;
+	@Override
+	public E element() 
+	{
+		return Element;
+		
+	}
+	public int getIndex()
+	{
+		return Index;
+	}
+	public E setElement(E ele)
+	{
+		
+		return Element = ele;
+	}
+	public int setIndex(int I)
+	{
+		return Index = I;
+	}
+
+}

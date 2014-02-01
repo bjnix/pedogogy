@@ -1,0 +1,18 @@
+*GPDSpecVersion: "1.0"
+*%
+*%    Created:  2006/07/14
+*%    Modified: 
+*%
+*%    Copyright (c) 1999 - 2006 Ricoh Co., Ltd.
+*%    All rights reserved.
+*%
+*GPDFileName: "IFCS4046.GPD"
+*Include: "STDNAMES.GPD"
+*ModelName: "infotec  ISC 4045 PCL6"
+*PrintRatePPM: 45
+*PrintRate: 45
+*PrintRateUnit: PPM
+*Ifdef: WINNT_51
+*Define: RI_PCLXL
+*Endif:
+*Include: "RIAAPC1.GPD"

@@ -1,0 +1,293 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/DTD/strict.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/bitmaps/favicon.png">
+	<link rel="icon" href="/bitmaps/favicon.png" type="image/png">
+	<link href="../faq.css" rel="Stylesheet" type="text/css">
+
+	<title>Winsock Programmer&rsquo;s FAQ: Win32 Network Programming</title>
+
+	<style type="text/css">
+		#next-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: -38px 0;
+		}
+		#prev-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: 0 0;
+		}
+		#stop-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: -76px 0;
+		}
+		.navbar {
+			border: 8px solid #d0d0a0;
+			border-spacing: 0;
+			border-radius: 10px;
+			-moz-border-radius: 10px;
+			-webkit-border-radius: 10px;
+			height: 140px;
+			margin: auto;   /* center on page */
+			margin-top: 10px;
+			text-align: center;
+			width: 95%;
+		}
+		.navbar td {
+			background-color: #006000;
+			border: 10px solid #e0e0c0;
+			color: #ffffee;
+			font-size: 182%;
+			font-family:
+				"verdana",
+				"luxi sans",
+				"helvetica narrow",
+				"arial condensed",
+				"arial",
+				"univers",
+				sans-serif;
+			font-weight: bold;
+			text-align: center;
+		}
+		.navbarcap {
+			background-color: #e0e0c0 !important;
+			cursor: pointer;
+			padding-left: 10px;
+			width: 50px;
+		}
+	</style>
+</head>
+
+<body>
+
+
+
+
+
+
+
+
+	
+
+
+
+
+	
+
+	<!--  **** Navigation Bar ****  -->
+	<table class="navbar">
+		<tr>
+			<td class="navbarcap" onclick="location.href='../reviews/wsnp.html'">
+				<a id="prev-link" href="../reviews/wsnp.html"></a>
+			</td>
+
+			<td>
+				Winsock Programmer&rsquo;s FAQ<br>
+
+				
+
+				
+					Section 8: Win32 Network Programming<br>
+				
+				
+				
+			</td>
+
+			<td class="navbarcap" onclick="location.href='../reviews/tcpillus.html'">
+				<a id="next-link" href="../reviews/tcpillus.html"></a>
+			</td>
+		</tr>
+	</table>
+
+	<!--  **** Body Container ****  -->
+	<div id="body" style="padding-left: 30px" >
+
+
+<IMG SRC="bitmaps/w32np-cover.jpg" WIDTH="172" HEIGHT="210" ALT="cover image" align=right>
+
+<h3><i>Win32 Network Programming</i></h3>
+
+<p class=inset>
+	by Ralph Davis<br>
+	Addison-Wesley Developer&rsquo;s Press, September 1996<br>
+	820 pp., with source code on 3.5" disk<br>
+	ISBN 0-201-48930-9<br>
+	$46.95 list,
+	<a href="http://www.amazon.com/exec/obidos/ASIN/0201489309/winsockprogramme">$32.87 at Amazon.com (click to purchase)</a><br>
+</p>
+
+<p class=inset>Book reviewed 9/7/1998</p>
+<br clear=all>
+
+<p><img src="/bitmaps/dot-clear.gif" alt="" width=1 height=1></p>
+
+<p>This book would be a "shovelware" book, if it wasn&rsquo;t so darned
+good. You know the kind I mean: they cover twenty loosely-related
+topics in as many chapters, are at least 1.5 inches thick, have at
+least three coauthors who apparently only met once in a bar, and
+<i>always</i> include a CD-ROM, packed with many, many megabytes
+of things that have only a tenuous tie to the contents of the
+book. They never seem to come from Addison-Wesley, though, and this
+book doesn&rsquo;t mar that record.</p>
+
+<p>In a way, this is the book that Jeffrey Richter could have written
+instead of the classic <i>Programming Applications for Microsoft
+Windows</i>, if he was more inclined to write about networking. Like
+that must-have book, Davis' tome is big and eclectic. They even
+cover some of the same topics: exception handling, memory management,
+threading, synchronization, file I/O, DLLs, etc. What in the world
+do those things have to do with network programming? Well, it makes
+more sense if you think of this book as a kind of story. It&rsquo;s
+the story of a programmer with minimal Win32 skills who eventually
+becomes a master of the wild array of Microsoft networking APIs. That
+programmer could be you.</p>
+
+<p>Another way to look at this book is as a &ldquo;brain dump&rdquo;
+(like a Unix core dump, only for humans) of a master Windows network
+programmer. So, it includes not only a networking tutorial, it covers
+all of the lower-level APIs that you will need to use the networking
+APIs effectively. For example, an understanding of Win32 file I/O is
+very helpful if you plan on using Winsock 2&rsquo;s overlapped I/O
+mechanisms. Similarly, a knowledge of threading and synchronization
+is essential for writing efficient network servers.</p>
+
+<p>Of all this, I think that the shining gem adorning this book&rsquo;s
+well-earned crown is the book&rsquo;s class library. Most Winsock
+books don&rsquo;t even acknowledge C++, and those that do seem to
+develop relatively weak class libraries, or use the &lt;shudder&gt;
+Microsoft wrapper clases. That wasn&rsquo;t good enough for Davis, who
+developed an extensive class library, and uses it entirely throughout
+his book. It is good enough for both commercial development, and as an
+"idea mine," from which you can extract the raw ideas you&rsquo;ll
+need if you like to develop your own class libraries. This is a true
+class library, and not a CAsyncSocket-esque collection of wrappers. For
+example, in the File I/O chapter, Davis develops a COverlapped class,
+which he later uses as a parent class for his named pipes and Winsock
+classes.</p>
+
+<p>Hidden away in the last part of the last chapter is a wonderful
+benchmarking program that pits synchronous Winsock, overlapped Winsock,
+CAsyncSocket, <a href="../articles/csocket.html">CSocket</a>, UDP, named pipes,
+and RPC against each other. With it, you can find out which mechanism
+really is the fastest. Each of these methods has its advantages and
+disadvantages, of course, so you also have to weigh those against your
+particular situation, but running this little wonder on your system
+might well give you that last bit of information you need to decide
+on an appropriate architecture for your next networking project.</p>
+
+<p>In addition to topics enumerated above, this book also covers
+mailslots, RPC, the LAN Manager API, Windows NT&rsquo;s security API,
+the registry, and a number of other, lesser APIs. In a sense, this book
+is a kind of cook book, and a good, quality one at that. You&rsquo;ll
+want to have it on hand on the theory that it will have some ideas
+you can use later, not because it will solve something for you right
+now. On the other hand, if you don&rsquo;t yet know how to "cook,"
+you&rsquo;ll want to look elsewhere.</p>
+
+<p>Note that the book&rsquo;s release date puts it just barely after
+the Windows NT 4.0 release, and just barely before the Winsock 2.0
+release. It seems to carry its age well, but it&rsquo;s possible
+that there are a few minor pitfalls that I did not discover. But,
+like many other books I&rsquo;ve reviewed here, this book hasn&rsquo;t
+yet been replaced by something newer that is also better.</p>
+
+
+<h4>The Bottom Line</h4>
+
+<p>The actual Winsock coverage in this book is good and clear, but
+the rest of the book crowds it into a single 140-page chapter. Still,
+I as I hinted above, if you are just getting into serious Win32
+programming and want to focus on networking, you might pick up
+this volume and Richter&rsquo;s <i>Programming Applications for
+Microsoft Windows</i>. They would make a great core for a budding
+Win32 library.</p>
+
+
+<h4>Related Resources</h4>
+
+<p>There are several reviews of this book at
+<a href="http://www.amazon.com/exec/obidos/ASIN/0201489309/winsockprogramme">Amazon.com</a>.</p>
+
+<p><a href="http://www.awl.com/cseng/titles/0-201-48930-9/">Addison-Wesley</a> also has a page dedicated to this book.</p>
+
+
+
+		</div> <!-- end body div -->
+
+<hr class="noshade">
+
+
+<!--  Navigation footer  -->
+<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer nav"> 
+	<tr>
+		<td align="left" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="../reviews/wsnp.html">&lt;&lt;&nbsp;Windows Sockets Network Programming</a><br>
+			</span>
+		
+		</td>
+
+		<td align="right" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="../reviews/tcpillus.html">TCP/IP Illustrated&nbsp;&gt;&gt;</a>
+			</span>
+		
+		</td>
+	</tr>
+</table>
+
+
+
+
+
+
+	<!--  Document Footer -->
+
+	<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer info"> 
+		<tr>
+			
+				<td align="left" class="thirdwidth">
+					
+					<span class="annotation">Updated Sun Oct 25 2009 01:54 MDT</span>
+				</td>
+				<td align="center" class="thirdwidth">
+				
+			
+
+			
+				&nbsp;
+			
+			</td>
+
+			<td align="right" class="thirdwidth">
+				<a href="/">Go to my home page</a>
+			</td>
+		</tr>	
+	</table>
+
+
+	<script type="text/javascript" src="/js/awstats_misc_tracker.js"></script>
+</body>
+</html>
+

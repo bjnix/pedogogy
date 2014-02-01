@@ -1,0 +1,78 @@
+Altera SOPC Builder Version 9.12 Build 350
+Copyright (c) 1999-2009 Altera Corporation.  All rights reserved.
+
+
+No .sopc_builder configuration file(!)
+# 2012.11.07 10:40:07 (*) mk_custom_sdk starting
+# 2012.11.07 10:40:07 (*) Reading project H:/QuartusII/Lab7/L7Nios.ptf.
+
+# 2012.11.07 10:40:07 (*) Finding all CPUs
+# 2012.11.07 10:40:07 (*) Finding all available components
+
+# 2012.11.07 10:40:07 (*) Reading H:/QuartusII/Lab7/.sopc_builder/install.ptf
+
+# 2012.11.07 10:40:07 (*) Found 67 components
+
+# 2012.11.07 10:40:07 (*) Finding all peripherals
+
+# 2012.11.07 10:40:07 (*) Finding software components
+
+# 2012.11.07 10:40:08 (*) (Legacy SDK Generation Skipped)
+# 2012.11.07 10:40:08 (*) (All TCL Script Generation Skipped)
+# 2012.11.07 10:40:08 (*) (No Libraries Built)
+# 2012.11.07 10:40:08 (*) (Contents Generation Skipped)
+# 2012.11.07 10:40:08 (*) mk_custom_sdk finishing
+# 2012.11.07 10:40:08 (*) Starting generation for system: L7Nios.
+
+.
+.
+.
+
+# 2012.11.07 10:40:08 (*) Running Generator Program for onchip_memory2_0
+
+# 2012.11.07 10:40:09 (*) Running Generator Program for cpu_0
+
+# 2012.11.07 10:40:11 (*) Starting Nios II generation
+# 2012.11.07 10:40:11 (*)   Checking for plaintext license.
+# 2012.11.07 10:40:12 (*)   Couldn't query license setup in Quartus directory c:/winapps/altera/quartus
+# 2012.11.07 10:40:12 (*)   Defaulting to contents of LM_LICENSE_FILE environment variable
+# 2012.11.07 10:40:12 (*)   Plaintext license not found.
+# 2012.11.07 10:40:12 (*)   Checking for encrypted license (non-evaluation).
+# 2012.11.07 10:40:12 (*)   Couldn't query license setup in Quartus directory c:/winapps/altera/quartus
+
+# 2012.11.07 10:40:12 (*)   Defaulting to contents of LM_LICENSE_FILE environment variable
+# 2012.11.07 10:40:12 (*)   Encrypted license found.  SOF will not be time-limited.
+# 2012.11.07 10:40:12 (*)   Getting CPU configuration settings
+# 2012.11.07 10:40:12 (*)   Elaborating CPU configuration settings
+# 2012.11.07 10:40:12 (*)   Creating all objects for CPU
+# 2012.11.07 10:40:14 (*)     Pipeline frontend
+# 2012.11.07 10:40:16 (*)   Generating HDL from CPU objects
+# 2012.11.07 10:40:19 (*)   Creating encrypted HDL
+
+# 2012.11.07 10:40:20 (*) Done Nios II generation
+
+# 2012.11.07 10:40:20 (*) Running Generator Program for spi_0
+
+
+# 2012.11.07 10:40:21 (*) Making arbitration and system (top) modules.
+
+# 2012.11.07 10:40:23 (*) Generating Quartus symbol for top level: L7Nios
+
+# 2012.11.07 10:40:23 (*) Generating Symbol H:/QuartusII/Lab7/L7Nios.bsf
+
+# 2012.11.07 10:40:23 (*) Creating command-line system-generation script: H:/QuartusII/Lab7/L7Nios_generation_script
+
+# 2012.11.07 10:40:23 (*) Running setup for HDL simulator: modelsim
+
+
+# 2012.11.07 10:40:23 (*) Completed generation for system: L7Nios.
+# 2012.11.07 10:40:23 (*) THE FOLLOWING SYSTEM ITEMS HAVE BEEN GENERATED:
+
+  SOPC Builder database : H:/QuartusII/Lab7/L7Nios.ptf 
+  System HDL Model : H:/QuartusII/Lab7/L7Nios.v 
+  System Generation Script : H:/QuartusII/Lab7/L7Nios_generation_script 
+
+# 2012.11.07 10:40:23 (*) SUCCESS: SYSTEM GENERATION COMPLETED.
+
+
+Press 'Exit' to exit.

@@ -1,0 +1,286 @@
+Simulator report for part2
+Wed Mar 16 08:18:53 2011
+Quartus II Version 7.1 Build 178 06/25/2007 Service Pack 1 SJ Full Version
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Simulator Summary
+  3. Simulator Settings
+  4. Simulation Waveforms
+  5. Coverage Summary
+  6. Complete 1/0-Value Coverage
+  7. Missing 1-Value Coverage
+  8. Missing 0-Value Coverage
+  9. Simulator INI Usage
+ 10. Simulator Messages
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 1991-2007 Altera Corporation
+Your use of Altera Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Altera Program License 
+Subscription Agreement, Altera MegaCore Function License 
+Agreement, or other applicable license agreement, including, 
+without limitation, that your use is for the sole purpose of 
+programming logic devices manufactured by Altera and sold by 
+Altera or its authorized distributors.  Please refer to the 
+applicable agreement for further details.
+
+
+
++--------------------------------------------+
+; Simulator Summary                          ;
++-----------------------------+--------------+
+; Type                        ; Value        ;
++-----------------------------+--------------+
+; Simulation Start Time       ; 0 ps         ;
+; Simulation End Time         ; 1.0 us       ;
+; Simulation Netlist Size     ; 68 nodes     ;
+; Simulation Coverage         ;      14.71 % ;
+; Total Number of Transitions ; 536          ;
+; Simulation Breakpoints      ; 0            ;
+; Family                      ; Cyclone II   ;
+; Device                      ; EP2C8F256C7  ;
++-----------------------------+--------------+
+
+
++-------------------------------------------------------------------------------------------------------------------------+
+; Simulator Settings                                                                                                      ;
++--------------------------------------------------------------------------------------------+------------+---------------+
+; Option                                                                                     ; Setting    ; Default Value ;
++--------------------------------------------------------------------------------------------+------------+---------------+
+; Simulation mode                                                                            ; Timing     ; Timing        ;
+; Start time                                                                                 ; 0 ns       ; 0 ns          ;
+; Simulation results format                                                                  ; CVWF       ;               ;
+; Add pins automatically to simulation output waveforms                                      ; On         ; On            ;
+; Check outputs                                                                              ; Off        ; Off           ;
+; Report simulation coverage                                                                 ; On         ; On            ;
+; Display complete 1/0 value coverage report                                                 ; On         ; On            ;
+; Display missing 1-value coverage report                                                    ; On         ; On            ;
+; Display missing 0-value coverage report                                                    ; On         ; On            ;
+; Detect setup and hold time violations                                                      ; Off        ; Off           ;
+; Detect glitches                                                                            ; Off        ; Off           ;
+; Disable timing delays in Timing Simulation                                                 ; Off        ; Off           ;
+; Generate Signal Activity File                                                              ; Off        ; Off           ;
+; Generate VCD File for PowerPlay Power Analyzer                                             ; Off        ; Off           ;
+; Group bus channels in simulation results                                                   ; Off        ; Off           ;
+; Preserve fewer signal transitions to reduce memory requirements                            ; On         ; On            ;
+; Trigger vector comparison with the specified mode                                          ; INPUT_EDGE ; INPUT_EDGE    ;
+; Disable setup and hold time violations detection in input registers of bi-directional pins ; Off        ; Off           ;
+; Overwrite Waveform Inputs With Simulation Outputs                                          ; Off        ;               ;
+; Perform Glitch Filtering in Timing Simulation                                              ; Auto       ; Auto          ;
++--------------------------------------------------------------------------------------------+------------+---------------+
+
+
++----------------------+
+; Simulation Waveforms ;
++----------------------+
+Waveform report data cannot be output to ASCII.
+Please use Quartus II to view the waveform report data.
+
+
++--------------------------------------------------------------------+
+; Coverage Summary                                                   ;
++-----------------------------------------------------+--------------+
+; Type                                                ; Value        ;
++-----------------------------------------------------+--------------+
+; Total coverage as a percentage                      ;      14.71 % ;
+; Total nodes checked                                 ; 68           ;
+; Total output ports checked                          ; 68           ;
+; Total output ports with complete 1/0-value coverage ; 10           ;
+; Total output ports with no 1/0-value coverage       ; 58           ;
+; Total output ports with no 1-value coverage         ; 58           ;
+; Total output ports with no 0-value coverage         ; 58           ;
++-----------------------------------------------------+--------------+
+
+
+The following table displays output ports that toggle between 1 and 0 during simulation.
++----------------------------------------------------------------------------------+
+; Complete 1/0-Value Coverage                                                      ;
++-------------------------------+-------------------------------+------------------+
+; Node Name                     ; Output Port Name              ; Output Port Type ;
++-------------------------------+-------------------------------+------------------+
+; |part2|t_FlipFlop:comb_4|q    ; |part2|t_FlipFlop:comb_4|q    ; regout           ;
+; |part2|C[0]                   ; |part2|C[0]                   ; combout          ;
+; |part2|t_FlipFlop:comb_4|q~5  ; |part2|t_FlipFlop:comb_4|q~5  ; combout          ;
+; |part2|t_FlipFlop:comb_6|q~21 ; |part2|t_FlipFlop:comb_6|q~21 ; combout          ;
+; |part2|out[0]                 ; |part2|out[0]                 ; padio            ;
+; |part2|enable                 ; |part2|enable~corein          ; combout          ;
+; |part2|clk                    ; |part2|clk~corein             ; combout          ;
+; |part2|reset                  ; |part2|reset~corein           ; combout          ;
+; |part2|reset~clkctrl          ; |part2|reset~clkctrl          ; outclk           ;
+; |part2|clk~clkctrl            ; |part2|clk~clkctrl            ; outclk           ;
++-------------------------------+-------------------------------+------------------+
+
+
+The following table displays output ports that do not toggle to 1 during simulation.
++------------------------------------------------------------------------------------+
+; Missing 1-Value Coverage                                                           ;
++--------------------------------+--------------------------------+------------------+
+; Node Name                      ; Output Port Name               ; Output Port Type ;
++--------------------------------+--------------------------------+------------------+
+; |part2|t_FlipFlop:comb_6|q     ; |part2|t_FlipFlop:comb_6|q     ; regout           ;
+; |part2|C[1]                    ; |part2|C[1]                    ; combout          ;
+; |part2|t_FlipFlop:comb_8|q     ; |part2|t_FlipFlop:comb_8|q     ; regout           ;
+; |part2|C[2]                    ; |part2|C[2]                    ; combout          ;
+; |part2|t_FlipFlop:comb_10|q    ; |part2|t_FlipFlop:comb_10|q    ; regout           ;
+; |part2|C[3]                    ; |part2|C[3]                    ; combout          ;
+; |part2|t_FlipFlop:comb_12|q    ; |part2|t_FlipFlop:comb_12|q    ; regout           ;
+; |part2|C[4]                    ; |part2|C[4]                    ; combout          ;
+; |part2|t_FlipFlop:comb_14|q    ; |part2|t_FlipFlop:comb_14|q    ; regout           ;
+; |part2|C[5]                    ; |part2|C[5]                    ; combout          ;
+; |part2|t_FlipFlop:comb_16|q    ; |part2|t_FlipFlop:comb_16|q    ; regout           ;
+; |part2|C[6]                    ; |part2|C[6]                    ; combout          ;
+; |part2|t_FlipFlop:comb_18|q    ; |part2|t_FlipFlop:comb_18|q    ; regout           ;
+; |part2|C[7]                    ; |part2|C[7]                    ; combout          ;
+; |part2|t_FlipFlop:comb_20|q    ; |part2|t_FlipFlop:comb_20|q    ; regout           ;
+; |part2|C[8]                    ; |part2|C[8]                    ; combout          ;
+; |part2|t_FlipFlop:comb_22|q    ; |part2|t_FlipFlop:comb_22|q    ; regout           ;
+; |part2|C[9]                    ; |part2|C[9]                    ; combout          ;
+; |part2|t_FlipFlop:comb_24|q    ; |part2|t_FlipFlop:comb_24|q    ; regout           ;
+; |part2|C[10]                   ; |part2|C[10]                   ; combout          ;
+; |part2|t_FlipFlop:comb_26|q    ; |part2|t_FlipFlop:comb_26|q    ; regout           ;
+; |part2|C[11]                   ; |part2|C[11]                   ; combout          ;
+; |part2|t_FlipFlop:comb_28|q    ; |part2|t_FlipFlop:comb_28|q    ; regout           ;
+; |part2|C[12]                   ; |part2|C[12]                   ; combout          ;
+; |part2|t_FlipFlop:comb_30|q    ; |part2|t_FlipFlop:comb_30|q    ; regout           ;
+; |part2|C[13]                   ; |part2|C[13]                   ; combout          ;
+; |part2|t_FlipFlop:comb_32|q    ; |part2|t_FlipFlop:comb_32|q    ; regout           ;
+; |part2|C[14]                   ; |part2|C[14]                   ; combout          ;
+; |part2|t_FlipFlop:comb_34|q    ; |part2|t_FlipFlop:comb_34|q    ; regout           ;
+; |part2|t_FlipFlop:comb_8|q~23  ; |part2|t_FlipFlop:comb_8|q~23  ; combout          ;
+; |part2|t_FlipFlop:comb_10|q~25 ; |part2|t_FlipFlop:comb_10|q~25 ; combout          ;
+; |part2|t_FlipFlop:comb_12|q~27 ; |part2|t_FlipFlop:comb_12|q~27 ; combout          ;
+; |part2|t_FlipFlop:comb_14|q~29 ; |part2|t_FlipFlop:comb_14|q~29 ; combout          ;
+; |part2|t_FlipFlop:comb_16|q~31 ; |part2|t_FlipFlop:comb_16|q~31 ; combout          ;
+; |part2|t_FlipFlop:comb_18|q~33 ; |part2|t_FlipFlop:comb_18|q~33 ; combout          ;
+; |part2|t_FlipFlop:comb_20|q~35 ; |part2|t_FlipFlop:comb_20|q~35 ; combout          ;
+; |part2|t_FlipFlop:comb_22|q~37 ; |part2|t_FlipFlop:comb_22|q~37 ; combout          ;
+; |part2|t_FlipFlop:comb_24|q~39 ; |part2|t_FlipFlop:comb_24|q~39 ; combout          ;
+; |part2|t_FlipFlop:comb_26|q~41 ; |part2|t_FlipFlop:comb_26|q~41 ; combout          ;
+; |part2|t_FlipFlop:comb_28|q~43 ; |part2|t_FlipFlop:comb_28|q~43 ; combout          ;
+; |part2|t_FlipFlop:comb_30|q~45 ; |part2|t_FlipFlop:comb_30|q~45 ; combout          ;
+; |part2|t_FlipFlop:comb_32|q~47 ; |part2|t_FlipFlop:comb_32|q~47 ; combout          ;
+; |part2|t_FlipFlop:comb_34|q~49 ; |part2|t_FlipFlop:comb_34|q~49 ; combout          ;
+; |part2|out[1]                  ; |part2|out[1]                  ; padio            ;
+; |part2|out[2]                  ; |part2|out[2]                  ; padio            ;
+; |part2|out[3]                  ; |part2|out[3]                  ; padio            ;
+; |part2|out[4]                  ; |part2|out[4]                  ; padio            ;
+; |part2|out[5]                  ; |part2|out[5]                  ; padio            ;
+; |part2|out[6]                  ; |part2|out[6]                  ; padio            ;
+; |part2|out[7]                  ; |part2|out[7]                  ; padio            ;
+; |part2|out[8]                  ; |part2|out[8]                  ; padio            ;
+; |part2|out[9]                  ; |part2|out[9]                  ; padio            ;
+; |part2|out[10]                 ; |part2|out[10]                 ; padio            ;
+; |part2|out[11]                 ; |part2|out[11]                 ; padio            ;
+; |part2|out[12]                 ; |part2|out[12]                 ; padio            ;
+; |part2|out[13]                 ; |part2|out[13]                 ; padio            ;
+; |part2|out[14]                 ; |part2|out[14]                 ; padio            ;
+; |part2|out[15]                 ; |part2|out[15]                 ; padio            ;
++--------------------------------+--------------------------------+------------------+
+
+
+The following table displays output ports that do not toggle to 0 during simulation.
++------------------------------------------------------------------------------------+
+; Missing 0-Value Coverage                                                           ;
++--------------------------------+--------------------------------+------------------+
+; Node Name                      ; Output Port Name               ; Output Port Type ;
++--------------------------------+--------------------------------+------------------+
+; |part2|t_FlipFlop:comb_6|q     ; |part2|t_FlipFlop:comb_6|q     ; regout           ;
+; |part2|C[1]                    ; |part2|C[1]                    ; combout          ;
+; |part2|t_FlipFlop:comb_8|q     ; |part2|t_FlipFlop:comb_8|q     ; regout           ;
+; |part2|C[2]                    ; |part2|C[2]                    ; combout          ;
+; |part2|t_FlipFlop:comb_10|q    ; |part2|t_FlipFlop:comb_10|q    ; regout           ;
+; |part2|C[3]                    ; |part2|C[3]                    ; combout          ;
+; |part2|t_FlipFlop:comb_12|q    ; |part2|t_FlipFlop:comb_12|q    ; regout           ;
+; |part2|C[4]                    ; |part2|C[4]                    ; combout          ;
+; |part2|t_FlipFlop:comb_14|q    ; |part2|t_FlipFlop:comb_14|q    ; regout           ;
+; |part2|C[5]                    ; |part2|C[5]                    ; combout          ;
+; |part2|t_FlipFlop:comb_16|q    ; |part2|t_FlipFlop:comb_16|q    ; regout           ;
+; |part2|C[6]                    ; |part2|C[6]                    ; combout          ;
+; |part2|t_FlipFlop:comb_18|q    ; |part2|t_FlipFlop:comb_18|q    ; regout           ;
+; |part2|C[7]                    ; |part2|C[7]                    ; combout          ;
+; |part2|t_FlipFlop:comb_20|q    ; |part2|t_FlipFlop:comb_20|q    ; regout           ;
+; |part2|C[8]                    ; |part2|C[8]                    ; combout          ;
+; |part2|t_FlipFlop:comb_22|q    ; |part2|t_FlipFlop:comb_22|q    ; regout           ;
+; |part2|C[9]                    ; |part2|C[9]                    ; combout          ;
+; |part2|t_FlipFlop:comb_24|q    ; |part2|t_FlipFlop:comb_24|q    ; regout           ;
+; |part2|C[10]                   ; |part2|C[10]                   ; combout          ;
+; |part2|t_FlipFlop:comb_26|q    ; |part2|t_FlipFlop:comb_26|q    ; regout           ;
+; |part2|C[11]                   ; |part2|C[11]                   ; combout          ;
+; |part2|t_FlipFlop:comb_28|q    ; |part2|t_FlipFlop:comb_28|q    ; regout           ;
+; |part2|C[12]                   ; |part2|C[12]                   ; combout          ;
+; |part2|t_FlipFlop:comb_30|q    ; |part2|t_FlipFlop:comb_30|q    ; regout           ;
+; |part2|C[13]                   ; |part2|C[13]                   ; combout          ;
+; |part2|t_FlipFlop:comb_32|q    ; |part2|t_FlipFlop:comb_32|q    ; regout           ;
+; |part2|C[14]                   ; |part2|C[14]                   ; combout          ;
+; |part2|t_FlipFlop:comb_34|q    ; |part2|t_FlipFlop:comb_34|q    ; regout           ;
+; |part2|t_FlipFlop:comb_8|q~23  ; |part2|t_FlipFlop:comb_8|q~23  ; combout          ;
+; |part2|t_FlipFlop:comb_10|q~25 ; |part2|t_FlipFlop:comb_10|q~25 ; combout          ;
+; |part2|t_FlipFlop:comb_12|q~27 ; |part2|t_FlipFlop:comb_12|q~27 ; combout          ;
+; |part2|t_FlipFlop:comb_14|q~29 ; |part2|t_FlipFlop:comb_14|q~29 ; combout          ;
+; |part2|t_FlipFlop:comb_16|q~31 ; |part2|t_FlipFlop:comb_16|q~31 ; combout          ;
+; |part2|t_FlipFlop:comb_18|q~33 ; |part2|t_FlipFlop:comb_18|q~33 ; combout          ;
+; |part2|t_FlipFlop:comb_20|q~35 ; |part2|t_FlipFlop:comb_20|q~35 ; combout          ;
+; |part2|t_FlipFlop:comb_22|q~37 ; |part2|t_FlipFlop:comb_22|q~37 ; combout          ;
+; |part2|t_FlipFlop:comb_24|q~39 ; |part2|t_FlipFlop:comb_24|q~39 ; combout          ;
+; |part2|t_FlipFlop:comb_26|q~41 ; |part2|t_FlipFlop:comb_26|q~41 ; combout          ;
+; |part2|t_FlipFlop:comb_28|q~43 ; |part2|t_FlipFlop:comb_28|q~43 ; combout          ;
+; |part2|t_FlipFlop:comb_30|q~45 ; |part2|t_FlipFlop:comb_30|q~45 ; combout          ;
+; |part2|t_FlipFlop:comb_32|q~47 ; |part2|t_FlipFlop:comb_32|q~47 ; combout          ;
+; |part2|t_FlipFlop:comb_34|q~49 ; |part2|t_FlipFlop:comb_34|q~49 ; combout          ;
+; |part2|out[1]                  ; |part2|out[1]                  ; padio            ;
+; |part2|out[2]                  ; |part2|out[2]                  ; padio            ;
+; |part2|out[3]                  ; |part2|out[3]                  ; padio            ;
+; |part2|out[4]                  ; |part2|out[4]                  ; padio            ;
+; |part2|out[5]                  ; |part2|out[5]                  ; padio            ;
+; |part2|out[6]                  ; |part2|out[6]                  ; padio            ;
+; |part2|out[7]                  ; |part2|out[7]                  ; padio            ;
+; |part2|out[8]                  ; |part2|out[8]                  ; padio            ;
+; |part2|out[9]                  ; |part2|out[9]                  ; padio            ;
+; |part2|out[10]                 ; |part2|out[10]                 ; padio            ;
+; |part2|out[11]                 ; |part2|out[11]                 ; padio            ;
+; |part2|out[12]                 ; |part2|out[12]                 ; padio            ;
+; |part2|out[13]                 ; |part2|out[13]                 ; padio            ;
+; |part2|out[14]                 ; |part2|out[14]                 ; padio            ;
+; |part2|out[15]                 ; |part2|out[15]                 ; padio            ;
++--------------------------------+--------------------------------+------------------+
+
+
++---------------------+
+; Simulator INI Usage ;
++--------+------------+
+; Option ; Usage      ;
++--------+------------+
+
+
++--------------------+
+; Simulator Messages ;
++--------------------+
+Info: *******************************************************************
+Info: Running Quartus II Simulator
+    Info: Version 7.1 Build 178 06/25/2007 Service Pack 1 SJ Full Version
+    Info: Processing started: Wed Mar 16 08:18:52 2011
+Info: Command: quartus_sim --read_settings_files=on --write_settings_files=off part2 -c part2
+Info: Using vector source file "H:/eeLab2/lab4/part2/part2.vwf"
+Info: Option to preserve fewer signal transitions to reduce memory requirements is enabled
+    Info: Simulation has been partitioned into sub-simulations according to the maximum transition count determined by the engine. Transitions from memory will be flushed out to disk at the end of each sub-simulation to reduce memory requirements.
+Info: Simulation partitioned into 1 sub-simulations
+Info: Simulation coverage is      14.71 %
+Info: Number of transitions in simulation is 536
+Info: Quartus II Simulator was successful. 0 errors, 0 warnings
+    Info: Allocated 97 megabytes of memory during processing
+    Info: Processing ended: Wed Mar 16 08:18:54 2011
+    Info: Elapsed time: 00:00:02
+
+

@@ -1,0 +1,16 @@
+Fitter Status : Successful - Mon Mar 28 20:52:54 2011
+Quartus II Version : 9.1 Build 222 10/21/2009 SJ Full Version
+Revision Name : part6
+Top-level Entity Name : part6
+Family : Cyclone II
+Device : EP2C35F672C6
+Timing Models : Final
+Total logic elements : 64 / 33,216 ( < 1 % )
+    Total combinational functions : 64 / 33,216 ( < 1 % )
+    Dedicated logic registers : 28 / 33,216 ( < 1 % )
+Total registers : 28
+Total pins : 102 / 475 ( 21 % )
+Total virtual pins : 0
+Total memory bits : 0 / 483,840 ( 0 % )
+Embedded Multiplier 9-bit elements : 0 / 70 ( 0 % )
+Total PLLs : 0 / 4 ( 0 % )

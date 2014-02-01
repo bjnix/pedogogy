@@ -1,0 +1,125 @@
+               my $src_call = "8000";
+                my $dst_call = "0000";
+                my $timestamp = "00000000";
+
+			#use rand sequence information to line up RE issues.
+                my $outbound_seq = unpack("H2",pack("H2",int(rand(256))));
+                my $inbound_seq = unpack("H2",pack("H2",int(rand(256))));
+			#or not
+                #my $outbound_seq = "00";
+                #my $inbound_seq = "00";
+
+		for(my $i=1; 1==1; $i++) {
+			foreach my $frame (keys(%iaxFrameTypes)) {
+			  foreach my $subset (keys(%iaxControlFrames)) {
+			    foreach my $ie (keys(%iaxIE)) {
+                                my $out_msg =   $src_call . 
+						$dst_call . 
+						$timestamp . 
+						$outbound_seq . 
+						$inbound_seq . 
+						$iaxFrameTypes{$frame} . 
+						$iaxControlFrames{$subset} . 
+						$iaxIE{$ie};
+                                if(my @args = sendUDPSocket($out_msg,$target,$port,$TIMEOUT,$listen,0)) {
+                                        if($verbose && $i%1==0) {
+                                                print('['.scalar(localtime).'] ');
+                                                print($frame.' '.$subset.' '.$ie."\n");
+                                        }
+                                }
+			    }
+			  }
+                        }
+			print "Looping\n";
+                }
+        }elsif($bruteforce) {
+                while(1) {
+                        bruteForceFUZZ($target,$port,$listen,$timeout,\%iaxFrameTypes,\%iaxControlFrames,\%iaxIE);
+                        print("\t\tLooping\n\n");
+                        sleep(5);
+                }
+        }else{ ###smart fuzz
+
+        my $src_call = "8000";
+        my $dst_call = "0000";
+        my $timestamp = "00000000";
+        my $outbound_seq = "00";
+        my $inbound_seq = "00";
+
+foreach my $frameType (keys(%iaxFrameTypes)) {
+    if($frameType eq 'CONTROL') {
+        foreach my $controlKey (keys(%iaxControls)) {
+            foreach my $ieKey (keys(%iaxIE)) {
+                my $out_msg = $src_call . $dst_call . $timestamp . $outbound_seq . $inbound_seq . $iaxFrameTypes{$frameType} . $iaxControls{$controlKey} . $iaxIE{$ieKey}."00";
+                if(my @recv = sendUDPSocket($out_msg,$target,$port,$TIMEOUT,1)) {
+                        if(defined($recv[0]) && defined($recv[1])) {
+                        	print('['.scalar(localtime).'] ');
+                        	print($recv[0].' '.$recv[1].' '.$frameType.' '.$controlKey." ".$ieKey."\n");
+			}
+			if(defined($recv[2]) && defined($out_msg) && length($recv[2]) > length($out_msg)) {
+                               	print(length($recv[2])-length($out_msg)." bytes difference\n");
+                               	print($out_msg.' '.$recv[2]."\n");
+                        }
+                }
+            }
+        }
+
+    }elsif($frameType eq 'IAXCONTROL') {
+        foreach my $frameKey (keys(%iaxControlFrames)) {
+            foreach my $ieKey (keys(%iaxIE)) {
+                my $out_msg = $src_call . $dst_call . $timestamp . $outbound_seq . $inbound_seq . $iaxFrameTypes{$frameType} . $iaxControlFrames{$frameKey} . $iaxIE{$ieKey}.'00';
+                if(my @recv = sendUDPSocket($out_msg,$target,$port,$TIMEOUT,1)) {
+                        if(defined($recv[0]) && defined($recv[1])) {
+                        	logAngPrint('['.scalar(localtime).'] ');
+                        	print($recv[0].' '.$recv[1].' '.$frameType.' '.$frameKey." ".$ieKey.' ');
+			}
+			if(defined($recv[2]) && defined($out_msg) && length($recv[2]) > length($out_msg)) {
+                               	print(length($recv[2])-length($out_msg)." bytes difference\n");
+                               	print($out_msg.' '.$recv[2]."\n");
+                        }
+                }
+            }
+        }
+    }elsif($frameType eq 'HTML') {
+        foreach my $htmlKey (keys(%iaxHTML)) {
+            foreach my $ieKey (keys(%iaxIE)) {
+                my $out_msg = $src_call . $dst_call . $timestamp . $outbound_seq . $inbound_seq . $iaxFrameTypes{$frameType} . $iaxHTML{$htmlKey} . $iaxIE{$ieKey}.'00';
+                if(my @recv = sendUDPSocket($out_msg,$target,$port,$TIMEOUT,1)) {
+                        if(defined($recv[0]) && defined($recv[1])) {
+                        	print('['.scalar(localtime).'] ');
+                        	print($recv[0].' '.$recv[1].' '.$frameType.' '.$htmlKey." ".$ieKey.' ');
+			}
+			if(defined($recv[2]) && defined($out_msg) && length($recv[2]) > length($out_msg)) {
+                               	print(length($recv[2])-length($out_msg)." bytes difference\n");
+                               	print($out_msg.' '.$recv[2]."\n");
+                        }
+                }
+            }
+        }
+
+    }elsif($frameType eq 'DTMF') {
+        foreach my $dtmfKey (keys(%iaxDTMF)) {
+            foreach my $ieKey (keys(%iaxIE)) {
+                my $out_msg = $src_call . $dst_call . $timestamp . $outbound_seq . $inbound_seq . $iaxFrameTypes{$frameType} . $iaxDTMF{$dtmfKey} . $iaxIE{$ieKey}.'00';
+                if(my @recv = sendUDPSocket($out_msg,$target,$port,$TIMEOUT,1)) {
+			if(defined($recv[0]) && defied($recv[2])) {
+                        	print('['.scalar(localtime).'] ');
+                        	print($recv[0].' '.$recv[1].' '.$frameType.' '.$dtmfKey." ".$ieKey.' ');
+			}
+           		if(defined($recv[2]) && defined($out_msg) && length($recv[2]) > length($out_msg)) {
+                               	print(length($recv[2])-length($out_msg)." bytes difference\n");
+                               	print($out_msg.' '.$recv[2]."\n");
+                        }
+                }
+            }
+        }
+    }elsif($frameType eq 'TEXT') {
+        my $out_msg = $src_call . $dst_call . $timestamp . $outbound_seq . $inbound_seq . $iaxFrameTypes{$frameType} . "00"; #text frame types "must" have a subclass of 0?
+        if(my @recv = sendUDPSocket($out_msg,$target,$port,$TIMEOUT,1)) {
+		if(defined($recv[0]) && defined($recv[1])) {
+          		print('['.scalar(localtime).'] ');
+               		print($recv[0].' '.$recv[1].' '.$frameType.' 00 ');
+		}
+	        if(defined($recv[2]) && defined($out_msg) && length($recv[2]) > length($out_msg)) {
+	        	print(length($recv[2])-length($out_msg)." bytes difference\n");
+	                

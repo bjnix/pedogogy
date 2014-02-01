@@ -1,0 +1,1763 @@
+State 0:
+          program ::= * programHeadAndProcedures compoundStatement DOT
+          programHeadAndProcedures ::= * programHead procedures
+          programHead ::= * PROGRAM IDENTIFIER SEMICOLON decls
+
+                       PROGRAM shift  66
+                       program accept
+      programHeadAndProcedures shift  39
+                   programHead shift  25
+
+State 1:
+          statement ::= * matched_stmt
+          statement ::= * open_stmt
+          matched_stmt ::= * matched_if
+          matched_stmt ::= * assignment
+          matched_stmt ::= * matchedWhileStatement
+          matched_stmt ::= * ioStatement
+          matched_stmt ::= * returnStatement
+          matched_stmt ::= * compoundStatement
+          assignment ::= * variable ASSIGN expr
+          matched_if ::= * IF testAndThen ELSE matched_stmt
+          open_stmt ::= * IF test THEN statement
+          open_stmt ::= * IF testAndThen ELSE open_stmt
+          open_stmt ::= * openWhileStatement
+          matchedWhileStatement ::= * whileToken whileExpr DO matched_stmt
+          openWhileStatement ::= * whileToken whileExpr DO open_stmt
+          whileToken ::= * WHILE
+          ioStatement ::= * READ LPAREN variable RPAREN
+          ioStatement ::= * WRITE LPAREN expr RPAREN
+          ioStatement ::= * WRITE LPAREN stringConstant RPAREN
+          returnStatement ::= * RETURN expr
+          compoundStatement ::= * T_BEGIN statementList END
+          compoundStatement ::= T_BEGIN * statementList END
+          statementList ::= * statement
+          statementList ::= * statementList SEMICOLON statement
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+
+                    IDENTIFIER shift  83
+                            IF shift  6
+                         WHILE shift  116
+                          READ shift  85
+                         WRITE shift  82
+                        RETURN shift  9
+                       T_BEGIN shift  1
+             compoundStatement shift  132
+                     statement shift  108
+                  matched_stmt shift  139
+                     open_stmt shift  138
+                    matched_if shift  137
+                    assignment shift  136
+         matchedWhileStatement shift  135
+                   ioStatement shift  134
+               returnStatement shift  133
+                      variable shift  89
+            openWhileStatement shift  119
+                    whileToken shift  8
+                 statementList shift  49
+
+State 2:
+          statement ::= * matched_stmt
+          statement ::= * open_stmt
+          matched_stmt ::= * matched_if
+          matched_stmt ::= * assignment
+          matched_stmt ::= * matchedWhileStatement
+          matched_stmt ::= * ioStatement
+          matched_stmt ::= * returnStatement
+          matched_stmt ::= * compoundStatement
+          assignment ::= * variable ASSIGN expr
+          matched_if ::= * IF testAndThen ELSE matched_stmt
+          open_stmt ::= * IF test THEN statement
+          open_stmt ::= * IF testAndThen ELSE open_stmt
+          open_stmt ::= * openWhileStatement
+          matchedWhileStatement ::= * whileToken whileExpr DO matched_stmt
+          openWhileStatement ::= * whileToken whileExpr DO open_stmt
+          whileToken ::= * WHILE
+          ioStatement ::= * READ LPAREN variable RPAREN
+          ioStatement ::= * WRITE LPAREN expr RPAREN
+          ioStatement ::= * WRITE LPAREN stringConstant RPAREN
+          returnStatement ::= * RETURN expr
+          compoundStatement ::= * T_BEGIN statementList END
+          statementList ::= statementList SEMICOLON * statement
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+
+                    IDENTIFIER shift  83
+                            IF shift  6
+                         WHILE shift  116
+                          READ shift  85
+                         WRITE shift  82
+                        RETURN shift  9
+                       T_BEGIN shift  1
+             compoundStatement shift  132
+                     statement shift  109
+                  matched_stmt shift  139
+                     open_stmt shift  138
+                    matched_if shift  137
+                    assignment shift  136
+         matchedWhileStatement shift  135
+                   ioStatement shift  134
+               returnStatement shift  133
+                      variable shift  89
+            openWhileStatement shift  119
+                    whileToken shift  8
+
+State 3:
+          statement ::= * matched_stmt
+          statement ::= * open_stmt
+          matched_stmt ::= * matched_if
+          matched_stmt ::= * assignment
+          matched_stmt ::= * matchedWhileStatement
+          matched_stmt ::= * ioStatement
+          matched_stmt ::= * returnStatement
+          matched_stmt ::= * compoundStatement
+          assignment ::= * variable ASSIGN expr
+          matched_if ::= * IF testAndThen ELSE matched_stmt
+          open_stmt ::= * IF test THEN statement
+          open_stmt ::= IF test THEN * statement
+          open_stmt ::= * IF testAndThen ELSE open_stmt
+          open_stmt ::= * openWhileStatement
+          testAndThen ::= test THEN * matched_stmt
+          matchedWhileStatement ::= * whileToken whileExpr DO matched_stmt
+          openWhileStatement ::= * whileToken whileExpr DO open_stmt
+          whileToken ::= * WHILE
+          ioStatement ::= * READ LPAREN variable RPAREN
+          ioStatement ::= * WRITE LPAREN expr RPAREN
+          ioStatement ::= * WRITE LPAREN stringConstant RPAREN
+          returnStatement ::= * RETURN expr
+          compoundStatement ::= * T_BEGIN statementList END
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+
+                    IDENTIFIER shift  83
+                            IF shift  6
+                         WHILE shift  116
+                          READ shift  85
+                         WRITE shift  82
+                        RETURN shift  9
+                       T_BEGIN shift  1
+             compoundStatement shift  132
+                     statement shift  111
+                  matched_stmt shift  79
+                     open_stmt shift  138
+                    matched_if shift  137
+                    assignment shift  136
+         matchedWhileStatement shift  135
+                   ioStatement shift  134
+               returnStatement shift  133
+                      variable shift  89
+            openWhileStatement shift  119
+                    whileToken shift  8
+
+State 4:
+          matched_stmt ::= * matched_if
+          matched_stmt ::= * assignment
+          matched_stmt ::= * matchedWhileStatement
+          matched_stmt ::= * ioStatement
+          matched_stmt ::= * returnStatement
+          matched_stmt ::= * compoundStatement
+          assignment ::= * variable ASSIGN expr
+          matched_if ::= * IF testAndThen ELSE matched_stmt
+          open_stmt ::= * IF test THEN statement
+          open_stmt ::= * IF testAndThen ELSE open_stmt
+          open_stmt ::= * openWhileStatement
+          matchedWhileStatement ::= * whileToken whileExpr DO matched_stmt
+          matchedWhileStatement ::= whileToken whileExpr DO * matched_stmt
+          openWhileStatement ::= * whileToken whileExpr DO open_stmt
+          openWhileStatement ::= whileToken whileExpr DO * open_stmt
+          whileToken ::= * WHILE
+          ioStatement ::= * READ LPAREN variable RPAREN
+          ioStatement ::= * WRITE LPAREN expr RPAREN
+          ioStatement ::= * WRITE LPAREN stringConstant RPAREN
+          returnStatement ::= * RETURN expr
+          compoundStatement ::= * T_BEGIN statementList END
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+
+                    IDENTIFIER shift  83
+                            IF shift  6
+                         WHILE shift  116
+                          READ shift  85
+                         WRITE shift  82
+                        RETURN shift  9
+                       T_BEGIN shift  1
+             compoundStatement shift  132
+                  matched_stmt shift  118
+                     open_stmt shift  117
+                    matched_if shift  137
+                    assignment shift  136
+         matchedWhileStatement shift  135
+                   ioStatement shift  134
+               returnStatement shift  133
+                      variable shift  89
+            openWhileStatement shift  119
+                    whileToken shift  8
+
+State 5:
+          matched_stmt ::= * matched_if
+          matched_stmt ::= * assignment
+          matched_stmt ::= * matchedWhileStatement
+          matched_stmt ::= * ioStatement
+          matched_stmt ::= * returnStatement
+          matched_stmt ::= * compoundStatement
+          assignment ::= * variable ASSIGN expr
+          matched_if ::= * IF testAndThen ELSE matched_stmt
+          matched_if ::= IF testAndThen ELSE * matched_stmt
+          open_stmt ::= * IF test THEN statement
+          open_stmt ::= * IF testAndThen ELSE open_stmt
+          open_stmt ::= IF testAndThen ELSE * open_stmt
+          open_stmt ::= * openWhileStatement
+          matchedWhileStatement ::= * whileToken whileExpr DO matched_stmt
+          openWhileStatement ::= * whileToken whileExpr DO open_stmt
+          whileToken ::= * WHILE
+          ioStatement ::= * READ LPAREN variable RPAREN
+          ioStatement ::= * WRITE LPAREN expr RPAREN
+          ioStatement ::= * WRITE LPAREN stringConstant RPAREN
+          returnStatement ::= * RETURN expr
+          compoundStatement ::= * T_BEGIN statementList END
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+
+                    IDENTIFIER shift  83
+                            IF shift  6
+                         WHILE shift  116
+                          READ shift  85
+                         WRITE shift  82
+                        RETURN shift  9
+                       T_BEGIN shift  1
+             compoundStatement shift  132
+                  matched_stmt shift  121
+                     open_stmt shift  120
+                    matched_if shift  137
+                    assignment shift  136
+         matchedWhileStatement shift  135
+                   ioStatement shift  134
+               returnStatement shift  133
+                      variable shift  89
+            openWhileStatement shift  119
+                    whileToken shift  8
+
+State 6:
+          matched_if ::= IF * testAndThen ELSE matched_stmt
+          open_stmt ::= IF * test THEN statement
+          open_stmt ::= IF * testAndThen ELSE open_stmt
+          testAndThen ::= * test THEN matched_stmt
+          test ::= * expr
+          expr ::= * simpleExpr
+          expr ::= * expr OR simpleExpr
+          expr ::= * expr AND simpleExpr
+          expr ::= * NOT simpleExpr
+          simpleExpr ::= * addExpr
+          simpleExpr ::= * simpleExpr EQ addExpr
+          simpleExpr ::= * simpleExpr NE addExpr
+          simpleExpr ::= * simpleExpr LE addExpr
+          simpleExpr ::= * simpleExpr LT addExpr
+          simpleExpr ::= * simpleExpr GE addExpr
+          simpleExpr ::= * simpleExpr GT addExpr
+          addExpr ::= * mulExpr
+          addExpr ::= * addExpr PLUS mulExpr
+          addExpr ::= * addExpr MINUS mulExpr
+          mulExpr ::= * factor
+          mulExpr ::= * mulExpr TIMES factor
+          mulExpr ::= * mulExpr DIVIDE factor
+          factor ::= * variable
+          factor ::= * constant
+          factor ::= * IDENTIFIER LPAREN RPAREN
+          factor ::= * LPAREN expr RPAREN
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+          constant ::= * FLOATCON
+          constant ::= * INTNUM
+
+                           NOT shift  13
+                    IDENTIFIER shift  61
+                        INTNUM shift  124
+                        LPAREN shift  10
+                      FLOATCON shift  125
+                      variable shift  130
+                          expr shift  50
+                   testAndThen shift  87
+                          test shift  80
+                    simpleExpr shift  42
+                       addExpr shift  53
+                       mulExpr shift  57
+                        factor shift  126
+                      constant shift  129
+
+State 7:
+          ioStatement ::= WRITE LPAREN * expr RPAREN
+          ioStatement ::= WRITE LPAREN * stringConstant RPAREN
+          expr ::= * simpleExpr
+          expr ::= * expr OR simpleExpr
+          expr ::= * expr AND simpleExpr
+          expr ::= * NOT simpleExpr
+          simpleExpr ::= * addExpr
+          simpleExpr ::= * simpleExpr EQ addExpr
+          simpleExpr ::= * simpleExpr NE addExpr
+          simpleExpr ::= * simpleExpr LE addExpr
+          simpleExpr ::= * simpleExpr LT addExpr
+          simpleExpr ::= * simpleExpr GE addExpr
+          simpleExpr ::= * simpleExpr GT addExpr
+          addExpr ::= * mulExpr
+          addExpr ::= * addExpr PLUS mulExpr
+          addExpr ::= * addExpr MINUS mulExpr
+          mulExpr ::= * factor
+          mulExpr ::= * mulExpr TIMES factor
+          mulExpr ::= * mulExpr DIVIDE factor
+          factor ::= * variable
+          factor ::= * constant
+          factor ::= * IDENTIFIER LPAREN RPAREN
+          factor ::= * LPAREN expr RPAREN
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+          stringConstant ::= * STRING
+          constant ::= * FLOATCON
+          constant ::= * INTNUM
+
+                           NOT shift  13
+                    IDENTIFIER shift  61
+                        INTNUM shift  124
+                        LPAREN shift  10
+                        STRING shift  112
+                      FLOATCON shift  125
+                      variable shift  130
+                          expr shift  44
+                stringConstant shift  81
+                    simpleExpr shift  42
+                       addExpr shift  53
+                       mulExpr shift  57
+                        factor shift  126
+                      constant shift  129
+
+State 8:
+          matchedWhileStatement ::= whileToken * whileExpr DO matched_stmt
+          openWhileStatement ::= whileToken * whileExpr DO open_stmt
+          whileExpr ::= * expr
+          expr ::= * simpleExpr
+          expr ::= * expr OR simpleExpr
+          expr ::= * expr AND simpleExpr
+          expr ::= * NOT simpleExpr
+          simpleExpr ::= * addExpr
+          simpleExpr ::= * simpleExpr EQ addExpr
+          simpleExpr ::= * simpleExpr NE addExpr
+          simpleExpr ::= * simpleExpr LE addExpr
+          simpleExpr ::= * simpleExpr LT addExpr
+          simpleExpr ::= * simpleExpr GE addExpr
+          simpleExpr ::= * simpleExpr GT addExpr
+          addExpr ::= * mulExpr
+          addExpr ::= * addExpr PLUS mulExpr
+          addExpr ::= * addExpr MINUS mulExpr
+          mulExpr ::= * factor
+          mulExpr ::= * mulExpr TIMES factor
+          mulExpr ::= * mulExpr DIVIDE factor
+          factor ::= * variable
+          factor ::= * constant
+          factor ::= * IDENTIFIER LPAREN RPAREN
+          factor ::= * LPAREN expr RPAREN
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+          constant ::= * FLOATCON
+          constant ::= * INTNUM
+
+                           NOT shift  13
+                    IDENTIFIER shift  61
+                        INTNUM shift  124
+                        LPAREN shift  10
+                      FLOATCON shift  125
+                      variable shift  130
+                          expr shift  51
+                     whileExpr shift  86
+                    simpleExpr shift  42
+                       addExpr shift  53
+                       mulExpr shift  57
+                        factor shift  126
+                      constant shift  129
+
+State 9:
+          returnStatement ::= RETURN * expr
+          expr ::= * simpleExpr
+          expr ::= * expr OR simpleExpr
+          expr ::= * expr AND simpleExpr
+          expr ::= * NOT simpleExpr
+          simpleExpr ::= * addExpr
+          simpleExpr ::= * simpleExpr EQ addExpr
+          simpleExpr ::= * simpleExpr NE addExpr
+          simpleExpr ::= * simpleExpr LE addExpr
+          simpleExpr ::= * simpleExpr LT addExpr
+          simpleExpr ::= * simpleExpr GE addExpr
+          simpleExpr ::= * simpleExpr GT addExpr
+          addExpr ::= * mulExpr
+          addExpr ::= * addExpr PLUS mulExpr
+          addExpr ::= * addExpr MINUS mulExpr
+          mulExpr ::= * factor
+          mulExpr ::= * mulExpr TIMES factor
+          mulExpr ::= * mulExpr DIVIDE factor
+          factor ::= * variable
+          factor ::= * constant
+          factor ::= * IDENTIFIER LPAREN RPAREN
+          factor ::= * LPAREN expr RPAREN
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+          constant ::= * FLOATCON
+          constant ::= * INTNUM
+
+                           NOT shift  13
+                    IDENTIFIER shift  61
+                        INTNUM shift  124
+                        LPAREN shift  10
+                      FLOATCON shift  125
+                      variable shift  130
+                          expr shift  52
+                    simpleExpr shift  42
+                       addExpr shift  53
+                       mulExpr shift  57
+                        factor shift  126
+                      constant shift  129
+
+State 10:
+          expr ::= * simpleExpr
+          expr ::= * expr OR simpleExpr
+          expr ::= * expr AND simpleExpr
+          expr ::= * NOT simpleExpr
+          simpleExpr ::= * addExpr
+          simpleExpr ::= * simpleExpr EQ addExpr
+          simpleExpr ::= * simpleExpr NE addExpr
+          simpleExpr ::= * simpleExpr LE addExpr
+          simpleExpr ::= * simpleExpr LT addExpr
+          simpleExpr ::= * simpleExpr GE addExpr
+          simpleExpr ::= * simpleExpr GT addExpr
+          addExpr ::= * mulExpr
+          addExpr ::= * addExpr PLUS mulExpr
+          addExpr ::= * addExpr MINUS mulExpr
+          mulExpr ::= * factor
+          mulExpr ::= * mulExpr TIMES factor
+          mulExpr ::= * mulExpr DIVIDE factor
+          factor ::= * variable
+          factor ::= * constant
+          factor ::= * IDENTIFIER LPAREN RPAREN
+          factor ::= * LPAREN expr RPAREN
+          factor ::= LPAREN * expr RPAREN
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+          constant ::= * FLOATCON
+          constant ::= * INTNUM
+
+                           NOT shift  13
+                    IDENTIFIER shift  61
+                        INTNUM shift  124
+                        LPAREN shift  10
+                      FLOATCON shift  125
+                      variable shift  130
+                          expr shift  46
+                    simpleExpr shift  42
+                       addExpr shift  53
+                       mulExpr shift  57
+                        factor shift  126
+                      constant shift  129
+
+State 11:
+          expr ::= * simpleExpr
+          expr ::= * expr OR simpleExpr
+          expr ::= * expr AND simpleExpr
+          expr ::= * NOT simpleExpr
+          simpleExpr ::= * addExpr
+          simpleExpr ::= * simpleExpr EQ addExpr
+          simpleExpr ::= * simpleExpr NE addExpr
+          simpleExpr ::= * simpleExpr LE addExpr
+          simpleExpr ::= * simpleExpr LT addExpr
+          simpleExpr ::= * simpleExpr GE addExpr
+          simpleExpr ::= * simpleExpr GT addExpr
+          addExpr ::= * mulExpr
+          addExpr ::= * addExpr PLUS mulExpr
+          addExpr ::= * addExpr MINUS mulExpr
+          mulExpr ::= * factor
+          mulExpr ::= * mulExpr TIMES factor
+          mulExpr ::= * mulExpr DIVIDE factor
+          factor ::= * variable
+          factor ::= * constant
+          factor ::= * IDENTIFIER LPAREN RPAREN
+          factor ::= * LPAREN expr RPAREN
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+          variable ::= IDENTIFIER LBRACKET * expr RBRACKET
+          constant ::= * FLOATCON
+          constant ::= * INTNUM
+
+                           NOT shift  13
+                    IDENTIFIER shift  61
+                        INTNUM shift  124
+                        LPAREN shift  10
+                      FLOATCON shift  125
+                      variable shift  130
+                          expr shift  45
+                    simpleExpr shift  42
+                       addExpr shift  53
+                       mulExpr shift  57
+                        factor shift  126
+                      constant shift  129
+
+State 12:
+          assignment ::= variable ASSIGN * expr
+          expr ::= * simpleExpr
+          expr ::= * expr OR simpleExpr
+          expr ::= * expr AND simpleExpr
+          expr ::= * NOT simpleExpr
+          simpleExpr ::= * addExpr
+          simpleExpr ::= * simpleExpr EQ addExpr
+          simpleExpr ::= * simpleExpr NE addExpr
+          simpleExpr ::= * simpleExpr LE addExpr
+          simpleExpr ::= * simpleExpr LT addExpr
+          simpleExpr ::= * simpleExpr GE addExpr
+          simpleExpr ::= * simpleExpr GT addExpr
+          addExpr ::= * mulExpr
+          addExpr ::= * addExpr PLUS mulExpr
+          addExpr ::= * addExpr MINUS mulExpr
+          mulExpr ::= * factor
+          mulExpr ::= * mulExpr TIMES factor
+          mulExpr ::= * mulExpr DIVIDE factor
+          factor ::= * variable
+          factor ::= * constant
+          factor ::= * IDENTIFIER LPAREN RPAREN
+          factor ::= * LPAREN expr RPAREN
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+          constant ::= * FLOATCON
+          constant ::= * INTNUM
+
+                           NOT shift  13
+                    IDENTIFIER shift  61
+                        INTNUM shift  124
+                        LPAREN shift  10
+                      FLOATCON shift  125
+                      variable shift  130
+                          expr shift  64
+                    simpleExpr shift  42
+                       addExpr shift  53
+                       mulExpr shift  57
+                        factor shift  126
+                      constant shift  129
+
+State 13:
+          expr ::= NOT * simpleExpr
+          simpleExpr ::= * addExpr
+          simpleExpr ::= * simpleExpr EQ addExpr
+          simpleExpr ::= * simpleExpr NE addExpr
+          simpleExpr ::= * simpleExpr LE addExpr
+          simpleExpr ::= * simpleExpr LT addExpr
+          simpleExpr ::= * simpleExpr GE addExpr
+          simpleExpr ::= * simpleExpr GT addExpr
+          addExpr ::= * mulExpr
+          addExpr ::= * addExpr PLUS mulExpr
+          addExpr ::= * addExpr MINUS mulExpr
+          mulExpr ::= * factor
+          mulExpr ::= * mulExpr TIMES factor
+          mulExpr ::= * mulExpr DIVIDE factor
+          factor ::= * variable
+          factor ::= * constant
+          factor ::= * IDENTIFIER LPAREN RPAREN
+          factor ::= * LPAREN expr RPAREN
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+          constant ::= * FLOATCON
+          constant ::= * INTNUM
+
+                    IDENTIFIER shift  61
+                        INTNUM shift  124
+                        LPAREN shift  10
+                      FLOATCON shift  125
+                      variable shift  130
+                    simpleExpr shift  40
+                       addExpr shift  53
+                       mulExpr shift  57
+                        factor shift  126
+                      constant shift  129
+
+State 14:
+          expr ::= expr AND * simpleExpr
+          simpleExpr ::= * addExpr
+          simpleExpr ::= * simpleExpr EQ addExpr
+          simpleExpr ::= * simpleExpr NE addExpr
+          simpleExpr ::= * simpleExpr LE addExpr
+          simpleExpr ::= * simpleExpr LT addExpr
+          simpleExpr ::= * simpleExpr GE addExpr
+          simpleExpr ::= * simpleExpr GT addExpr
+          addExpr ::= * mulExpr
+          addExpr ::= * addExpr PLUS mulExpr
+          addExpr ::= * addExpr MINUS mulExpr
+          mulExpr ::= * factor
+          mulExpr ::= * mulExpr TIMES factor
+          mulExpr ::= * mulExpr DIVIDE factor
+          factor ::= * variable
+          factor ::= * constant
+          factor ::= * IDENTIFIER LPAREN RPAREN
+          factor ::= * LPAREN expr RPAREN
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+          constant ::= * FLOATCON
+          constant ::= * INTNUM
+
+                    IDENTIFIER shift  61
+                        INTNUM shift  124
+                        LPAREN shift  10
+                      FLOATCON shift  125
+                      variable shift  130
+                    simpleExpr shift  41
+                       addExpr shift  53
+                       mulExpr shift  57
+                        factor shift  126
+                      constant shift  129
+
+State 15:
+          expr ::= expr OR * simpleExpr
+          simpleExpr ::= * addExpr
+          simpleExpr ::= * simpleExpr EQ addExpr
+          simpleExpr ::= * simpleExpr NE addExpr
+          simpleExpr ::= * simpleExpr LE addExpr
+          simpleExpr ::= * simpleExpr LT addExpr
+          simpleExpr ::= * simpleExpr GE addExpr
+          simpleExpr ::= * simpleExpr GT addExpr
+          addExpr ::= * mulExpr
+          addExpr ::= * addExpr PLUS mulExpr
+          addExpr ::= * addExpr MINUS mulExpr
+          mulExpr ::= * factor
+          mulExpr ::= * mulExpr TIMES factor
+          mulExpr ::= * mulExpr DIVIDE factor
+          factor ::= * variable
+          factor ::= * constant
+          factor ::= * IDENTIFIER LPAREN RPAREN
+          factor ::= * LPAREN expr RPAREN
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+          constant ::= * FLOATCON
+          constant ::= * INTNUM
+
+                    IDENTIFIER shift  61
+                        INTNUM shift  124
+                        LPAREN shift  10
+                      FLOATCON shift  125
+                      variable shift  130
+                    simpleExpr shift  43
+                       addExpr shift  53
+                       mulExpr shift  57
+                        factor shift  126
+                      constant shift  129
+
+State 16:
+          simpleExpr ::= simpleExpr GT * addExpr
+          addExpr ::= * mulExpr
+          addExpr ::= * addExpr PLUS mulExpr
+          addExpr ::= * addExpr MINUS mulExpr
+          mulExpr ::= * factor
+          mulExpr ::= * mulExpr TIMES factor
+          mulExpr ::= * mulExpr DIVIDE factor
+          factor ::= * variable
+          factor ::= * constant
+          factor ::= * IDENTIFIER LPAREN RPAREN
+          factor ::= * LPAREN expr RPAREN
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+          constant ::= * FLOATCON
+          constant ::= * INTNUM
+
+                    IDENTIFIER shift  61
+                        INTNUM shift  124
+                        LPAREN shift  10
+                      FLOATCON shift  125
+                      variable shift  130
+                       addExpr shift  54
+                       mulExpr shift  57
+                        factor shift  126
+                      constant shift  129
+
+State 17:
+          simpleExpr ::= simpleExpr GE * addExpr
+          addExpr ::= * mulExpr
+          addExpr ::= * addExpr PLUS mulExpr
+          addExpr ::= * addExpr MINUS mulExpr
+          mulExpr ::= * factor
+          mulExpr ::= * mulExpr TIMES factor
+          mulExpr ::= * mulExpr DIVIDE factor
+          factor ::= * variable
+          factor ::= * constant
+          factor ::= * IDENTIFIER LPAREN RPAREN
+          factor ::= * LPAREN expr RPAREN
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+          constant ::= * FLOATCON
+          constant ::= * INTNUM
+
+                    IDENTIFIER shift  61
+                        INTNUM shift  124
+                        LPAREN shift  10
+                      FLOATCON shift  125
+                      variable shift  130
+                       addExpr shift  55
+                       mulExpr shift  57
+                        factor shift  126
+                      constant shift  129
+
+State 18:
+          simpleExpr ::= simpleExpr LT * addExpr
+          addExpr ::= * mulExpr
+          addExpr ::= * addExpr PLUS mulExpr
+          addExpr ::= * addExpr MINUS mulExpr
+          mulExpr ::= * factor
+          mulExpr ::= * mulExpr TIMES factor
+          mulExpr ::= * mulExpr DIVIDE factor
+          factor ::= * variable
+          factor ::= * constant
+          factor ::= * IDENTIFIER LPAREN RPAREN
+          factor ::= * LPAREN expr RPAREN
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+          constant ::= * FLOATCON
+          constant ::= * INTNUM
+
+                    IDENTIFIER shift  61
+                        INTNUM shift  124
+                        LPAREN shift  10
+                      FLOATCON shift  125
+                      variable shift  130
+                       addExpr shift  56
+                       mulExpr shift  57
+                        factor shift  126
+                      constant shift  129
+
+State 19:
+          simpleExpr ::= simpleExpr LE * addExpr
+          addExpr ::= * mulExpr
+          addExpr ::= * addExpr PLUS mulExpr
+          addExpr ::= * addExpr MINUS mulExpr
+          mulExpr ::= * factor
+          mulExpr ::= * mulExpr TIMES factor
+          mulExpr ::= * mulExpr DIVIDE factor
+          factor ::= * variable
+          factor ::= * constant
+          factor ::= * IDENTIFIER LPAREN RPAREN
+          factor ::= * LPAREN expr RPAREN
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+          constant ::= * FLOATCON
+          constant ::= * INTNUM
+
+                    IDENTIFIER shift  61
+                        INTNUM shift  124
+                        LPAREN shift  10
+                      FLOATCON shift  125
+                      variable shift  130
+                       addExpr shift  58
+                       mulExpr shift  57
+                        factor shift  126
+                      constant shift  129
+
+State 20:
+          simpleExpr ::= simpleExpr NE * addExpr
+          addExpr ::= * mulExpr
+          addExpr ::= * addExpr PLUS mulExpr
+          addExpr ::= * addExpr MINUS mulExpr
+          mulExpr ::= * factor
+          mulExpr ::= * mulExpr TIMES factor
+          mulExpr ::= * mulExpr DIVIDE factor
+          factor ::= * variable
+          factor ::= * constant
+          factor ::= * IDENTIFIER LPAREN RPAREN
+          factor ::= * LPAREN expr RPAREN
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+          constant ::= * FLOATCON
+          constant ::= * INTNUM
+
+                    IDENTIFIER shift  61
+                        INTNUM shift  124
+                        LPAREN shift  10
+                      FLOATCON shift  125
+                      variable shift  130
+                       addExpr shift  60
+                       mulExpr shift  57
+                        factor shift  126
+                      constant shift  129
+
+State 21:
+          simpleExpr ::= simpleExpr EQ * addExpr
+          addExpr ::= * mulExpr
+          addExpr ::= * addExpr PLUS mulExpr
+          addExpr ::= * addExpr MINUS mulExpr
+          mulExpr ::= * factor
+          mulExpr ::= * mulExpr TIMES factor
+          mulExpr ::= * mulExpr DIVIDE factor
+          factor ::= * variable
+          factor ::= * constant
+          factor ::= * IDENTIFIER LPAREN RPAREN
+          factor ::= * LPAREN expr RPAREN
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+          constant ::= * FLOATCON
+          constant ::= * INTNUM
+
+                    IDENTIFIER shift  61
+                        INTNUM shift  124
+                        LPAREN shift  10
+                      FLOATCON shift  125
+                      variable shift  130
+                       addExpr shift  63
+                       mulExpr shift  57
+                        factor shift  126
+                      constant shift  129
+
+State 22:
+          addExpr ::= addExpr MINUS * mulExpr
+          mulExpr ::= * factor
+          mulExpr ::= * mulExpr TIMES factor
+          mulExpr ::= * mulExpr DIVIDE factor
+          factor ::= * variable
+          factor ::= * constant
+          factor ::= * IDENTIFIER LPAREN RPAREN
+          factor ::= * LPAREN expr RPAREN
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+          constant ::= * FLOATCON
+          constant ::= * INTNUM
+
+                    IDENTIFIER shift  61
+                        INTNUM shift  124
+                        LPAREN shift  10
+                      FLOATCON shift  125
+                      variable shift  130
+                       mulExpr shift  59
+                        factor shift  126
+                      constant shift  129
+
+State 23:
+          addExpr ::= addExpr PLUS * mulExpr
+          mulExpr ::= * factor
+          mulExpr ::= * mulExpr TIMES factor
+          mulExpr ::= * mulExpr DIVIDE factor
+          factor ::= * variable
+          factor ::= * constant
+          factor ::= * IDENTIFIER LPAREN RPAREN
+          factor ::= * LPAREN expr RPAREN
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+          constant ::= * FLOATCON
+          constant ::= * INTNUM
+
+                    IDENTIFIER shift  61
+                        INTNUM shift  124
+                        LPAREN shift  10
+                      FLOATCON shift  125
+                      variable shift  130
+                       mulExpr shift  62
+                        factor shift  126
+                      constant shift  129
+
+State 24:
+          procedures ::= * procedureDecl procedures
+          procedures ::= procedureDecl * procedures
+      (6) procedures ::= *
+          procedureDecl ::= * procedureHead compoundStatement SEMICOLON
+          procedureHead ::= * functionDecl decls
+          functionDecl ::= * FUNCTION IDENTIFIER COLON type SEMICOLON
+
+                      FUNCTION shift  69
+                    procedures shift  106
+                 procedureDecl shift  24
+                 procedureHead shift  37
+                  functionDecl shift  36
+                     {default} reduce 6
+
+State 25:
+          programHeadAndProcedures ::= programHead * procedures
+          procedures ::= * procedureDecl procedures
+      (6) procedures ::= *
+          procedureDecl ::= * procedureHead compoundStatement SEMICOLON
+          procedureHead ::= * functionDecl decls
+          functionDecl ::= * FUNCTION IDENTIFIER COLON type SEMICOLON
+
+                      FUNCTION shift  69
+                    procedures shift  107
+                 procedureDecl shift  24
+                 procedureHead shift  37
+                  functionDecl shift  36
+                     {default} reduce 6
+
+State 26:
+          mulExpr ::= mulExpr DIVIDE * factor
+          factor ::= * variable
+          factor ::= * constant
+          factor ::= * IDENTIFIER LPAREN RPAREN
+          factor ::= * LPAREN expr RPAREN
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+          constant ::= * FLOATCON
+          constant ::= * INTNUM
+
+                    IDENTIFIER shift  61
+                        INTNUM shift  124
+                        LPAREN shift  10
+                      FLOATCON shift  125
+                      variable shift  130
+                        factor shift  127
+                      constant shift  129
+
+State 27:
+          mulExpr ::= mulExpr TIMES * factor
+          factor ::= * variable
+          factor ::= * constant
+          factor ::= * IDENTIFIER LPAREN RPAREN
+          factor ::= * LPAREN expr RPAREN
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+          constant ::= * FLOATCON
+          constant ::= * INTNUM
+
+                    IDENTIFIER shift  61
+                        INTNUM shift  124
+                        LPAREN shift  10
+                      FLOATCON shift  125
+                      variable shift  130
+                        factor shift  131
+                      constant shift  129
+
+State 28:
+          functionDecl ::= FUNCTION IDENTIFIER COLON * type SEMICOLON
+          type ::= * standardType
+          type ::= * arrayType
+          standardType ::= * INTEGER
+          standardType ::= * FLOAT
+          arrayType ::= * ARRAY LBRACKET dim RBRACKET OF standardType
+
+                       INTEGER shift  101
+                         FLOAT shift  100
+                         ARRAY shift  76
+                          type shift  67
+                  standardType shift  103
+                     arrayType shift  102
+
+State 29:
+          declList ::= identifierList COLON * type SEMICOLON
+          type ::= * standardType
+          type ::= * arrayType
+          standardType ::= * INTEGER
+          standardType ::= * FLOAT
+          arrayType ::= * ARRAY LBRACKET dim RBRACKET OF standardType
+
+                       INTEGER shift  101
+                         FLOAT shift  100
+                         ARRAY shift  76
+                          type shift  70
+                  standardType shift  103
+                     arrayType shift  102
+
+State 30:
+          declList ::= declList identifierList COLON * type SEMICOLON
+          type ::= * standardType
+          type ::= * arrayType
+          standardType ::= * INTEGER
+          standardType ::= * FLOAT
+          arrayType ::= * ARRAY LBRACKET dim RBRACKET OF standardType
+
+                       INTEGER shift  101
+                         FLOAT shift  100
+                         ARRAY shift  76
+                          type shift  77
+                  standardType shift  103
+                     arrayType shift  102
+
+State 31:
+          decls ::= VAR * declList
+          declList ::= * identifierList COLON type SEMICOLON
+          declList ::= * declList identifierList COLON type SEMICOLON
+          identifierList ::= * IDENTIFIER
+          identifierList ::= * identifierList COMMA IDENTIFIER
+
+                    IDENTIFIER shift  96
+                      declList shift  35
+                identifierList shift  47
+
+State 32:
+          standardType ::= * INTEGER
+          standardType ::= * FLOAT
+          arrayType ::= ARRAY LBRACKET dim RBRACKET OF * standardType
+
+                       INTEGER shift  101
+                         FLOAT shift  100
+                  standardType shift  99
+
+State 33:
+          programHead ::= PROGRAM IDENTIFIER SEMICOLON * decls
+          decls ::= * VAR declList
+      (4) decls ::= *
+
+                           VAR shift  31
+                         decls shift  92
+                     {default} reduce 4
+
+State 34:
+          arrayType ::= ARRAY LBRACKET * dim RBRACKET OF standardType
+          dim ::= * INTNUM DOTDOT INTNUM
+
+                        INTNUM shift  73
+                           dim shift  75
+
+State 35:
+      (3) decls ::= VAR declList *
+          declList ::= declList * identifierList COLON type SEMICOLON
+          identifierList ::= * IDENTIFIER
+          identifierList ::= * identifierList COMMA IDENTIFIER
+
+                    IDENTIFIER shift  96
+                identifierList shift  48
+                     {default} reduce 3
+
+State 36:
+          decls ::= * VAR declList
+      (4) decls ::= *
+          procedureHead ::= functionDecl * decls
+
+                           VAR shift  31
+                         decls shift  94
+                     {default} reduce 4
+
+State 37:
+          procedureDecl ::= procedureHead * compoundStatement SEMICOLON
+          compoundStatement ::= * T_BEGIN statementList END
+
+                       T_BEGIN shift  1
+             compoundStatement shift  78
+
+State 38:
+          ioStatement ::= READ LPAREN * variable RPAREN
+          variable ::= * IDENTIFIER
+          variable ::= * IDENTIFIER LBRACKET expr RBRACKET
+
+                    IDENTIFIER shift  83
+                      variable shift  84
+
+State 39:
+          program ::= programHeadAndProcedures * compoundStatement DOT
+          compoundStatement ::= * T_BEGIN statementList END
+
+                       T_BEGIN shift  1
+             compoundStatement shift  91
+
+State 40:
+     (49) expr ::= NOT simpleExpr *
+          simpleExpr ::= simpleExpr * EQ addExpr
+          simpleExpr ::= simpleExpr * NE addExpr
+          simpleExpr ::= simpleExpr * LE addExpr
+          simpleExpr ::= simpleExpr * LT addExpr
+          simpleExpr ::= simpleExpr * GE addExpr
+          simpleExpr ::= simpleExpr * GT addExpr
+
+                            LT shift  18
+                            LE shift  19
+                            GT shift  16
+                            GE shift  17
+                            NE shift  20
+                            EQ shift  21
+                     {default} reduce 49
+
+State 41:
+     (48) expr ::= expr AND simpleExpr *
+          simpleExpr ::= simpleExpr * EQ addExpr
+          simpleExpr ::= simpleExpr * NE addExpr
+          simpleExpr ::= simpleExpr * LE addExpr
+          simpleExpr ::= simpleExpr * LT addExpr
+          simpleExpr ::= simpleExpr * GE addExpr
+          simpleExpr ::= simpleExpr * GT addExpr
+
+                            LT shift  18
+                            LE shift  19
+                            GT shift  16
+                            GE shift  17
+                            NE shift  20
+                            EQ shift  21
+                     {default} reduce 48
+
+State 42:
+     (46) expr ::= simpleExpr *
+          simpleExpr ::= simpleExpr * EQ addExpr
+          simpleExpr ::= simpleExpr * NE addExpr
+          simpleExpr ::= simpleExpr * LE addExpr
+          simpleExpr ::= simpleExpr * LT addExpr
+          simpleExpr ::= simpleExpr * GE addExpr
+          simpleExpr ::= simpleExpr * GT addExpr
+
+                            LT shift  18
+                            LE shift  19
+                            GT shift  16
+                            GE shift  17
+                            NE shift  20
+                            EQ shift  21
+                     {default} reduce 46
+
+State 43:
+     (47) expr ::= expr OR simpleExpr *
+          simpleExpr ::= simpleExpr * EQ addExpr
+          simpleExpr ::= simpleExpr * NE addExpr
+          simpleExpr ::= simpleExpr * LE addExpr
+          simpleExpr ::= simpleExpr * LT addExpr
+          simpleExpr ::= simpleExpr * GE addExpr
+          simpleExpr ::= simpleExpr * GT addExpr
+
+                            LT shift  18
+                            LE shift  19
+                            GT shift  16
+                            GE shift  17
+                            NE shift  20
+                            EQ shift  21
+                     {default} reduce 47
+
+State 44:
+          ioStatement ::= WRITE LPAREN expr * RPAREN
+          expr ::= expr * OR simpleExpr
+          expr ::= expr * AND simpleExpr
+
+                            OR shift  15
+                           AND shift  14
+                        RPAREN shift  114
+
+State 45:
+          expr ::= expr * OR simpleExpr
+          expr ::= expr * AND simpleExpr
+          variable ::= IDENTIFIER LBRACKET expr * RBRACKET
+
+                            OR shift  15
+                           AND shift  14
+                      RBRACKET shift  122
+
+State 46:
+          expr ::= expr * OR simpleExpr
+          expr ::= expr * AND simpleExpr
+          factor ::= LPAREN expr * RPAREN
+
+                            OR shift  15
+                           AND shift  14
+                        RPAREN shift  123
+
+State 47:
+          declList ::= identifierList * COLON type SEMICOLON
+          identifierList ::= identifierList * COMMA IDENTIFIER
+
+                         COLON shift  29
+                         COMMA shift  71
+
+State 48:
+          declList ::= declList identifierList * COLON type SEMICOLON
+          identifierList ::= identifierList * COMMA IDENTIFIER
+
+                         COLON shift  30
+                         COMMA shift  71
+
+State 49:
+          compoundStatement ::= T_BEGIN statementList * END
+          statementList ::= statementList * SEMICOLON statement
+
+                     SEMICOLON shift  2
+                           END shift  110
+
+State 50:
+     (34) test ::= expr *
+          expr ::= expr * OR simpleExpr
+          expr ::= expr * AND simpleExpr
+
+                            OR shift  15
+                           AND shift  14
+                     {default} reduce 34
+
+State 51:
+     (37) whileExpr ::= expr *
+          expr ::= expr * OR simpleExpr
+          expr ::= expr * AND simpleExpr
+
+                            OR shift  15
+                           AND shift  14
+                     {default} reduce 37
+
+State 52:
+     (42) returnStatement ::= RETURN expr *
+          expr ::= expr * OR simpleExpr
+          expr ::= expr * AND simpleExpr
+
+                            OR shift  15
+                           AND shift  14
+                     {default} reduce 42
+
+State 53:
+     (50) simpleExpr ::= addExpr *
+          addExpr ::= addExpr * PLUS mulExpr
+          addExpr ::= addExpr * MINUS mulExpr
+
+                          PLUS shift  23
+                         MINUS shift  22
+                     {default} reduce 50
+
+State 54:
+     (56) simpleExpr ::= simpleExpr GT addExpr *
+          addExpr ::= addExpr * PLUS mulExpr
+          addExpr ::= addExpr * MINUS mulExpr
+
+                          PLUS shift  23
+                         MINUS shift  22
+                     {default} reduce 56
+
+State 55:
+     (55) simpleExpr ::= simpleExpr GE addExpr *
+          addExpr ::= addExpr * PLUS mulExpr
+          addExpr ::= addExpr * MINUS mulExpr
+
+                          PLUS shift  23
+                         MINUS shift  22
+                     {default} reduce 55
+
+State 56:
+     (54) simpleExpr ::= simpleExpr LT addExpr *
+          addExpr ::= addExpr * PLUS mulExpr
+          addExpr ::= addExpr * MINUS mulExpr
+
+                          PLUS shift  23
+                         MINUS shift  22
+                     {default} reduce 54
+
+State 57:
+     (57) addExpr ::= mulExpr *
+          mulExpr ::= mulExpr * TIMES factor
+          mulExpr ::= mulExpr * DIVIDE factor
+
+                         TIMES shift  27
+                        DIVIDE shift  26
+                     {default} reduce 57
+
+State 58:
+     (53) simpleExpr ::= simpleExpr LE addExpr *
+          addExpr ::= addExpr * PLUS mulExpr
+          addExpr ::= addExpr * MINUS mulExpr
+
+                          PLUS shift  23
+                         MINUS shift  22
+                     {default} reduce 53
+
+State 59:
+     (59) addExpr ::= addExpr MINUS mulExpr *
+          mulExpr ::= mulExpr * TIMES factor
+          mulExpr ::= mulExpr * DIVIDE factor
+
+                         TIMES shift  27
+                        DIVIDE shift  26
+                     {default} reduce 59
+
+State 60:
+     (52) simpleExpr ::= simpleExpr NE addExpr *
+          addExpr ::= addExpr * PLUS mulExpr
+          addExpr ::= addExpr * MINUS mulExpr
+
+                          PLUS shift  23
+                         MINUS shift  22
+                     {default} reduce 52
+
+State 61:
+          factor ::= IDENTIFIER * LPAREN RPAREN
+     (67) variable ::= IDENTIFIER *
+          variable ::= IDENTIFIER * LBRACKET expr RBRACKET
+
+                      LBRACKET shift  11
+                        LPAREN shift  88
+                     {default} reduce 67
+
+State 62:
+     (58) addExpr ::= addExpr PLUS mulExpr *
+          mulExpr ::= mulExpr * TIMES factor
+          mulExpr ::= mulExpr * DIVIDE factor
+
+                         TIMES shift  27
+                        DIVIDE shift  26
+                     {default} reduce 58
+
+State 63:
+     (51) simpleExpr ::= simpleExpr EQ addExpr *
+          addExpr ::= addExpr * PLUS mulExpr
+          addExpr ::= addExpr * MINUS mulExpr
+
+                          PLUS shift  23
+                         MINUS shift  22
+                     {default} reduce 51
+
+State 64:
+     (28) assignment ::= variable ASSIGN expr *
+          expr ::= expr * OR simpleExpr
+          expr ::= expr * AND simpleExpr
+
+                            OR shift  15
+                           AND shift  14
+                     {default} reduce 28
+
+State 65:
+          programHead ::= PROGRAM IDENTIFIER * SEMICOLON decls
+
+                     SEMICOLON shift  33
+
+State 66:
+          programHead ::= PROGRAM * IDENTIFIER SEMICOLON decls
+
+                    IDENTIFIER shift  65
+
+State 67:
+          functionDecl ::= FUNCTION IDENTIFIER COLON type * SEMICOLON
+
+                     SEMICOLON shift  93
+
+State 68:
+          functionDecl ::= FUNCTION IDENTIFIER * COLON type SEMICOLON
+
+                         COLON shift  28
+
+State 69:
+          functionDecl ::= FUNCTION * IDENTIFIER COLON type SEMICOLON
+
+                    IDENTIFIER shift  68
+
+State 70:
+          declList ::= identifierList COLON type * SEMICOLON
+
+                     SEMICOLON shift  95
+
+State 71:
+          identifierList ::= identifierList COMMA * IDENTIFIER
+
+                    IDENTIFIER shift  97
+
+State 72:
+          dim ::= INTNUM DOTDOT * INTNUM
+
+                        INTNUM shift  98
+
+State 73:
+          dim ::= INTNUM * DOTDOT INTNUM
+
+                        DOTDOT shift  72
+
+State 74:
+          arrayType ::= ARRAY LBRACKET dim RBRACKET * OF standardType
+
+                            OF shift  32
+
+State 75:
+          arrayType ::= ARRAY LBRACKET dim * RBRACKET OF standardType
+
+                      RBRACKET shift  74
+
+State 76:
+          arrayType ::= ARRAY * LBRACKET dim RBRACKET OF standardType
+
+                      LBRACKET shift  34
+
+State 77:
+          declList ::= declList identifierList COLON type * SEMICOLON
+
+                     SEMICOLON shift  104
+
+State 78:
+          procedureDecl ::= procedureHead compoundStatement * SEMICOLON
+
+                     SEMICOLON shift  105
+
+State 79:
+     (20) statement ::= matched_stmt *
+     (33) testAndThen ::= test THEN matched_stmt *
+
+                          ELSE reduce 33
+                     {default} reduce 20
+
+State 80:
+          open_stmt ::= IF test * THEN statement
+          testAndThen ::= test * THEN matched_stmt
+
+                          THEN shift  3
+
+State 81:
+          ioStatement ::= WRITE LPAREN stringConstant * RPAREN
+
+                        RPAREN shift  113
+
+State 82:
+          ioStatement ::= WRITE * LPAREN expr RPAREN
+          ioStatement ::= WRITE * LPAREN stringConstant RPAREN
+
+                        LPAREN shift  7
+
+State 83:
+     (67) variable ::= IDENTIFIER *
+          variable ::= IDENTIFIER * LBRACKET expr RBRACKET
+
+                      LBRACKET shift  11
+                     {default} reduce 67
+
+State 84:
+          ioStatement ::= READ LPAREN variable * RPAREN
+
+                        RPAREN shift  115
+
+State 85:
+          ioStatement ::= READ * LPAREN variable RPAREN
+
+                        LPAREN shift  38
+
+State 86:
+          matchedWhileStatement ::= whileToken whileExpr * DO matched_stmt
+          openWhileStatement ::= whileToken whileExpr * DO open_stmt
+
+                            DO shift  4
+
+State 87:
+          matched_if ::= IF testAndThen * ELSE matched_stmt
+          open_stmt ::= IF testAndThen * ELSE open_stmt
+
+                          ELSE shift  5
+
+State 88:
+          factor ::= IDENTIFIER LPAREN * RPAREN
+
+                        RPAREN shift  128
+
+State 89:
+          assignment ::= variable * ASSIGN expr
+
+                        ASSIGN shift  12
+
+State 90:
+      (0) program ::= programHeadAndProcedures compoundStatement DOT *
+
+                             $ reduce 0
+
+State 91:
+          program ::= programHeadAndProcedures compoundStatement * DOT
+
+                           DOT shift  90
+
+State 92:
+      (2) programHead ::= PROGRAM IDENTIFIER SEMICOLON decls *
+
+                     {default} reduce 2
+
+State 93:
+      (9) functionDecl ::= FUNCTION IDENTIFIER COLON type SEMICOLON *
+
+                     {default} reduce 9
+
+State 94:
+      (8) procedureHead ::= functionDecl decls *
+
+                     {default} reduce 8
+
+State 95:
+     (10) declList ::= identifierList COLON type SEMICOLON *
+
+                     {default} reduce 10
+
+State 96:
+     (12) identifierList ::= IDENTIFIER *
+
+                     {default} reduce 12
+
+State 97:
+     (13) identifierList ::= identifierList COMMA IDENTIFIER *
+
+                     {default} reduce 13
+
+State 98:
+     (19) dim ::= INTNUM DOTDOT INTNUM *
+
+                     {default} reduce 19
+
+State 99:
+     (18) arrayType ::= ARRAY LBRACKET dim RBRACKET OF standardType *
+
+                     {default} reduce 18
+
+State 100:
+     (17) standardType ::= FLOAT *
+
+                     {default} reduce 17
+
+State 101:
+     (16) standardType ::= INTEGER *
+
+                     {default} reduce 16
+
+State 102:
+     (15) type ::= arrayType *
+
+                     {default} reduce 15
+
+State 103:
+     (14) type ::= standardType *
+
+                     {default} reduce 14
+
+State 104:
+     (11) declList ::= declList identifierList COLON type SEMICOLON *
+
+                     {default} reduce 11
+
+State 105:
+      (7) procedureDecl ::= procedureHead compoundStatement SEMICOLON *
+
+                     {default} reduce 7
+
+State 106:
+      (5) procedures ::= procedureDecl procedures *
+
+                     {default} reduce 5
+
+State 107:
+      (1) programHeadAndProcedures ::= programHead procedures *
+
+                     {default} reduce 1
+
+State 108:
+     (44) statementList ::= statement *
+
+                     {default} reduce 44
+
+State 109:
+     (45) statementList ::= statementList SEMICOLON statement *
+
+                     {default} reduce 45
+
+State 110:
+     (43) compoundStatement ::= T_BEGIN statementList END *
+
+                     {default} reduce 43
+
+State 111:
+     (30) open_stmt ::= IF test THEN statement *
+
+                     {default} reduce 30
+
+State 112:
+     (69) stringConstant ::= STRING *
+
+                     {default} reduce 69
+
+State 113:
+     (41) ioStatement ::= WRITE LPAREN stringConstant RPAREN *
+
+                     {default} reduce 41
+
+State 114:
+     (40) ioStatement ::= WRITE LPAREN expr RPAREN *
+
+                     {default} reduce 40
+
+State 115:
+     (39) ioStatement ::= READ LPAREN variable RPAREN *
+
+                     {default} reduce 39
+
+State 116:
+     (38) whileToken ::= WHILE *
+
+                     {default} reduce 38
+
+State 117:
+     (36) openWhileStatement ::= whileToken whileExpr DO open_stmt *
+
+                     {default} reduce 36
+
+State 118:
+     (35) matchedWhileStatement ::= whileToken whileExpr DO matched_stmt *
+
+                     {default} reduce 35
+
+State 119:
+     (32) open_stmt ::= openWhileStatement *
+
+                     {default} reduce 32
+
+State 120:
+     (31) open_stmt ::= IF testAndThen ELSE open_stmt *
+
+                     {default} reduce 31
+
+State 121:
+     (29) matched_if ::= IF testAndThen ELSE matched_stmt *
+
+                     {default} reduce 29
+
+State 122:
+     (68) variable ::= IDENTIFIER LBRACKET expr RBRACKET *
+
+                     {default} reduce 68
+
+State 123:
+     (66) factor ::= LPAREN expr RPAREN *
+
+                     {default} reduce 66
+
+State 124:
+     (71) constant ::= INTNUM *
+
+                     {default} reduce 71
+
+State 125:
+     (70) constant ::= FLOATCON *
+
+                     {default} reduce 70
+
+State 126:
+     (60) mulExpr ::= factor *
+
+                     {default} reduce 60
+
+State 127:
+     (62) mulExpr ::= mulExpr DIVIDE factor *
+
+                     {default} reduce 62
+
+State 128:
+     (65) factor ::= IDENTIFIER LPAREN RPAREN *
+
+                     {default} reduce 65
+
+State 129:
+     (64) factor ::= constant *
+
+                     {default} reduce 64
+
+State 130:
+     (63) factor ::= variable *
+
+                     {default} reduce 63
+
+State 131:
+     (61) mulExpr ::= mulExpr TIMES factor *
+
+                     {default} reduce 61
+
+State 132:
+     (27) matched_stmt ::= compoundStatement *
+
+                     {default} reduce 27
+
+State 133:
+     (26) matched_stmt ::= returnStatement *
+
+                     {default} reduce 26
+
+State 134:
+     (25) matched_stmt ::= ioStatement *
+
+                     {default} reduce 25
+
+State 135:
+     (24) matched_stmt ::= matchedWhileStatement *
+
+                     {default} reduce 24
+
+State 136:
+     (23) matched_stmt ::= assignment *
+
+                     {default} reduce 23
+
+State 137:
+     (22) matched_stmt ::= matched_if *
+
+                     {default} reduce 22
+
+State 138:
+     (21) statement ::= open_stmt *
+
+                     {default} reduce 21
+
+State 139:
+     (20) statement ::= matched_stmt *
+
+                     {default} reduce 20
+
+----------------------------------------------------
+Symbols:
+    0: $:
+    1: OR
+    2: AND
+    3: NOT
+    4: LT
+    5: LE
+    6: GT
+    7: GE
+    8: NE
+    9: EQ
+   10: PLUS
+   11: MINUS
+   12: TIMES
+   13: DIVDE
+   14: DOT
+   15: PROGRAM
+   16: IDENTIFIER
+   17: SEMICOLON
+   18: VAR
+   19: FUNCTION
+   20: COLON
+   21: COMMA
+   22: INTEGER
+   23: FLOAT
+   24: ARRAY
+   25: LBRACKET
+   26: RBRACKET
+   27: OF
+   28: INTNUM
+   29: DOTDOT
+   30: ASSIGN
+   31: IF
+   32: ELSE
+   33: THEN
+   34: DO
+   35: WHILE
+   36: READ
+   37: LPAREN
+   38: RPAREN
+   39: WRITE
+   40: RETURN
+   41: T_BEGIN
+   42: END
+   43: DIVIDE
+   44: STRING
+   45: FLOATCON
+   46: error:
+   47: program: PROGRAM
+   48: programHeadAndProcedures: PROGRAM
+   49: compoundStatement: T_BEGIN
+   50: programHead: PROGRAM
+   51: procedures: <lambda> FUNCTION
+   52: decls: <lambda> VAR
+   53: declList: IDENTIFIER
+   54: procedureDecl: FUNCTION
+   55: procedureHead: FUNCTION
+   56: functionDecl: FUNCTION
+   57: type: INTEGER FLOAT ARRAY
+   58: identifierList: IDENTIFIER
+   59: standardType: INTEGER FLOAT
+   60: arrayType: ARRAY
+   61: dim: INTNUM
+   62: statement: IDENTIFIER IF WHILE READ WRITE RETURN T_BEGIN
+   63: matched_stmt: IDENTIFIER IF WHILE READ WRITE RETURN T_BEGIN
+   64: open_stmt: IF WHILE
+   65: matched_if: IF
+   66: assignment: IDENTIFIER
+   67: matchedWhileStatement: WHILE
+   68: ioStatement: READ WRITE
+   69: returnStatement: RETURN
+   70: variable: IDENTIFIER
+   71: expr: NOT IDENTIFIER INTNUM LPAREN FLOATCON
+   72: testAndThen: NOT IDENTIFIER INTNUM LPAREN FLOATCON
+   73: test: NOT IDENTIFIER INTNUM LPAREN FLOATCON
+   74: openWhileStatement: WHILE
+   75: whileToken: WHILE
+   76: whileExpr: NOT IDENTIFIER INTNUM LPAREN FLOATCON
+   77: stringConstant: STRING
+   78: statementList: IDENTIFIER IF WHILE READ WRITE RETURN T_BEGIN
+   79: simpleExpr: IDENTIFIER INTNUM LPAREN FLOATCON
+   80: addExpr: IDENTIFIER INTNUM LPAREN FLOATCON
+   81: mulExpr: IDENTIFIER INTNUM LPAREN FLOATCON
+   82: factor: IDENTIFIER INTNUM LPAREN FLOATCON
+   83: constant: INTNUM FLOATCON

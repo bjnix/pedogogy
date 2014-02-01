@@ -1,0 +1,3 @@
+#pragma namespace("\\\\.\\root\\WMI")
+#pragma deleteclass( "RestartManager", NOFAIL )
+

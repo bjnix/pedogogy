@@ -1,0 +1,22 @@
+#Sat Nov 06 01:53:19 GMT 2010
+content_assist_proposals_foreground=26,26,26
+spelling_locale_initialized=true
+org.eclipse.jdt.ui.text.templates_migrated=true
+useAnnotationsPrefPage=true
+eclipse.preferences.version=1
+org.eclipse.jface.textfont=1|Monospace|10.0|0|GTK|1|;
+tabWidthPropagated=true
+LexicalSortingAction.isChecked=true
+org.eclipse.jdt.ui.editor.tab.width=
+fontPropagated=true
+org.eclipse.jdt.ui.text.custom_code_templates=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><templates/>
+org.eclipse.jdt.ui.javadoclocations.migrated=true
+proposalOrderMigrated=true
+content_assist_proposals_background=255,255,255
+org.eclipse.jdt.ui.formatterprofiles.version=11
+org.eclipse.jdt.internal.ui.navigator.layout=2
+content_assist_number_of_computers=13
+useQuickDiffPrefPage=true
+org.eclipse.jdt.ui.text.custom_templates=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><templates/>
+content_assist_lru_history=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><history maxLHS\="100" maxRHS\="10"><lhs name\="net.datastructures.Position"><rhs name\="cs2321.BTPos"/><rhs name\="cs2321.ArrSeqPos"/><rhs name\="cs2321.AdjListGraph$vertEntry"/><rhs name\="cs2321.AdjListGraph$edgeEntry"/></lhs><lhs name\="cs2321.ArrSeqPos"><rhs name\="cs2321.ArrSeqPos"/></lhs><lhs name\="net.datastructures.Sequence"><rhs name\="cs2321.ArraySequence"/><rhs name\="cs2321.LinkedSequence"/></lhs><lhs name\="net.datastructures.Deque"><rhs name\="cs2321.ArraySequence"/><rhs name\="cs2321.LinkedSequence"/></lhs><lhs name\="net.datastructures.IndexList"><rhs name\="cs2321.ArraySequence"/><rhs name\="cs2321.LinkedSequence"/></lhs><lhs name\="net.datastructures.PositionList"><rhs name\="cs2321.ArraySequence"/><rhs name\="cs2321.LinkedSequence"/></lhs><lhs name\="java.lang.Iterable"><rhs name\="cs2321.ArraySequence"/><rhs name\="cs2321.LinkedSequence"/></lhs><lhs name\="cs2321.ArraySequence"><rhs name\="cs2321.ArraySequence"/></lhs><lhs name\="cs2321.BTPos"><rhs name\="cs2321.BTPos"/></lhs><lhs name\="cs2321.sorting.Sorter"><rhs name\="cs2321.sorting.InsertionSort"/></lhs><lhs name\="cs2321.LinkedSequence"><rhs name\="cs2321.LinkedSequence"/></lhs><lhs name\="net.datastructures.Dictionary"><rhs name\="cs2321.Logfile"/></lhs><lhs name\="cs2321.Logfile"><rhs name\="cs2321.Logfile"/></lhs><lhs name\="net.datastructures.Map"><rhs name\="cs2321.LookupTable"/><rhs name\="cs2321.HashMap"/><rhs name\="cs2321.UnorderedMap"/><rhs name\="cs2321.AdjListGraph$vertEntry"/></lhs><lhs name\="cs2321.LookupTable"><rhs name\="cs2321.LookupTable"/></lhs><lhs name\="cs2321.HashMap"><rhs name\="cs2321.HashMap"/></lhs><lhs name\="cs2321.MapFrontEnd"><rhs name\="cs2321.UnorderedMap"/></lhs><lhs name\="cs2321.UnorderedMap"><rhs name\="cs2321.UnorderedMap"/></lhs><lhs name\="cs2321.ZipCode"><rhs name\="cs2321.ZipCode"/></lhs><lhs name\="cs2321.StateAbbr"><rhs name\="cs2321.StateAbbr"/></lhs><lhs name\="cs2321.PhoneNumber"><rhs name\="cs2321.PhoneNumber"/></lhs><lhs name\="cs2321.AdjListGraph$decPos"><rhs name\="cs2321.AdjListGraph$vertEntry"/></lhs><lhs name\="net.datastructures.DecorablePosition"><rhs name\="cs2321.AdjListGraph$vertEntry"/></lhs><lhs name\="cs2321.AdjListGraph$vertEntry"><rhs name\="cs2321.AdjListGraph$vertEntry"/></lhs></history>
+org.eclipse.jdt.ui.text.code_templates_migrated=true

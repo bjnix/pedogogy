@@ -1,0 +1,10 @@
+	lw	$1, stuff
+	cmp  	$1, thing
+	blt  	add5
+	addi  	$1,$0,50 #skipped sum @$1 should be 50
+add5:	addi 	$2,$0,5  #sum @ $2 should be 5	
+	lw	$3, junk
+	halt
+thing:	word 	9
+stuff:	word	8
+junk:	word	15

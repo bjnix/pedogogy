@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!ELEMENT component (software)>
+<!ELEMENT PmlOIDs (pmldata*)>
+<!ELEMENT pmldata (pmlname?, oidvalue?)>
+<!ELEMENT pmlname (#PCDATA)>
+<!ELEMENT oidvalue (#PCDATA)>
+
+<!ELEMENT software (file_header, vayu)>
+<!ELEMENT file_header (file_name, file_version, file_timestamp)>
+<!ELEMENT file_name (#PCDATA)>
+<!ELEMENT file_timestamp (#PCDATA)>
+<!ELEMENT file_version (#PCDATA)>
+
+<!ELEMENT vayu (PmlOIDs)>

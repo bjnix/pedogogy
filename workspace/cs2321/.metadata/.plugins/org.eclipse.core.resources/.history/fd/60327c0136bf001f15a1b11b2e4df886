@@ -1,0 +1,42 @@
+package cs2321;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.util.Scanner;
+public class Assignment2Exp3_4 {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		FileOutputStream out; // declare a file output object
+		PrintStream p; // declare a print stream object
+
+
+		try {
+			out = new FileOutputStream("addLastResultArrAverage.csv");
+			p = new PrintStream( out );
+			for( int j = 1 ; j < 201 ; j ++ )
+			{
+				int foo = 0;
+
+				Scanner scan = new Scanner( "AddLastResultArr/addLastResultArr" + j + ".csv" );
+
+				for (int i = 0 ; i < 5000 ; i ++ )
+				{
+					foo = foo + scan.nextInt();
+				}
+				p.println(foo/5000 + " ");
+			}
+
+			
+		}
+		catch (Exception e)
+		{
+			System.err.println ("Error writing to file");
+		}
+
+	}
+
+}

@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/DTD/strict.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/bitmaps/favicon.png">
+	<link rel="icon" href="/bitmaps/favicon.png" type="image/png">
+	<link href="../faq.css" rel="Stylesheet" type="text/css">
+
+	<title>Winsock Programmer&rsquo;s FAQ: Example Programs</title>
+
+	<style type="text/css">
+		#next-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: -38px 0;
+		}
+		#prev-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: 0 0;
+		}
+		#stop-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: -76px 0;
+		}
+		.navbar {
+			border: 8px solid #d0d0a0;
+			border-spacing: 0;
+			border-radius: 10px;
+			-moz-border-radius: 10px;
+			-webkit-border-radius: 10px;
+			height: 140px;
+			margin: auto;   /* center on page */
+			margin-top: 10px;
+			text-align: center;
+			width: 95%;
+		}
+		.navbar td {
+			background-color: #006000;
+			border: 10px solid #e0e0c0;
+			color: #ffffee;
+			font-size: 182%;
+			font-family:
+				"verdana",
+				"luxi sans",
+				"helvetica narrow",
+				"arial condensed",
+				"arial",
+				"univers",
+				sans-serif;
+			font-weight: bold;
+			text-align: center;
+		}
+		.navbarcap {
+			background-color: #e0e0c0 !important;
+			cursor: pointer;
+			padding-left: 10px;
+			width: 50px;
+		}
+	</style>
+</head>
+
+<body>
+
+
+
+
+
+
+
+
+	
+
+
+
+
+	
+
+	<!--  **** Navigation Bar ****  -->
+	<table class="navbar">
+		<tr>
+			<td class="navbarcap" onclick="location.href='../resources/kb.html'">
+				<a id="prev-link" href="../resources/kb.html"></a>
+			</td>
+
+			<td>
+				Winsock Programmer&rsquo;s FAQ<br>
+
+				
+
+				
+					Section 6: Example Programs<br>
+				
+				
+				
+			</td>
+
+			<td class="navbarcap" onclick="location.href='../examples/basics/index.html'">
+				<a id="next-link" href="../examples/basics/index.html"></a>
+			</td>
+		</tr>
+	</table>
+
+	<!--  **** Body Container ****  -->
+	<div id="body" style="padding-left: 30px" >
+
+
+<p><i>Legal Stuff:</i> Several of the examples here are in the public
+domain, and the rest are free to use and copy. Use them, learn from
+them, enjoy them. But please understand that there is NO WARRANTY OF
+ANY KIND attached to these examples.</p>
+
+<p>I&rsquo;ve tested all of these examples with the command line
+compilers from Borland C++ 5.0 and Visual C++ 5.0. All of these
+examples can, in principle, be made to work with older compiler
+versions, but since I like to make use of newer C++ features,
+you may have to change some of the code to get the examples to
+compile. I&rsquo;ve heard reports that some of the newer compilers
+may complain about some of this code as they obey the letter of
+the Standard more and more closely. I don&rsquo;t have time right
+now to rework these examples to follow changing compiler behavior,
+so be prepared to tweak the code a bit, as needed.</p>
+
+<p>Most of the programs are Win32 console programs written in the
+"better C" subset of C++. This keeps the programs simple, letting you
+concentrate on the networking code. The exceptions are the samples that
+use asynchronous sockets, since this requires the use of a Windows
+message queue; they use C++ and MFC in order to minimize the amount
+of GUI code.</p>
+
+<p>Most of these examples use the Winsock 1.1 API. Only those programs
+that actually use Winsock 2 features require the Winsock 2 API. For
+compatibility reasons, I recommend that you follow this practice in
+your own programs.</p>
+
+<p>The header comment for each example shows how to compile that
+example.</p>
+
+<h4>The Examples</h4>
+
+
+
+
+
+
+
+<ul>
+	<li> <a href="../examples/basics/index.html">Basic Example Programs</a>
+	<li> <a href="../examples/dllping.html">Ping: ICMP.DLL Method</a>
+	<li> <a href="../examples/rawping.html">Ping: Raw Sockets Method</a>
+	<li> <a href="../examples/fdpass.html">Passing Sockets Between Processes</a>
+	<li> <a href="../examples/ipaddr.html">Get the Local IP Address(es)</a>
+	<li> <a href="../examples/getifaces.html">Get Interface Information</a>
+	<li> <a href="../examples/getmac-netbios.html">Get MAC Address, NetBIOS Method</a>
+	<li> <a href="../examples/getmac-rpc.html">Get MAC Address, RPC Method</a>
+	<li> <a href="../examples/getmac-snmp.html">Get MAC Address, SNMP Method</a>
+	<li> <a href="../examples/username.html">Get the Username</a>
+	<li> <a href="../examples/packetize.html">How to Packetize a TCP Stream</a>
+	<li> <a href="../examples/rascheck.html">How to Check for a RAS Connection</a>
+</ul>
+
+
+
+		</div> <!-- end body div -->
+
+<hr class="noshade">
+
+
+<!--  Navigation footer  -->
+<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer nav"> 
+	<tr>
+		<td align="left" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="../resources/kb.html">&lt;&lt;&nbsp;MS Knowledge Base Articles</a><br>
+			</span>
+		
+		</td>
+
+		<td align="right" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="../examples/basics/index.html">Basic Example Programs&nbsp;&gt;&gt;</a>
+			</span>
+		
+		</td>
+	</tr>
+</table>
+
+
+
+
+
+
+	<!--  Document Footer -->
+
+	<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer info"> 
+		<tr>
+			
+				<td align="left" class="thirdwidth">
+					
+					<span class="annotation">Updated Sun Feb 28 2010 09:33 MST</span>
+				</td>
+				<td align="center" class="thirdwidth">
+				
+			
+
+			
+				&nbsp;
+			
+			</td>
+
+			<td align="right" class="thirdwidth">
+				<a href="/">Go to my home page</a>
+			</td>
+		</tr>	
+	</table>
+
+
+	<script type="text/javascript" src="/js/awstats_misc_tracker.js"></script>
+</body>
+</html>
+

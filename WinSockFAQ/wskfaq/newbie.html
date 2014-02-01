@@ -1,0 +1,866 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/DTD/strict.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/bitmaps/favicon.png">
+	<link rel="icon" href="/bitmaps/favicon.png" type="image/png">
+	<link href="./faq.css" rel="Stylesheet" type="text/css">
+
+	<title>Winsock Programmer&rsquo;s FAQ: Information for New Winsockers</title>
+
+	<style type="text/css">
+		#next-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(./bitmaps/navbar-icons.png);
+			background-position: -38px 0;
+		}
+		#prev-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(./bitmaps/navbar-icons.png);
+			background-position: 0 0;
+		}
+		#stop-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(./bitmaps/navbar-icons.png);
+			background-position: -76px 0;
+		}
+		.navbar {
+			border: 8px solid #d0d0a0;
+			border-spacing: 0;
+			border-radius: 10px;
+			-moz-border-radius: 10px;
+			-webkit-border-radius: 10px;
+			height: 140px;
+			margin: auto;   /* center on page */
+			margin-top: 10px;
+			text-align: center;
+			width: 95%;
+		}
+		.navbar td {
+			background-color: #006000;
+			border: 10px solid #e0e0c0;
+			color: #ffffee;
+			font-size: 182%;
+			font-family:
+				"verdana",
+				"luxi sans",
+				"helvetica narrow",
+				"arial condensed",
+				"arial",
+				"univers",
+				sans-serif;
+			font-weight: bold;
+			text-align: center;
+		}
+		.navbarcap {
+			background-color: #e0e0c0 !important;
+			cursor: pointer;
+			padding-left: 10px;
+			width: 50px;
+		}
+	</style>
+</head>
+
+<body>
+
+
+
+
+
+
+
+
+	
+
+
+
+
+	
+
+	<!--  **** Navigation Bar ****  -->
+	<table class="navbar">
+		<tr>
+			<td class="navbarcap" onclick="location.href='./general.html'">
+				<a id="prev-link" href="./general.html"></a>
+			</td>
+
+			<td>
+				Winsock Programmer&rsquo;s FAQ<br>
+
+				
+
+				
+					Section 2: Information for New Winsockers<br>
+				
+				
+				
+			</td>
+
+			<td class="navbarcap" onclick="location.href='./intermediate.html'">
+				<a id="next-link" href="./intermediate.html"></a>
+			</td>
+		</tr>
+	</table>
+
+	<!--  **** Body Container ****  -->
+	<div id="body" style="padding-left: 30px" >
+
+
+
+
+
+
+
+<a name="targetapi"></a>
+<h5>2.1 - Which sockets API should I target?</h5>
+
+<p>From the programmer&rsquo;s standpoint, there are two major
+versions of Winsock, 2.0 and 1.1. These are the version numbers
+you pass to <code>WSAStartup()</code>, and your choice affects whether
+you <tt>#include&nbsp;&lt;winsock2.h&gt;</tt> and link against
+<tt>ws2_32.dll</tt> or you <tt>#include&nbsp;&lt;winsock.h&gt;</tt>
+and link against <tt>wsock32.dll</tt>. You could choose to declare
+your program as using some other minor version, but unless you know
+for a fact that you need to use something different, I recommend
+using only 1.1 or 2.0, for best compatibility.</p>
+
+<p>The Winsock design is a series of additions to older technologies,
+not something wholly new. Winsock 2.0 is mostly a strict superset
+of Winsock 1.1, and Winsock 1.1 is mostly a strict superset of BSD
+Sockets. (In both cases, there are some things left behind or which
+simply change. I cover these things elsewhere in the FAQ.)</p>
+
+<p>The older APIs are still quite useful. If your program doesn&rsquo;t
+need anything added in later versions of the API, it&rsquo;s perfectly
+fine to limit your program to only Winsock 1.1 or to portable BSD
+Sockets.</p>
+
+<p>The Winsock 1.1 specific DLLs are still provided on
+the newest versions of Windows. Winsock 1.1 has some <a
+href="general.html#ws2additions">limitations</a> compared to Winsock 2,
+but there are few types of programs that absolutely require Winsock
+2 features.</p>
+
+<p>Likewise, BSD Sockets, though a very old API now, still
+contains a large amount of functionality. Most network programs
+running today on Linux, Unix, and OS X still use nothing but
+the plain old BSD Sockets API. Viewed that way, even Winsock 1.1
+looks modern, new, and powerful. If your program doesn&rsquo;t
+need any of the Windows-specific extensions, or simply has
+to be portable to these other operating systems, feel free to
+stick to the BSD Sockets subset of the API. There are some <a
+href="articles/bsd-compatibility.html">details</a> that prevent you
+from simply recompiling a BSD Sockets program on Windows, but these
+are generally easy to work around.</p>
+
+<p>I&rsquo;m not aware of any penalty for choosing an older API on a
+newer operating system. Nor for that matter am I aware of penalties for
+using an older API subset while building your program against Winsock
+2. There is the decreased portability, of course, but since there
+are Winsock 2 options for OSes going back 14 years now, it&rsquo;s
+not generally a practical concern.</p>
+
+<p>The FAQ&rsquo;s example programs are all set up to build as Winsock
+2 code just to be <a href="intro.html#versions">modern</a>. (Again,
+14 years!) That said, you could easily make most of them build against
+Winsock 1.1 simply by changing the things mentioned at the top of
+this FAQ item.</p>
+
+
+<a name="samples"></a>
+<h5>2.2 - Are there any sample apps on the Net?</h5>
+
+<p>Yes. There are several listed on the
+<a href="./resources/samples.html">Resources</a> page, and the FAQ&rsquo;s
+<a href="./examples/index.html">Examples</a> section has several more. If
+you&rsquo;re just getting started with Winsock, you may be especially
+interested in <a href="./examples/basics/index.html">these</a> samples.</p>
+
+<a name="initwsadata"></a>
+<h5>2.3 - Do I need to initialize the WSAData structure before calling WSAStartup?</h5>
+
+<p>No, <code>WSAStartup()</code> fills this structure in for you.</p>
+
+<a name="linkerror"></a>
+<h5>2.4 - I&rsquo;m getting link errors when compiling Winsock programs. What&rsquo;s wrong?</h5>
+
+<p>You&rsquo;re most likely not linking with the proper Winsock
+import library. This is <tt>ws2_32.lib</tt> if you&rsquo;re targetting
+Winsock 2, or <tt>wsock32.lib</tt> for Winsock 1.1.</p>
+
+
+<a name="interop"></a>
+<h5>2.5 - If I write a Winsock program, will I be able to communicate with a Unix sockets program?</h5>
+
+<p>Absolutely! This common question is the result of confusing protocols
+with the APIs. Communicating programs need not have been created with
+the same APIs, as long as they are using the same transport and network
+protocols.</p>
+
+<p>Before dealing with cross-platform networking, please read the
+FAQ article <a href="./articles/effective-tcp.html">How to Use TCP Effectively</a>. It covers several issues
+that bite cross-platform programs, like structure padding and data
+representation.</p>
+
+<a name="langcompat"></a>
+<h5>2.6 - Can I use Winsock with { My Favorite Language }?</h5>
+
+<p>Maybe, but Winsock is usually only used directly in low-level
+languages like C and its close relatives. There are several reasons
+for this.</p>
+
+<p><b>Reason 1:</b> Some languages simply lack the language features
+to call the Winsock API directly.</p>
+
+<p>A programming language needs the following features to access
+Winsock:</p>
+
+<ol>
+	<li><p>Pointers. (The ability to access a specific piece of
+	memory by its address.)</p></li>
+
+	<li><p>Bitwise operators. (The ability to change specific
+	bits in a byte.)</p></li>
+
+	<li><p>Structures or records. (The ability to define a block
+	of memory that is an aggregate of simple data elements, such
+	as two characters followed by a 16-bit integer. This feature
+	must also allow some measure of control as to how the data
+	is laid out in memory.)</p></li>
+</ol>
+
+<p>Most high-level languages lack one or more of these features. Your
+language might have some kind of extension mechanism that lets you
+write code in C or a similar language to provide a bridge, but that
+is usually not necessary.</p>
+
+<p><b>Reason 2:</b> Most modern languages commonly used on Windows
+provide network support as part of the language or its runtime. This
+is typical of cross-platform languages like Java, Perl, Python, Tcl,
+Ruby, Lua... Even more specialized languages, like R, Mathematica,
+and Erlang usually include network support. Unless you are using a
+language without network support built in or need to dig into some
+Winsock-specific mechanism not exposed by the language&rsquo;s network
+support, you won&rsquo;t have cause to use Winsock directly. Using
+the language&rsquo;s own network API usually results in smaller,
+more portable code.</p>
+
+<p><b>Reason 3:</b> Older languages often didn&rsquo;t have networking
+as part of the language, but had some extension mechanism whereby
+networking was later added. A good example is old versions of
+Visual Basic, and the now-moribund market for ActiveX networking
+controls. Other than this external component difference, the argument
+follows that for Reason 2.</p>
+
+<p>For these reasons and others, this FAQ is
+<a href="./intro.html#langbias">biased towards C and C++</a>. It
+probably also applies just as well to other close C family members
+like Objective C and D, but I don&rsquo;t use those, so I haven&rsquo;t
+tried to ensure code compatibility.</p>
+
+<p>If your language allows direct access to the Winsock API, you may
+be able to translate the C++ code in the FAQ into equivalent code
+in your chosen language. However, you&rsquo;ll probably do better
+to try and find sample code in your chosen language elsewhere on the
+net. You may be able to find something that does exactly what you need,
+and if not, at least you will have a basis in your language&rsquo;s
+network APIs which will make it easier to translate the code here
+into your language.</p>
+
+<a name="debugtools"></a>
+<h5>2.7 - Are there any tools available for debugging Winsock programs?</h5>
+
+<p>The two main categories of debugging tools are sniffers and
+shims.</p>
+
+<p><b>Sniffers</b></p>
+
+<p>I&rsquo;ve moved all discussion of what sniffers are, their
+limitations, and workarounds for those limitations into a separate
+article, &ldquo;<i><a href="./articles/sniffer.html">The Straight Dope on Packet Sniffers</a>.</i>&rdquo;</p>
+
+<p>The main advantage of a sniffer is that it literally sees every bit
+of data in a network conversation, way down below the Winsock level
+to the network hardware&rsquo;s protocol layer. (e.g. Ethernet)
+Another advantage is that a good sniffer is quite powerful and
+configurable. For example, some allow you to write &ldquo;protocol
+plugins&rdquo; that will decode any protocol, such as a custom protocol
+that you&rsquo;ve developed. You can also build complex expressions
+to filter out just the small bit of traffic you need to see to debug
+a problem, so you don&rsquo;t have to wade through the torrent of
+variegated data on a modern LAN.</p>
+
+<p>By far, the most popular packet sniffer today is the open source
+and cross-platform <a href="http://www.wireshark.org/">Wireshark</a>
+suite. (Previously called Ethereal.) In the same way that Firefox
+slowly, unevenly, yet inevitably steamrolled its commercial
+competition, Wireshark has pushed out all but the very best commercial
+offerings. It is not perfect, but it is more than good enough for
+day-to-day packet sniffing; I use it <a href="#tcpdump">almost</a>
+exclusively.</p>
+
+<p>The main commercial sniffers left are WildPackets&rsquo; <a
+href="http://www.wildpackets.com/products/network_analysis/omnipeek_network_analyzer">OmniPeek</a>,
+Network Instruments&rsquo; <a
+href="http://www.networkinstruments.com/products/observer/">Observer</a>,
+and NetScout&rsquo;s <a
+href="http://www.netscout.com/products/sniffer_analysis.asp">Sniffer</a>.
+(An ancestor of the latter is the source of the now-kleenexed term
+&ldquo;sniffer.&rdquo;) These all cost north of US$ 1,000 and run
+into deep the thousands for enhanced versions and optional add-ons. I
+haven&rsquo;t used any of them in many years, so I cannot advise about
+the conditions where they are worth the cost. (They must be, else
+they would not have survived this long in the face of a good-enough
+free alternative.)</p>
+
+<a name="tcpdump"></a>
+<p>The only other sniffer I use is <a
+href="http://www.tcpdump.org/">tcpdump</a>. Its main virtue is
+that it&rsquo;s installed by default on almost every Linux, Unix
+and OS X box out there. You can usually find such a box somewhere
+nearby when you need to debug something. I almost never use it to
+analyze captured packets; its display format is difficult to read
+and often doesn&rsquo;t tell you enough besides. Instead, I use its
+<code>-w</code> option to write the captured packets to a file, which
+I then compress, transfer back to my PC, then load up in Wireshark
+for analysis. I can do this even when not on-site with the problem
+by dialing or <code>ssh</code>ing into a *ix box on site. Beware
+that you might need to give the <code>-s</code> option to get it to
+capture more than just the packet headers.</p>
+
+<p>You can use Wireshark&rsquo;s <code>tshark</code> command-line
+companion for this instead, if available. Its output format is more
+readable and it captures whole packets by default.</p>
+
+
+<p><b>Shims</b></p>
+
+<p>Another major category of debugging tools are shims. (Also called
+spies.) A shim uses any of several different methods to monitor a
+single application&rsquo;s use of the Winsock APIs. Shims present
+a higher-level view of your program&rsquo;s network interactions
+than sniffers.</p>
+
+<p>The difference in perspective can make it easier to map what it
+displays onto what you know your program is trying to do. Captured
+packets are sometimes too far removed from the problem source to
+be immediately helpful.</p>
+
+<p>(The reverse can be true, too: knowing the sequence of API calls
+doesn&rsquo;t tell you every detail about the data that is actually
+going out on the wire. Sniffers tell you that.)</p>
+
+<p>Shims can sometimes work where sniffers will not. Some types of
+point-to-point links (e.g. PPP over a modem) are sniff-resistant
+due to their nature, but if they&rsquo;re exposed to Winsock, a
+shim can see them. Some types of shims work in such a way that they
+don&rsquo;t require administrator privileges on the local machine,
+unlike most sniffers.</p>
+
+<p>The main shims available are Systems Software Technology&rsquo;s <a
+href="http://www.sstinc.com/winsock.html">TracePlus/Winsock</a>
+(US&nbsp;$160) and WinTECH&rsquo;s <a
+href="http://www.win-tech.com/html/socktspy.htm">SocktSpy</a>
+(US&nbsp;$60).</p>
+
+
+
+<p><b>Miscellaneous Tools</p></b>
+
+<p>There are various other network debugging tools out there useful to
+programmers.</p>
+
+<p>Every network programmer needs a port scanner, with which you
+can probe a machine to learn what ports are open, what ports
+are closed or blocked by a firewall, even what OS a remote
+machine is running based on how it responds to the scanning
+packets. One nice GUI tool of that sort is Atelier Web&rsquo;s <a
+href="http://www.atelierweb.com/pscan/">Security Port Scanner</a>,
+a.k.a. AWSPS. (US&nbsp;$34 to 120, depending on options) A
+more powerful but less pretty open source alternative is <a
+href="http://nmap.org/">Nmap</a>.</p>
+
+<p>Another useful class of tool is something that tells you
+which programs on a given machine are listening on which
+ports. Merely knowing that <i>something</i> is listening on
+TCP port 8472 isn&rsquo;t as useful as knowing <i>what</i>
+is listening on that port. AWSPS does this, as well. One
+free but closed-source tool to do this is SysInternals&rsquo; <a
+href="http://technet.microsoft.com/en-us/sysinternals/bb897437.aspx">TCPView</a>.
+Another is <a
+href="http://www.foundstone.com/us/resources/proddesc/vision.htm">Vision</a>,
+from security firm Foundstone. In Windows XP and up, you can
+get a primitive form of this information at the command line
+by saying <code>netstat&nbsp;-ba</code>. The <code>-b</code>
+option is Windows-specific; to get the same information on Linux,
+BSD, and OS X systems, look into the awesome <code>lsof</code>
+command. (The example question posed above would be answered with
+<code>lsof&nbsp;-i:8472</code>.)</p>
+
+
+<p><b>General Advice</b></p>
+
+<p>No one tool will do everything you need. You might use a port
+scanner to check for an open port, start a sniffer capturing packets on
+that port, point your program at it, capture the data, then go back and
+run it through a shim to find out why the API calls you&rsquo;re making
+are giving you a some weird network packets the sniffer captured.</p>
+
+<p>I suggest that you start with Wireshark, Nmap and TCPView, then
+explore the commercial alternatives&rsquo; demos to see if they add
+any features you just gotta have. I find less use for shims myself,
+but that may be a result of long experience; I rarely find myself at
+a loss to explain why a particular packet capture was produced by a
+given program.</p>
+
+<p>You may also find the FAQ article <a href="./articles/debugging-tcp.html">Debugging TCP/IP</a>
+useful for some less-automated methods of debugging a TCP program.</p>
+
+
+<p><b>Methods That Don&rsquo;t Work</b></p>
+
+<p>There are a couple of debugging tools that are supposed to work
+that don&rsquo;t, or are too flaky to deal with. The first is the
+<code>SO_DEBUG</code> socket option. It simply doesn&rsquo;t work
+on Microsoft stacks. The other is the Winsock DLL debugging plugin
+<tt>dt_dll.dll</tt>; this method is flaky. Bob Quinn wrote an article
+about this, but unfortunately the site that held it was bought by
+another company that hasn&rsquo;t yet made that article available
+again.</p>
+
+<a name="errmsg"></a>
+<h5>2.8 - How do I get a readable error message from a Winsock error number?</h5>
+
+<p>The problem with this question is that it assumes that there is
+a &ldquo;good&rdquo; canned error message for every situation. The
+reality is that many times, you need to know the program&rsquo;s
+context before you can turn an error value into a meaningful error
+message. For example, <code>WSAEFAULT</code> can mean any of the
+following, depending on context:</p>
+
+<ul>
+    <li>bad pointer passed</li>
+    <li>passed buffer too small</li>
+    <li>that version of the API is not supported</li>
+</ul>
+
+<p>Since the Winsock docs tell you the most likely error values
+that each function will return, you should use this information to
+construct intelligent error handlers.</p>
+
+<p>Still, sometimes an API call returns something unexpected,
+so a cryptic error message is better than none at all. For such
+&ldquo;default&rdquo; case handling the <code>FormatMessage()</code> API
+on all <a href="intro.html#versions">modern</a> versions of Windows
+(except NT 4) will return canned messages when given Winsock error
+numbers.</p>
+
+<p>I must stress that you&rsquo;re better off spending your time
+constructing meaningful error messages based on program context than
+chasing something that doesn&rsquo;t work very well even in the best
+case. Use canned messages only when your program has no better idea
+what to do about an error.</p>
+
+
+<a name="wouldblock"></a>
+<h5>2.9 - Winsock keeps returning the error <code>WSAEWOULDBLOCK</code>. What&rsquo;s wrong with my program?</h5>
+
+<p>Not a thing. <code>WSAEWOULDBLOCK</code> is a perfectly
+normal occurrence in programs using non-blocking and asynchronous
+sockets. It&rsquo;s Winsock&rsquo;s way of telling your program
+&ldquo;I can&rsquo;t do that right now, because I would have to
+<a href="./glossary.html#blocking">block</a> to do so.&rdquo;</p>
+
+<p>The next question is, how do you know when it&rsquo;s safe to try
+again? In the case of asynchronous sockets, Winsock will send you
+an <code>FD_WRITE</code> message after a failed <code>send()</code> call
+when it is safe to write; it will send you an <code>FD_READ</code>
+message after a <code>recv()</code> call when more data arrives on that
+socket. Similarly, in a non-blocking sockets program that uses
+<code>select()</code>, the <code>writefds</code> will be set when it&rsquo;s
+okay to write, and the <code>readfds</code> will be set if there is
+data to read.</p>
+
+<p>Don&rsquo;t count on Winsock to handle blocking the way you think
+it ought to. Whenever you use some form of nonblocking sockets,
+you have to be prepared for <code>WSAEWOULDBLOCK</code> at any
+time. It&rsquo;s simply a matter of defensive programming, just like
+checking for null pointers.</p>
+
+
+<a name="localhost"></a>
+<h5>2.10 - How can I test my Winsock application without setting up a network?</h5>
+
+<p>There is a special address called the <i>loopback</i> or
+<i>localhost</i> address, 127.0.0.1. This lets two programs running
+on a single machine talk to each other. The server usually listens
+for connections on all available interfaces, and the client connects
+to the localhost address. (See the <a href="./examples/index.html">Example Programs</a> section for
+basic client and server program code.)</p>
+
+<p>If you have an Internet or LAN connection on your development
+machine, you&rsquo;re already set up for this.</p>
+
+<p>For machines with no network at all, you
+have to set up a &ldquo;dummy&rdquo; network. On <a
+href="intro.html#versions">modern</a> versions of Windows, you can
+go into the Network control panel, tell it to add an interface, and
+select the Microsoft Loopback Device. You don&rsquo;t need any other
+networking support for this to work.</p>
+
+<p>Be warned: behavior through the loopback interface <i>will</i>
+differ from that on a &ldquo;real&rdquo; network, if only because
+conditions are much simpler within a single machine than over a LAN
+or WAN. You should try to test your application on a real network,
+even if you do primary development on a single machine.</p>
+
+
+<a name="howclose"></a>
+<h5>2.11 - What&rsquo;s the proper way to close a TCP socket?</h5>
+
+<p>TCP is a bidirectional protocol. Think about it like a conversation
+between two people. It&rsquo;s rude for one person to simply stop
+talking and walk away. Proper social protocol requires that the person
+who is done talking wait and listen to what the other person has to
+say before walking away. One side starts winding down the conversation
+&mdash; &ldquo;Well, it&rsquo;s been nice, but I have to go.&rdquo;
+&mdash; then politely waits for the other person to finish and agree
+to finish. (&ldquo;Yes, okay, I&rsquo;ll see you later.&rdquo;)</p>
+
+<p>TCP connections with Winsock are designed to work the same way:</p>
+
+<ol>
+  <li><p>One side finishes sending data. It tells this to the stack
+  by calling <code>shutdown()</code> with the <i>how</i> parameter set to
+  <code>SD_SEND</code>.</p></li>
+
+  <li><p>Both sides continue to call <code>recv()</code>. The side that
+  closed its sending half of the connection must because the remote
+  peer probably isn&rsquo;t done sending yet. The peer that is still
+  sending must continue calling <code>recv()</code> because it will get 0 when
+  the remote peer calls <code>shutdown()</code> with <code>SD_SEND</code>.
+  If you are using asynchronous sockets or event objects, you will
+  get an <code>FD_CLOSE</code> when this happens, too. In programs
+  that use <code>select()</code>, you simply get a signaled socket in
+  the <code>readfds</code>, which tells you to call <code>recv()</code>,
+  whereupon you get the 0 return value. Beware that both sides still
+  have to be prepared to receive a -1 return from <code>recv()</code>,
+  indicating an error.</p></li>
+
+  <li><p>Both sides call <code>closesocket()</code> only when they are
+  convinced the conversation is over, either because they have stopped
+  sending and they got 0 from <code>recv()</code>, or they got a connection
+  error.</p></li>
+</ol>
+
+<p>Not following this graceful shutdown protocol can cause data loss.</p>
+
+<p>Nonblocking or asynchronous sockets complicate this. You can either
+build &ldquo;finish sending/receiving&rdquo; logic into your normal
+I/O loop, or you can temporarily put the socket in blocking mode and
+do the last bits of I/O that way. The proper choice depends on your
+program&rsquo;s architecture and requirements.</p>
+
+
+<a name="hownotclose"></a>
+<h5>2.12 - Is it possible to close the connection &ldquo;abnormally&rdquo;?</h5>
+
+<p>Sure, but it&rsquo;s an evil thing to do. <tt><b>:)</b></tt></p>
+
+<p>The simplest way is to call <code>shutdown()</code> with the
+<code>how</code> parameter set to <code>SD_BOTH</code> (&ldquo;both
+directions&rdquo;), optionally followed by a <code>closesocket()</code>
+call. Another method is to set the <code>SO_LINGER</code>
+flag to 0 with the <code>setsockopt()</code> call before you call
+<code>closesocket()</code>. This causes a TCP connection reset. (That is,
+a TCP packet goes out with the <code>RST</code> flag set, forcing
+the remote stack to drop the connection immediately.)</p>
+
+<p>&ldquo;Slamming the connection shut&rdquo; is only justifiable in
+a very small number of cases. You must have fairly deep knowledge
+of the way TCP works before you can properly decide to use this
+technique. Generally, the perceived need to slam the connection
+shut comes from a broken program, either yours or the remote peer. I
+recommend that you try to fix the broken program so you don&rsquo;t
+have to resort to such a questionable technique.</p>
+
+
+<a name="normalclose"></a>
+<h5>2.13 - How do I detect when my TCP connection is closed?</h5>
+
+<p>All of the I/O strategies discussed in the
+<a href="./articles/io-strategies.html">I/O strategies article</a> have some way of
+indicating that the connection is closed.</p>
+
+<p>First, keep in mind that TCP is a full-duplex network protocol.
+That means that you can close the connection half-way and still send
+data on the other half. An example of this is the old HTTP 1.0 web
+protocol. The browser sends a short request to the web server, then
+closes its half of the connection. The web server then sends back
+the requested data on the other half of the connection, and closes
+its sending side, which terminates the TCP session. (HTTP 1.1 is more
+complex than this, but at the end, the same basic thing happens.)</p>
+
+<p>Normal TCP programs only close the sending half, which the remote
+peer perceives as the receiving half. So, what you normally want to
+detect is whether the remote peer closed its sending half, meaning
+you won&rsquo;t be receiving data from them any more.</p>
+
+<p>With asynchronous sockets, Winsock sends you an
+<code>FD_CLOSE</code> message when the connection drops. Event
+objects are similar: the system signals the event object with an
+<code>FD_CLOSE</code> notification.</p>
+
+<p>With blocking and non-blocking sockets, you probably have a
+loop that calls <code>recv()</code> on that socket. <code>recv()</code> returns
+0 when the remote peer closes the connection. As you would expect,
+if you are using <code>select()</code>, the SOCKET descriptor in the
+<code>read_fds</code> parameter gets set when the connection drops. As
+normal, you&rsquo;ll call <code>recv()</code> and see the 0 return value.</p>
+
+<p>As you might have guessed from the discussion above, it is also
+possible to close the <i>receiving</i> half of the connection. If
+the remote peer then tries to send you data, the stack will drop that
+data on the floor and send a TCP RST to the remote peer.</p>
+
+<p>See <a href="#abnormalclose">below</a> for information on handling
+abnormal disconnects.</p>
+
+<a name="abnormalclose"></a>
+<h5>2.14 - How do I detect an abnormal network disconnect?</h5>
+
+<p>The <a href="#normalclose">previous question</a> deals with
+detecting when a protocol connection is dropped normally, but what if
+you want to detect other problems, like unplugged network cables or
+crashed workstations? In these cases, the failure prevents notifying
+the remote peer that something is wrong. My feeling is that this is
+usually a feature, because the broken component might get fixed before
+anyone notices, so why demand that the connection be reestablished?</p>
+
+<p>If you have a situation where you must be able to detect all
+network failures, you have two options:</p>
+
+<p>The first option is to give the protocol a command/response
+structure: one host sends a command and expects a prompt response
+from the other host when the command is received or acted upon. If
+the response does not arrive, the connection is assumed to be dead,
+or at least faulty.</p>
+
+<p>The second option is to add an &ldquo;echo&rdquo; function to
+your protocol, where one host (usually the client) is expected to
+periodically send out an &ldquo;are you still there?&rdquo; packet to
+the other host, which it must promptly acknowledge. If the echo-sending
+host doesn&rsquo;t receive its response or the receiving host fails
+to see an echo request for a certain period of time, the program can
+assume that the connection is bad or the remote host has gone down.</p>
+
+<p>If you choose the &ldquo;echo&rdquo; alternative, avoid the
+temptation to use the ICMP &ldquo;ping&rdquo; facility for this. If you
+did it this way, you would have to send pings from both sides, because
+Microsoft stacks won&rsquo;t let you see the other side&rsquo;s echo
+requests, only responses to your own echo requests. Another problem
+with ping is that it&rsquo;s outside your protocol, so it won&rsquo;t
+detect a failed TCP connection if the hardware connection remains
+viable. A final problem with the ping technique is that ICMP is an
+unreliable protocol: does it make a whole lot of sense to use an
+unreliable protocol to add an assurance of reliability to another
+protocol?</p>
+
+<p>If you can restrict your program to Windows 2000 and its direct
+descendants, one option you might consider is TCP keepalives. This is
+a way to tell the stack to send a packet out over the connection at
+specific intervals whether there&rsquo;s real data to send or not. If
+the remote host is up, it will send back a similar reply packet. If
+the TCP connection is no longer valid (e.g. the remote host has
+rebooted since the last keepalive), the remote host will send back
+a reset packet, killing the local host&rsquo;s connection. If the
+remote host is down, the local host&rsquo;s TCP stack will time out
+waiting for the reply and kill the connection. The main problem with
+keepalives is that these packets are entirely wasteful: they carry
+no useful data. At least with the command/response option, you have
+the possibility that every packet carries meaning.</p>
+
+<p>Note that different types of networks handle physical disconnection
+differently. Ethernet, for example, establishes no link-level
+connection, so if you unplug the network cable, a remote host
+can&rsquo;t tell that its peer is physically unable to communicate. By
+contrast, a dropped PPP link causes a detectable failure at the link
+layer, which propagates up to the Winsock layer for your program
+to detect.</p>
+
+<a name="timeout"></a>
+<h5>2.15 - How can I change the timeout for a Winsock function?</h5>
+
+<p>Some of the blocking Winsock functions (e.g. <code>connect()</code>) have
+a timeout embedded into them. The theory behind this is that only
+the stack has all the information necessary to set a proper timeout.
+Yet, some people find that the value the stack uses is too long for
+their application; it can be a minute or longer.</p>
+
+<p>You can adjust the <code>send()</code> and <code>recv()</code> timeouts
+with the <code>SO_SNDTIMEO</code> and <code>SO_RCVTIMEO</code>
+<code>setsockopt()</code> options. .</p>
+
+<p>For other Winsock functions, the best solution is to avoid blocking
+sockets altogether. All of the non-blocking socket methods provide
+ways for you to build custom timeouts:</p>
+
+<ul>
+  <li><p><b>Non-blocking sockets with <code>select()</code></b> &ndash; The
+  fifth parameter to the <code>select()</code> function is a timeout value.
+
+  <li><p><b>Asynchronous sockets</b> &ndash; Use the Windows API
+  <code>SetTimer()</code>.</p></li>
+
+  <li><p><b>Event objects</b> &ndash; <code>WSAWaitForMultipleEvents()</code>
+  has a timeout parameter.</p></li>
+
+  <li><p><b>Waitable Timers</b> &ndash; Call
+  <code>CreateWaitableTimers()</code> to make a waitable timer, which you
+  can then pass to a function like <code>WSAEventSelect()</code> along with
+  your sockets: if none of the sockets is signalled before the timer
+  goes off, the blocking function will return anyway.</p></li>
+</ul>
+
+<p>Note that with asynchronous and non-blocking sockets, you may be
+able to avoid handling timeouts altogether. Your program continues
+working even while Winsock is busy. So, you can leave it up to the
+user to cancel an operation that&rsquo;s taking too long, or just
+let Winsock&rsquo;s natural timeout expire rather than taking over
+this functionality in your code.</p>
+
+
+<a name="peeking"></a>
+<h5>2.16 - What is peeking (MSG_PEEK), and why is it bad?</h5>
+
+<p>Peeking is looking ahead in the TCP data stream: when you use
+the MSG_PEEK flag with <code>recv()</code>, it returns bytes from the
+stack&rsquo;s buffer without removing these from the buffer. (You
+can also do a form of peeking with the <code>ioctlsocket()</code> option
+FIONREAD.)</p>
+
+<p>Peeking is essentially never necessary: you can always read data
+into your own buffers and process it there. This is good, because
+peeking often causes problems. Indeed, it&rsquo;s so problematic
+it&rsquo;s earned <a href="./articles/lame-list.html#item12">a place on the
+Lame List</a> and in Microsoft&rsquo;s Knowledge Base: see article
+<a href="http://support.microsoft.com/kb/192599">KB192599</a> for specific info on the problems peeking causes
+with their Winsock stack.</p>
+
+<a name="oobdata"></a>
+<h5>2.17 - What is out-of-band data (MSG_OOB), and why is it bad?</h5>
+
+<p>Out-of-band (OOB) data is like a second data channel. The intent is
+to use the regular TCP data stream for most data and the OOB stream
+for &ldquo;emergency&rdquo; messages. The telnet protocol uses this
+for &ldquo;interrupt&rdquo; keystrokes like Ctrl-C, so that they
+don&rsquo;t have to wait on the remote peer to handle regular TCP data
+before the interrupt occurs. You can send OOB data by passing the
+<code>MSG_OOB</code> flag to <code>send()</code> and receive it by passing
+<code>MSG_OOB</code> to <code>recv()</code>. You can also get OOB data by
+setting the <code>SO_OOBINLINE</code> flag with <code>setsockopt()</code>.</p>
+
+<p>OOB data is a useful concept, but unfortunately there are two
+conflicing interpretations of how OOB data should be handled at the
+stack level: the original description of OOB in the TCP protocol
+specification (<a href="../rfcs/official.html#rfc793">RFC 793</a>)
+was superceded by the &ldquo;host requirements&rdquo; spec (<a
+href="../rfcs/official.html#rfc1122">RFC 1122</a>), but there are
+still many machines with RFC 793 OOB implementations. Section 3.5.2
+in the Winsock 2.2.2 spec provides the gory details on why RFC 793
+vs. RFC 1122 is a problem.</p>
+
+<p>OOB also isn&rsquo;t a fully functional second data channel:
+it&rsquo;s rather limited, even between two machines that agree on
+what OOB means.</p>
+
+<p>So, never use OOB except when implementing legacy protocols like
+telnet which demand it. You can get reliable OOB-like behavior by
+simply using two data connections: one for normal data, and the second
+for emergency data.</p>
+
+<a name="srflags"></a>
+<h5>2.18 - If MSG_PEEK and MSG_OOB are bad, what do I pass for <code>send()</code> and <code>recv()</code>&rsquo;s flags parameter?</h5>
+
+<p>It&rsquo;s perfectly valid to pass 0 for <code>send()</code> and
+<code>recv()</code>&rsquo;s flags parameter.</p>
+
+
+
+
+		</div> <!-- end body div -->
+
+<hr class="noshade">
+
+
+<!--  Navigation footer  -->
+<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer nav"> 
+	<tr>
+		<td align="left" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="./general.html">&lt;&lt;&nbsp;General Winsock Information</a><br>
+			</span>
+		
+		</td>
+
+		<td align="right" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="./intermediate.html">Intermediate Winsock Issues&nbsp;&gt;&gt;</a>
+			</span>
+		
+		</td>
+	</tr>
+</table>
+
+
+
+
+
+
+	<!--  Document Footer -->
+
+	<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer info"> 
+		<tr>
+			
+				<td align="left" class="thirdwidth">
+					
+					<span class="annotation">Updated Sun Oct 25 2009 09:40 MDT</span>
+				</td>
+				<td align="center" class="thirdwidth">
+				
+			
+
+			
+				&nbsp;
+			
+			</td>
+
+			<td align="right" class="thirdwidth">
+				<a href="/">Go to my home page</a>
+			</td>
+		</tr>	
+	</table>
+
+
+	<script type="text/javascript" src="/js/awstats_misc_tracker.js"></script>
+</body>
+</html>
+

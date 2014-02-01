@@ -1,0 +1,66 @@
+--------------------------------------------------------------------------------------
+Timing Analyzer Summary
+--------------------------------------------------------------------------------------
+
+Type           : Worst-case tsu
+Slack          : N/A
+Required Time  : None
+Actual Time    : 4.436 ns
+From           : SW[15]
+To             : posEdge:m0|Q[15]
+From Clock     : --
+To Clock       : KEY[1]
+Failed Paths   : 0
+
+Type           : Worst-case tco
+Slack          : N/A
+Required Time  : None
+Actual Time    : 10.850 ns
+From           : posEdge:m1|Q[14]
+To             : HEX7[6]
+From Clock     : KEY[1]
+To Clock       : --
+Failed Paths   : 0
+
+Type           : Worst-case tpd
+Slack          : N/A
+Required Time  : None
+Actual Time    : 9.832 ns
+From           : SW[15]
+To             : LEDR[15]
+From Clock     : --
+To Clock       : --
+Failed Paths   : 0
+
+Type           : Worst-case th
+Slack          : N/A
+Required Time  : None
+Actual Time    : 0.461 ns
+From           : SW[5]
+To             : posEdge:m0|Q[5]
+From Clock     : --
+To Clock       : KEY[1]
+Failed Paths   : 0
+
+Type           : Clock Setup: 'KEY[1]'
+Slack          : N/A
+Required Time  : None
+Actual Time    : Restricted to 450.05 MHz ( period = 2.222 ns )
+From           : posEdge:m0|Q[1]
+To             : posEdge:m1|Q[1]
+From Clock     : KEY[1]
+To Clock       : KEY[1]
+Failed Paths   : 0
+
+Type           : Total number of failed paths
+Slack          : 
+Required Time  : 
+Actual Time    : 
+From           : 
+To             : 
+From Clock     : 
+To Clock       : 
+Failed Paths   : 0
+
+--------------------------------------------------------------------------------------
+

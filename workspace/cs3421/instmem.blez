@@ -1,0 +1,7 @@
+# test BLEZ instruction
+
+00 19000002		blez	$8,skip		# should not branch
+01 ac040000		sw	$4,0($0)	# should store 4
+02 fc000000		halt
+03 ac050000	skip:	sw	$5,0($0)	# should not execute
+04 fc000000		halt

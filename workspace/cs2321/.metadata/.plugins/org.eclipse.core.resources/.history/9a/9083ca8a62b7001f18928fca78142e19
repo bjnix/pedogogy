@@ -1,0 +1,343 @@
+package cs2321;
+
+import java.util.Iterator;
+import net.datastructures.*;
+import cs2321.*;
+
+/**
+ * A sequence that is implemented as an array.
+ * If the capacity is exceeded the capacity will be doubled. 
+ * 
+ * YOUR COMPLEXITY INFO HERE
+ * 
+ * Course: CS2321 Section YOUR SECTION HERE
+ * Assignment: #1
+ * @author YOUR NAME HERE
+ */ 
+/* Do not alter the definition of the class.
+ * ie. Do not extend LinkedSequence.
+ */
+public class ArraySequence<E> implements Sequence<E>
+{
+	private int mCurrentSize;
+	private int mMaxSize;
+	private ArrSeqPos<E>[] mArray;
+
+	public ArraySequence()
+	{
+		mCurrentSize = 0;
+		mMaxSize = 10;
+		mArray = (ArrSeqPos<E>[])new ArrSeqPos[mMaxSize];
+	}
+
+
+
+	/*# Complete the implementation of all required methods.
+	 *  Be sure to update this file to include:
+	 *      
+	 *      Annotations (@TimeComplexity, @SpaceComplexity, @TimeComplexityAmmortized, @TimeComplexityExpected)
+	 *      that indicate the time and space complexities.
+	 *      
+	 *      Appropriate comments justifying time and space claims (TCJ and SCJ) 
+	 */
+
+	@Override
+	public Position<E> atIndex( int aIndex ) throws BoundaryViolationException
+	{
+		if ( ( aIndex < 0 ) || ( aIndex > mCurrentSize ) )
+        {
+            throw new BoundaryViolationException ( "Index is invalid" );
+        }
+
+		return mArray[aIndex];
+	}
+
+	@Override
+	public int indexOf( Position<E> aPosition ) throws InvalidPositionException
+	{
+		int pos = -2;
+		
+//		for(int i = 0; i < mCurrentSize; i++ )
+//		{
+//			if(aPosition.element().equals(mArray[i].element() ) )
+//				pos = i;
+//		}
+		System.out.println("foo " + ((ArrSeqPos<E>)aPosition).getIndex());
+		
+		if ( (pos < 0) || (pos > mCurrentSize ) )
+		{
+			throw new InvalidPositionException( "Position is invalid" );
+		}
+		return pos;
+	}
+
+	@Override
+	public boolean isEmpty()
+	{
+		if(mCurrentSize == 0){
+			return true;
+		}
+		else return false;
+	}
+
+	@Override
+	public int size()
+	{
+
+		return mCurrentSize;
+	}
+
+	@Override
+	public void add( int aIndex, E aElement ) throws IndexOutOfBoundsException
+	{
+
+		System.out.println("Adding " + aElement);
+		if ( ( aIndex < 0 ) || ( aIndex > mCurrentSize ) )
+        {
+            throw new IndexOutOfBoundsException( "Index is invalid" );
+        }
+		if( mCurrentSize == mMaxSize )
+			resize();
+		System.out.println("Current Size: " + mCurrentSize);
+		for(int i = mCurrentSize; i > aIndex; i--)
+			{mArray[i] = mArray[i-1];}
+		
+		mArray[aIndex] = new ArrSeqPos<E> ( aIndex , aElement );
+		
+		mCurrentSize = mCurrentSize + 1;
+		
+
+	}
+
+	@Override
+	public E get( int aIndex ) throws IndexOutOfBoundsException
+	{
+		if ( ( aIndex < 0 ) || ( aIndex > mCurrentSize ) )
+        {
+            throw new IndexOutOfBoundsException( "Index is invalid" );
+        }
+		
+		return mArray[aIndex].element();
+	}
+
+	@Override
+	public E remove( int aIndex ) throws IndexOutOfBoundsException
+	{
+
+		if ( ( aIndex < 0 ) || ( aIndex > mCurrentSize ) )
+        {
+            throw new IndexOutOfBoundsException( "Index is invalid" );
+        }
+		
+
+		for( int i = aIndex; i<mCurrentSize; i++ )
+		{
+			mArray[i] = mArray[i+1];
+
+		}
+		mCurrentSize = mCurrentSize - 1;
+		return null;
+	}
+
+	@Override
+	public E set( int aIndex, E aElement ) throws IndexOutOfBoundsException
+	{
+		if ( ( aIndex < 0 ) || ( aIndex > mCurrentSize ) )
+        {
+            throw new IndexOutOfBoundsException( "Index is invalid" );
+        }
+		mArray[aIndex].setElement(aElement);
+
+		return null;
+	}
+
+	@Override
+	public void addAfter( Position<E> aPosition, E aElementToAdd )
+	throws InvalidPositionException
+	{
+
+		add(indexOf(aPosition)+1,aElementToAdd);
+
+	}
+
+	@Override
+	public void addBefore( Position<E> aPosition, E aElementToAdd )
+	throws InvalidPositionException
+	{
+		add(indexOf(aPosition)-1,aElementToAdd);
+
+	}
+
+	@Override
+	public Position<E> first()throws EmptyListException
+	{
+		// TCJ: The time complexity does not vary with input size,
+		// thus the running time is constant.
+		if ( isEmpty() )
+			throw new EmptyListException( "List is empty" );
+		
+		return mArray[0];
+	}
+
+	@Override
+	public Position<E> last()
+	{
+		return mArray[mCurrentSize];
+	}
+
+	@Override
+	public Position<E> next( Position<E> aPosition )
+	throws InvalidPositionException, BoundaryViolationException
+	{
+		int aIndex = indexOf(aPosition)+1;
+		if ( ( aIndex < 0 ) || ( aIndex > mCurrentSize ) )
+        {
+            throw new BoundaryViolationException ( "Index is invalid" );
+        }
+		return mArray[aIndex];
+	}
+
+	@Override
+	public Position<E> prev( Position<E> aPosition )
+	throws InvalidPositionException, BoundaryViolationException
+	{
+		int aIndex = indexOf(aPosition)-1;
+		if ( ( aIndex < 0 ) || ( aIndex > mCurrentSize ) )
+        {
+            throw new BoundaryViolationException ( "Index is invalid" );
+        }
+		return mArray[aIndex];
+	}
+	
+	@Override
+	public E remove( Position<E> aPosition ) throws InvalidPositionException
+	{
+		remove(indexOf(aPosition));
+		return null;
+	}
+
+	@Override
+	public E set( Position<E> aPosition, E aElement )
+	throws InvalidPositionException
+	{
+		set(indexOf(aPosition),aElement);
+		return null;
+	}
+
+	@Override
+	public Iterator<E> iterator()
+	{
+		
+		
+		return new ElementIterator<E>( this );
+	} 
+	public void resize()
+	{
+		mMaxSize = mMaxSize*2;
+		ArrSeqPos<E>[] tmpArray = new ArrSeqPos[mMaxSize];
+		for( int i = 0 ; i < mCurrentSize ; i++ )
+		tmpArray[i] = mArray[i];
+		
+		mArray = tmpArray;
+		System.out.println(mMaxSize);
+
+	}
+
+	@Override
+	public void addFirst( E aElementToAdd )
+	{
+		/* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+		/* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+		/* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+	}
+
+	@Override
+	public void addLast( E aElementToAdd )
+	{
+		/* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+		/* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+		/* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+	}
+
+	@Override
+	public E getFirst() throws EmptyDequeException
+	{
+		/* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+		/* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+		/* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+		return null;
+	}
+
+	@Override
+	public E getLast() throws EmptyDequeException
+	{
+		/* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+		/* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+		/* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+		return null;
+	}
+
+	@Override
+	public E removeFirst() throws EmptyDequeException
+	{
+		/* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+		/* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+		/* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+		return null;
+	}
+
+	@Override
+	public E removeLast() throws EmptyDequeException
+	{
+		/* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+		/* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+		/* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+		return null;
+	}
+	@TimeComplexity("O(?)")
+	@SpaceComplexity("O(?)")
+	static public void main( String [] args )
+	{
+		ArraySequence<Integer> lLS = new ArraySequence<Integer>();
+		        
+        if ( lLS.isEmpty() == false )
+        {
+            System.out.println( "FAILED: isEmpty did not return empty" );
+        }
+        else
+        {
+            System.out.println( "PASSED: isEmpty returned empty" );
+        }
+        lLS.add(0,0);
+        lLS.add(1,1);
+        lLS.add(2,2);
+        lLS.add(3,3);
+        lLS.add(4,4);
+        lLS.add(5,5);
+        lLS.add(6,6);
+        lLS.add(7,7);
+        lLS.add(8,8);
+        lLS.add(9,9);
+        lLS.add(1,200);
+        lLS.remove(3);
+        System.out.println("next" + lLS.next(lLS.atIndex(1)).element());
+        System.out.println("prev" + lLS.prev(lLS.atIndex(3)).element());
+        lLS.set(5, 1000);
+        System.out.println("current size from size()" + lLS.size());
+        for(int i = 0 ; i < lLS.mCurrentSize ; i++)
+        {
+        	System.out.println(lLS.get(i));
+        }
+        if ( lLS.isEmpty() == false )
+        {
+            System.out.println( "PASSED: isEmpty did not return empty" );
+        }
+        else
+        {
+            System.out.println( "FAILED: isEmpty returned empty" );
+        }
+        
+        
+	}
+	
+}

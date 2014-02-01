@@ -1,0 +1,929 @@
+#ifndef FreqCount_timers_h_
+#define FreqCount_timers_h_
+
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
+// Arduino Mega
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+  // #define COUNTER_USE_TIMER1 // T1 is not connected
+  // #define COUNTER_USE_TIMER3 // T3 is not connected
+  // #define COUNTER_USE_TIMER4 // T4 is not connected
+  #define COUNTER_USE_TIMER5    // T5 is pin 47
+  #define TIMER_USE_TIMER2
+
+// Teensy 2.0
+#elif defined(__AVR_ATmega32U4__)
+  #define COUNTER_USE_TIMER1    // T1 is pin 11  (has LED connected)
+  #define TIMER_USE_TIMER4H
+
+// Teensy++ 1.0 & 2.0
+#elif defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__)
+  #define COUNTER_USE_TIMER1    // T1 is pin 6   (has LED connected)
+  //#define COUNTER_USE_TIMER3  // T3 is pin 13
+  #define TIMER_USE_TIMER2
+
+// Sanguino
+#elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
+  #define COUNTER_USE_TIMER1    // T1 is pin 1
+  #define TIMER_USE_TIMER2
+
+// Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, etc
+#elif defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__)
+  #define COUNTER_USE_TIMER1    // T1 is pin 5
+  #define TIMER_USE_TIMER2
+
+#else
+  #error "Unknown chip, please edit me with timer+counter definitions"
+
+#endif
+
+
+/**********************************************/
+/*   Counter Hardware Abstraction             */
+/**********************************************/
+
+#if defined(COUNTER_USE_TIMER1) // 16 bit Timer 1
+
+static uint8_t saveTCCR1A, saveTCCR1B;
+
+static inline void counter_init(void)
+{
+	saveTCCR1A = TCCR1A;
+	saveTCCR1B = TCCR1B;
+	TCCR1B = 0;
+	TCCR1A = 0;
+	TCNT1 = 0;
+	TIFR1 = (1<<TOV1);
+	TIMSK1 = 0;
+}
+
+static inline void counter_start(void)
+{
+	TCCR1B = (1<<CS12) | (1<<CS11) | (1<<CS10);
+}
+
+static inline void counter_shutdown(void)
+{
+	TCCR1B = 0;
+	TCCR1A = saveTCCR1A;
+	TCCR1B = saveTCCR1B;
+}
+
+static inline uint16_t counter_read(void)
+{
+	return TCNT1;
+}
+
+static inline uint8_t counter_overflow(void)
+{
+	return TIFR1 & (1<<TOV1);
+}
+
+static inline uint8_t counter_overflow_reset(void)
+{
+	return TIFR1 = (1<<TOV1);
+}
+
+
+
+#elif defined(COUNTER_USE_TIMER3) // 16 bit Timer 3
+
+static uint8_t saveTCCR3A, saveTCCR3B;
+
+static inline void counter_init(void)
+{
+	saveTCCR3A = TCCR3A;
+	saveTCCR3B = TCCR3B;
+	TCCR3B = 0;
+	TCCR3A = 0;
+	TCNT3 = 0;
+	TIFR3 = (1<<TOV3);
+	TIMSK3 = 0;
+}
+
+static inline void counter_start(void)
+{
+	TCCR3B = (1<<CS32) | (1<<CS31) | (1<<CS30);
+}
+
+static inline void counter_shutdown(void)
+{
+	TCCR3B = 0;
+	TCCR3A = saveTCCR3A;
+	TCCR3B = saveTCCR3B;
+}
+
+static inline uint16_t counter_read(void)
+{
+	return TCNT3;
+}
+
+static inline uint8_t counter_overflow(void)
+{
+	return TIFR3 & (1<<TOV3);
+}
+
+static inline uint8_t counter_overflow_reset(void)
+{
+	return TIFR3 = (1<<TOV3);
+}
+
+
+#elif defined(COUNTER_USE_TIMER4) // 16 bit Timer 4
+
+static uint8_t saveTCCR4A, saveTCCR4B;
+
+static inline void counter_init(void)
+{
+	saveTCCR4A = TCCR4A;
+	saveTCCR4B = TCCR4B;
+	TCCR4B = 0;
+	TCCR4A = 0;
+	TCNT4 = 0;
+	TIFR4 = (1<<TOV4);
+	TIMSK4 = 0;
+}
+
+static inline void counter_start(void)
+{
+	TCCR4B = (1<<CS42) | (1<<CS41) | (1<<CS40);
+}
+
+static inline void counter_shutdown(void)
+{
+	TCCR4B = 0;
+	TCCR4A = saveTCCR4A;
+	TCCR4B = saveTCCR4B;
+}
+
+static inline uint16_t counter_read(void)
+{
+	return TCNT4;
+}
+
+static inline uint8_t counter_overflow(void)
+{
+	return TIFR4 & (1<<TOV4);
+}
+
+static inline uint8_t counter_overflow_reset(void)
+{
+	return TIFR4 = (1<<TOV4);
+}
+
+
+#elif defined(COUNTER_USE_TIMER5) // 16 bit Timer 5
+
+static uint8_t saveTCCR5A, saveTCCR5B;
+
+static inline void counter_init(void)
+{
+	saveTCCR5A = TCCR5A;
+	saveTCCR5B = TCCR5B;
+	TCCR5B = 0;
+	TCCR5A = 0;
+	TCNT5 = 0;
+	TIFR5 = (1<<TOV5);
+	TIMSK5 = 0;
+}
+
+static inline void counter_start(void)
+{
+	TCCR5B = (1<<CS52) | (1<<CS51) | (1<<CS50);
+}
+
+static inline void counter_shutdown(void)
+{
+	TCCR5B = 0;
+	TCCR5A = saveTCCR5A;
+	TCCR5B = saveTCCR5B;
+}
+
+static inline uint16_t counter_read(void)
+{
+	return TCNT5;
+}
+
+static inline uint8_t counter_overflow(void)
+{
+	return TIFR5 & (1<<TOV5);
+}
+
+static inline uint8_t counter_overflow_reset(void)
+{
+	return TIFR5 = (1<<TOV5);
+}
+
+
+#endif // COUNTER_USE_***
+
+
+
+/**********************************************/
+/*   Timer Hardware Abstraction               */
+/**********************************************/
+
+#if defined(TIMER_USE_TIMER2) // 8 bit Timer 2
+
+/*        1ms       2ms       4ms       8ms
+16 MHz    128x125   256x125   256x250   1024x125
+8 MHz     64x125    128x125   256x125   256x250
+4 MHz     32x125    64x125    128x125   256x125
+2 MHz     8x250     32x125    64x125    128x125
+1 MHz     8x125     8x250     32x125    64x125
+*/
+#if F_CPU == 16000000L
+  #define TIMER2_OCR2A_1MS_VAL	124					// div 125
+  #define TIMER2_TCCR2B_1MS_VAL	            (1<<CS22) | (1<<CS20)	// div 128
+  #define TIMER2_OCR2A_2MS_VAL	124					// div 125
+  #define TIMER2_TCCR2B_2MS_VAL	(1<<CS22) | (1<<CS21)			// div 256
+  #define TIMER2_OCR2A_4MS_VAL	249					// div 250
+  #define TIMER2_TCCR2B_4MS_VAL	(1<<CS22) | (1<<CS21)			// div 256
+  #define TIMER2_OCR2A_8MS_VAL	124					// div 125
+  #define TIMER2_TCCR2B_8MS_VAL	(1<<CS22) | (1<<CS21) | (1<<CS20)	// div 1024
+#elif F_CPU == 8000000L
+  #define TIMER2_OCR2A_1MS_VAL  124					// div 125
+  #define TIMER2_TCCR2B_1MS_VAL (1<<CS22)				// div 64
+  #define TIMER2_OCR2A_2MS_VAL  124					// div 125
+  #define TIMER2_TCCR2B_2MS_VAL (1<<CS22) |             (1<<CS20)	// div 128
+  #define TIMER2_OCR2A_4MS_VAL  124					// div 125
+  #define TIMER2_TCCR2B_4MS_VAL (1<<CS22) | (1<<CS21)			// div 256
+  #define TIMER2_OCR2A_8MS_VAL  249					// div 250
+  #define TIMER2_TCCR2B_8MS_VAL (1<<CS22) | (1<<CS21)			// div 256
+#elif F_CPU == 4000000L
+  #define TIMER2_OCR2A_1MS_VAL  124					// div 125
+  #define TIMER2_TCCR2B_1MS_VAL             (1<<CS21) | (1<<CS20)	// div 32
+  #define TIMER2_OCR2A_2MS_VAL  124					// div 125
+  #define TIMER2_TCCR2B_2MS_VAL (1<<CS22)				// div 64
+  #define TIMER2_OCR2A_4MS_VAL  124					// div 125
+  #define TIMER2_TCCR2B_4MS_VAL (1<<CS22) |             (1<<CS20)	// div 128
+  #define TIMER2_OCR2A_8MS_VAL  124					// div 125
+  #define TIMER2_TCCR2B_8MS_VAL (1<<CS22) | (1<<CS21)			// div 256
+#elif F_CPU == 2000000L
+  #define TIMER2_OCR2A_1MS_VAL  249					// div 250
+  #define TIMER2_TCCR2B_1MS_VAL             (1<<CS21)			// div 8
+  #define TIMER2_OCR2A_2MS_VAL  124					// div 125
+  #define TIMER2_TCCR2B_2MS_VAL             (1<<CS21) | (1<<CS20)	// div 32
+  #define TIMER2_OCR2A_4MS_VAL  124					// div 125
+  #define TIMER2_TCCR2B_4MS_VAL (1<<CS22)				// div 64
+  #define TIMER2_OCR2A_8MS_VAL  124					// div 125
+  #define TIMER2_TCCR2B_8MS_VAL (1<<CS22) | (1<<CS21)			// div 128
+#elif F_CPU == 1000000L
+  #define TIMER2_OCR2A_1MS_VAL  124					// div 125
+  #define TIMER2_TCCR2B_1MS_VAL             (1<<CS21)			// div 8
+  #define TIMER2_OCR2A_2MS_VAL	249					// div 250
+  #define TIMER2_TCCR2B_2MS_VAL	            (1<<CS21)			// div 8
+  #define TIMER2_OCR2A_4MS_VAL	124					// div 125
+  #define TIMER2_TCCR2B_4MS_VAL	            (1<<CS21) | (1<<CS20)	// div 32
+  #define TIMER2_OCR2A_8MS_VAL	124					// div 125
+  #define TIMER2_TCCR2B_8MS_VAL	(1<<CS22)				// div 64
+#else
+#error "Clock must be 16, 8, 4, 2 or 1 MHz"
+#endif
+
+/*	1ms	2ms	4ms	8ms
+16 MHz	128x125	256x125	256x250	1024x125
+8 MHz	64x125	128x125	256x125	256x250
+4 MHz	32x125	64x125	128x125	256x125
+2 MHz	8x250	32x125	64x125	128x125
+1 MHz	8x125	8x250	32x125	64x125
+*/
+
+static uint8_t saveTCCR2A, saveTCCR2B;
+static uint8_t startTCCR2B;
+
+static inline uint16_t timer_init(uint16_t msec)
+{
+	uint16_t gate_len;
+
+	saveTCCR2A = TCCR2A;
+	saveTCCR2B = TCCR2B;
+	TCCR2B = 0;
+	TCCR2A = (1<<WGM21);
+	if ((msec & 7) == 0) {
+		gate_len = msec >> 3;
+		OCR2A = TIMER2_OCR2A_8MS_VAL;
+		startTCCR2B = TIMER2_TCCR2B_8MS_VAL;
+	} else if ((msec & 3) == 0) {
+		gate_len = msec >> 2;
+		OCR2A = TIMER2_OCR2A_4MS_VAL;
+		startTCCR2B = TIMER2_TCCR2B_4MS_VAL;
+	} else if ((msec & 1) == 0) {
+		gate_len = msec >> 1;
+		OCR2A = TIMER2_OCR2A_2MS_VAL;
+		startTCCR2B = TIMER2_TCCR2B_2MS_VAL;
+	} else {
+		gate_len = msec;
+		OCR2A = TIMER2_OCR2A_1MS_VAL;
+		startTCCR2B = TIMER2_TCCR2B_1MS_VAL;
+	}
+	TIFR2 = (1<<OCF2A);
+	TCNT2 = 0;
+	return gate_len;
+}
+
+static inline void timer_start(void)
+{
+	GTCCR = (1<<PSRASY);
+	TCCR2B = startTCCR2B;
+	TIMSK2 = (1<<OCIE2A);
+}
+
+static inline void timer_shutdown(void)
+{
+	TCCR2B = 0;
+	TIMSK2 = 0;
+	TCCR2A = saveTCCR2A;
+	TCCR2B = saveTCCR2B;
+}
+
+#define TIMER_ISR_VECTOR TIMER2_COMPA_vect
+
+/*
+There is a typical latency from the timer interrupt until the first
+actual line of code executes.  Here is a typical compiler output of
+approximately 34 cycles.  When starting, this same delay is used to
+begin counting, so the first reading will not have 34 cycles of
+extra measurement.  Because each measurement period gates instantly
+after the previous, this approximate correction only affects the
+first measurement.  If you do not define TIMER_LATENCY_CYCLES, this
+extra delay is skipped (saving a tiny bit of code space), and the
+only downside is a slight inaccuracy in the first measurement.
+2  00000326 <__vector_13>:
+2       326:       1f 92           push    r1
+2       328:       0f 92           push    r0
+1       32a:       0f b6           in      r0, 0x3f        ; 63
+2       32c:       0f 92           push    r0
+1       32e:       11 24           eor     r1, r1
+2       330:       ef 92           push    r14
+2       332:       ff 92           push    r15
+2       334:       0f 93           push    r16
+2       336:       1f 93           push    r17
+2       338:       2f 93           push    r18
+2       33a:       3f 93           push    r19
+2       33c:       4f 93           push    r20
+2       33e:       5f 93           push    r21
+2       340:       8f 93           push    r24
+2       342:       9f 93           push    r25
+2       344:       af 93           push    r26
+2       346:       bf 93           push    r27
+*/
+#define TIMER_LATENCY_CYCLES 34
+
+
+
+#elif defined(TIMER_USE_TIMER4H)  // 10 bit "high speed" Timer 4
+
+#define TIMER4H_OCR4C_VAL   124		// always div 125
+#if F_CPU == 16000000L
+  #define TIMER4H_TCCR4B_1MS_VAL  (1<<CS43)					// div 128
+  #define TIMER4H_TCCR4B_2MS_VAL  (1<<CS43) |                         (1<<CS40)	// div 256
+  #define TIMER4H_TCCR4B_4MS_VAL  (1<<CS43) |             (1<<CS41)		// div 512
+  #define TIMER4H_TCCR4B_8MS_VAL  (1<<CS43) |             (1<<CS41) | (1<<CS40)	// div 1024
+#elif F_CPU == 8000000L
+  #define TIMER4H_TCCR4B_1MS_VAL              (1<<CS42) | (1<<CS41) | (1<<CS40)	// div 64
+  #define TIMER4H_TCCR4B_2MS_VAL  (1<<CS43)					// div 128
+  #define TIMER4H_TCCR4B_4MS_VAL  (1<<CS43) |                         (1<<CS40)	// div 256
+  #define TIMER4H_TCCR4B_8MS_VAL  (1<<CS43) |             (1<<CS41)		// div 512
+#elif F_CPU == 4000000L
+  #define TIMER4H_TCCR4B_1MS_VAL              (1<<CS42) | (1<<CS41)		// div 32
+  #define TIMER4H_TCCR4B_2MS_VAL              (1<<CS42) | (1<<CS41) | (1<<CS40)	// div 64
+  #define TIMER4H_TCCR4B_4MS_VAL  (1<<CS43)					// div 128
+  #define TIMER4H_TCCR4B_8MS_VAL  (1<<CS43) |                         (1<<CS40)	// div 256
+#elif F_CPU == 2000000L
+  #define TIMER4H_TCCR4B_1MS_VAL              (1<<CS42) |             (1<<CS40)	// div 16
+  #define TIMER4H_TCCR4B_2MS_VAL              (1<<CS42) | (1<<CS41)		// div 32
+  #define TIMER4H_TCCR4B_4MS_VAL              (1<<CS42) | (1<<CS41) | (1<<CS40)	// div 64
+  #define TIMER4H_TCCR4B_8MS_VAL  (1<<CS43)					// div 128
+#elif F_CPU == 1000000L
+  #define TIMER4H_TCCR4B_1MS_VAL              (1<<CS42)				// div 8
+  #define TIMER4H_TCCR4B_2MS_VAL              (1<<CS42) |             (1<<CS40)	// div 16
+  #define TIMER4H_TCCR4B_4MS_VAL              (1<<CS42) | (1<<CS41)		// div 32
+  #define TIMER4H_TCCR4B_8MS_VAL              (1<<CS42) | (1<<CS41) | (1<<CS40)	// div 64
+#else
+#error "Clock must be 16, 8, 4, 2 or 1 MHz"
+#endif
+
+static uint8_t saveTCCR4A, saveTCCR4B, saveTCCR4C, saveTCCR4D, saveTCCR4E, saveOCR4C;
+static uint8_t startTCCR4B;
+
+static inline uint16_t timer_init(uint16_t msec)
+{
+	uint16_t gate_len;
+
+	saveTCCR4A = TCCR4A;
+	saveTCCR4B = TCCR4B;
+	saveTCCR4C = TCCR4C;
+	saveTCCR4D = TCCR4D;
+	saveTCCR4E = TCCR4E;
+	saveOCR4C = OCR4C;
+	TCCR4B = 0;
+	TCCR4A = 0;
+	TCCR4C = 0;
+	TCCR4D = 0;
+	TCCR4E = 0;
+	OCR4C = TIMER4H_OCR4C_VAL;
+	if ((msec & 7) == 0) {
+		gate_len = msec >> 3;
+		startTCCR4B = TIMER4H_TCCR4B_8MS_VAL | (1<<PSR4);
+	} else if ((msec & 3) == 0) {
+		gate_len = msec >> 2;
+		startTCCR4B = TIMER4H_TCCR4B_4MS_VAL | (1<<PSR4);
+	} else if ((msec & 1) == 0) {
+		gate_len = msec >> 1;
+		startTCCR4B = TIMER4H_TCCR4B_2MS_VAL | (1<<PSR4);
+	} else {
+		gate_len = msec;
+		startTCCR4B = TIMER4H_TCCR4B_1MS_VAL | (1<<PSR4);
+	}
+	TIFR4 = (1<<TOV4);
+	TCNT4 = 0;
+	return gate_len;
+}
+
+static inline void timer_start(void)
+{
+	TCCR4B = startTCCR4B;
+	TIMSK4 = (1<<TOIE4);
+}
+
+static inline void timer_shutdown(void)
+{
+	TCCR2B = 0;
+	TIMSK4 = 0;
+	OCR4C = saveOCR4C;
+	TCCR4A = saveTCCR4A;
+	TCCR4C = saveTCCR4C;
+	TCCR4D = saveTCCR4D;
+	TCCR4E = saveTCCR4E;
+	TCCR4B = saveTCCR4B;
+}
+
+#define TIMER_ISR_VECTOR TIMER4_OVF_vect
+#define TIMER_LATENCY_CYCLES 34
+
+
+#endif // TIMER_USE_***
+
+
+
+
+static inline void timer_isr_latency_delay(void)
+{
+#ifdef TIMER_LATENCY_CYCLES
+	uint8_t cycles_times_3 = TIMER_LATENCY_CYCLES / 3;
+	asm volatile(
+		"L_%=_loop:"
+		"subi   %0, 1"		"\n\t"
+		"brne   L_%=_loop"	"\n\t"
+		: "+d" (cycles_times_3)
+		: "0" (cycles_times_3)
+	);
+#endif
+}
+
+
+/**********************************************/
+/*   Board Specific Interrupts (to hog)       */
+/**********************************************/
+
+static inline void disable_other_interrupts(void)
+{
+}
+static inline void restore_other_interrupts(void)
+{
+}
+
+
+
+#endif
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           #ifndef FreqCount_timers_h_
+#define FreqCount_timers_h_
+
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
+// Arduino Mega
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+  // #define COUNTER_USE_TIMER1 // T1 is not connected
+  // #define COUNTER_USE_TIMER3 // T3 is not connected
+  // #define COUNTER_USE_TIMER4 // T4 is not connected
+  #define COUNTER_USE_TIMER5    // T5 is pin 47
+  #define TIMER_USE_TIMER2
+
+// Teensy 2.0
+#elif defined(__AVR_ATmega32U4__)
+  #define COUNTER_USE_TIMER1    // T1 is pin 11  (has LED connected)
+  #define TIMER_USE_TIMER4H
+
+// Teensy++ 1.0 & 2.0
+#elif defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__)
+  #define COUNTER_USE_TIMER1    // T1 is pin 6   (has LED connected)
+  //#define COUNTER_USE_TIMER3  // T3 is pin 13
+  #define TIMER_USE_TIMER2
+
+// Sanguino
+#elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
+  #define COUNTER_USE_TIMER1    // T1 is pin 1
+  #define TIMER_USE_TIMER2
+
+// Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, etc
+#elif defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__)
+  #define COUNTER_USE_TIMER1    // T1 is pin 5
+  #define TIMER_USE_TIMER2
+
+#else
+  #error "Unknown chip, please edit me with timer+counter definitions"
+
+#endif
+
+
+/**********************************************/
+/*   Counter Hardware Abstraction             */
+/**********************************************/
+
+#if defined(COUNTER_USE_TIMER1) // 16 bit Timer 1
+
+static uint8_t saveTCCR1A, saveTCCR1B;
+
+static inline void counter_init(void)
+{
+	saveTCCR1A = TCCR1A;
+	saveTCCR1B = TCCR1B;
+	TCCR1B = 0;
+	TCCR1A = 0;
+	TCNT1 = 0;
+	TIFR1 = (1<<TOV1);
+	TIMSK1 = 0;
+}
+
+static inline void counter_start(void)
+{
+	TCCR1B = (1<<CS12) | (1<<CS11) | (1<<CS10);
+}
+
+static inline void counter_shutdown(void)
+{
+	TCCR1B = 0;
+	TCCR1A = saveTCCR1A;
+	TCCR1B = saveTCCR1B;
+}
+
+static inline uint16_t counter_read(void)
+{
+	return TCNT1;
+}
+
+static inline uint8_t counter_overflow(void)
+{
+	return TIFR1 & (1<<TOV1);
+}
+
+static inline uint8_t counter_overflow_reset(void)
+{
+	return TIFR1 = (1<<TOV1);
+}
+
+
+
+#elif defined(COUNTER_USE_TIMER3) // 16 bit Timer 3
+
+static uint8_t saveTCCR3A, saveTCCR3B;
+
+static inline void counter_init(void)
+{
+	saveTCCR3A = TCCR3A;
+	saveTCCR3B = TCCR3B;
+	TCCR3B = 0;
+	TCCR3A = 0;
+	TCNT3 = 0;
+	TIFR3 = (1<<TOV3);
+	TIMSK3 = 0;
+}
+
+static inline void counter_start(void)
+{
+	TCCR3B = (1<<CS32) | (1<<CS31) | (1<<CS30);
+}
+
+static inline void counter_shutdown(void)
+{
+	TCCR3B = 0;
+	TCCR3A = saveTCCR3A;
+	TCCR3B = saveTCCR3B;
+}
+
+static inline uint16_t counter_read(void)
+{
+	return TCNT3;
+}
+
+static inline uint8_t counter_overflow(void)
+{
+	return TIFR3 & (1<<TOV3);
+}
+
+static inline uint8_t counter_overflow_reset(void)
+{
+	return TIFR3 = (1<<TOV3);
+}
+
+
+#elif defined(COUNTER_USE_TIMER4) // 16 bit Timer 4
+
+static uint8_t saveTCCR4A, saveTCCR4B;
+
+static inline void counter_init(void)
+{
+	saveTCCR4A = TCCR4A;
+	saveTCCR4B = TCCR4B;
+	TCCR4B = 0;
+	TCCR4A = 0;
+	TCNT4 = 0;
+	TIFR4 = (1<<TOV4);
+	TIMSK4 = 0;
+}
+
+static inline void counter_start(void)
+{
+	TCCR4B = (1<<CS42) | (1<<CS41) | (1<<CS40);
+}
+
+static inline void counter_shutdown(void)
+{
+	TCCR4B = 0;
+	TCCR4A = saveTCCR4A;
+	TCCR4B = saveTCCR4B;
+}
+
+static inline uint16_t counter_read(void)
+{
+	return TCNT4;
+}
+
+static inline uint8_t counter_overflow(void)
+{
+	return TIFR4 & (1<<TOV4);
+}
+
+static inline uint8_t counter_overflow_reset(void)
+{
+	return TIFR4 = (1<<TOV4);
+}
+
+
+#elif defined(COUNTER_USE_TIMER5) // 16 bit Timer 5
+
+static uint8_t saveTCCR5A, saveTCCR5B;
+
+static inline void counter_init(void)
+{
+	saveTCCR5A = TCCR5A;
+	saveTCCR5B = TCCR5B;
+	TCCR5B = 0;
+	TCCR5A = 0;
+	TCNT5 = 0;
+	TIFR5 = (1<<TOV5);
+	TIMSK5 = 0;
+}
+
+static inline void counter_start(void)
+{
+	TCCR5B = (1<<CS52) | (1<<CS51) | (1<<CS50);
+}
+
+static inline void counter_shutdown(void)
+{
+	TCCR5B = 0;
+	TCCR5A = saveTCCR5A;
+	TCCR5B = saveTCCR5B;
+}
+
+static inline uint16_t counter_read(void)
+{
+	return TCNT5;
+}
+
+static inline uint8_t counter_overflow(void)
+{
+	return TIFR5 & (1<<TOV5);
+}
+
+static inline uint8_t counter_overflow_reset(void)
+{
+	return TIFR5 = (1<<TOV5);
+}
+
+
+#endif // COUNTER_USE_***
+
+
+
+/***********(tabString)) {
+          textarea.setSelectedText("");
+        }
+      }
+    }
+    // Subtract one from the end, otherwise selects past the current line.
+    // (Which causes subsequent calls to keep expanding the selection)
+    textarea.select(textarea.getLineStartOffset(startLine),
+                    textarea.getLineStopOffset(stopLine) - 1);
+    stopCompoundEdit();
+  }
+
+
+  protected void handleFindReference() {
+    String text = textarea.getSelectedText().trim();
+
+    if (text.length() == 0) {
+      statusNotice(_("First select a word to find in the reference."));
+
+    } else {
+      String referenceFile = PdeKeywords.getReference(text);
+      //System.out.println("reference file is " + referenceFile);
+      if (referenceFile == null) {
+        statusNotice(
+	  I18n.format(_("No reference available for \"{0}\""), text)
+	);
+      } else {
+        Base.showReference(I18n.format(_("{0}.html"), referenceFile));
+      }
+    }
+  }
+
+
+  // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+
+  /**
+   * Implements Sketch &rarr; Run.
+   * @param verbose Set true to run with verbose output.
+   */
+  public void handleRun(final boolean verbose) {
+    internalCloseRunner();
+    running = true;
+    toolbar.activate(EditorToolbar.RUN);
+    status.progress(_("Compiling sketch..."));
+
+    // do this to advance/clear the terminal window / dos prompt / etc
+    for (int i = 0; i < 10; i++) System.out.println();
+
+    // clear the console on each run, unless the user doesn't want to
+    if (Preferences.getBoolean("console.auto_clear")) {
+      console.clear();
+    }
+
+    // Cannot use invokeLater() here, otherwise it gets
+    // placed on the event thread and causes a hang--bad idea all around.
+    new Thread(verbose ? presentHandler : runHandler).start();
+  }
+
+  // DAM: in Arduino, this is compile
+  class DefaultRunHandler implements Runnable {
+    public void run() {
+      try {
+        sketch.prepare();
+        sketch.build(false);
+        statusNotice(_("Done compiling."));
+      } catch (Exception e) {
+        status.unprogress();
+        statusError(e);
+      }
+
+      status.unprogress();
+      toolbar.deactivate(EditorToolbar.RUN);
+    }
+  }
+
+  // DAM: in Arduino, this is compile (with verbose output)
+  class DefaultPresentHandler implements Runnable {
+    public void run() {
+      try {
+        sketch.prepare();
+        sketch.build(true);
+        statusNotice(_("Done compiling."));
+      } catch (Exception e) {
+        status.unprogress();
+        statusError(e);
+      }
+
+      status.unprogress();
+      toolbar.deactivate(EditorToolbar.RUN);
+    }
+  }
+
+  class DefaultStopHandler implements Runnable {
+    public void run() {
+      try {
+        // DAM: we should try to kill the compilation or upload process here.
+      } catch (Exception e) {
+        statusError(e);
+      }
+    }
+  }
+
+  /**
+   * Set the location of the sketch run window. Used by Runner to update the
+   * Editor about window drag events while the sketch is running.
+   */
+  public void setSketchLocation(Point p) {
+    sketchWindowLocation = p;
+  }
+
+
+  /**
+   * Get the last location of the sketch's run window. Used by Runner to make
+   * the window show up in the same location as when it was last closed.
+   */
+  public Point getSketchLocation() {
+    return sketchWindowLocation;
+  }
+
+
+  /**
+   * Implements Sketch &rarr; Stop, or pressing Stop on the toolbar.
+   */
+  public void handleStop() {  // called by menu or buttons
+//    toolbar.activate(EditorToolbar.STOP);
+
+    internalCloseRunner();
+
+    toolbar.deactivate(EditorToolbar.RUN);
+//    toolbar.deactivate(EditorToolbar.STOP);
+
+    // focus the PDE again after quitting presentation mode [toxi 030903]
+    toFront();
+  }
+
+
+  /**
+   * Deactivate the Run button. This is called by Runner to notify that the
+   * sketch has stopped running, usually in response to an error (or maybe
+   * the sketch completing and exiting?) Tools should not call this function.
+   * To initiate a "stop" action, call handleStop() instead.
+   */
+  public void internalRunnerClosed() {
+    running = false;
+    toolbar.değ¿·=„w33A‹İˆéõ[ÁÂ?¨EŠ7h¸„ÏJ
+û²f"Ö.şÕöàZ7zş‘Q õ˜
+ô"–Ö/ùĞñP,¦çË¨3&¾ÍÛLH$:ìWeäš‘£=³jıpƒ¶Ûn.„(p¤ñÿƒ@pfÏk&“8z`G¢`	­nEÇhvM¶‰™Ç£Ñ©8 Ç9ÂjDŒ^!Š?=%Ù9õµªÍ˜í[ë2æÜÇA>8|¡Vù;3¬T½RK6ÑúÿA¡°ëu¸Ç¶YŠ+•ó1‚ÂÑ63GÔwÊc¶jM¡L ¸£ÁG”˜ÏK8*5şö÷Á/:x†ƒÊXºN¹ğ3lŞdø¸mŸËƒïi¬Â 2POr¶Yµ’jK1\ÃÉéH¨8‚è?ÙtWeäT…k*nÌã½”²ÎÖø~öyOì.1²ô¢£<¦-hÁ…¦·0P 5Ü``+‰x„Cærœ w,&uâp8ë÷{U9ç†şÎ%Û—Ÿó&¶Ñ[öFÕ…uE®•3ã¿vÜn§ào«ÚID@„ÑaVØ<úŒ¡t¼†3ãâ5^!7l5¦ÅúTM[TjAù=C	Û	« <†Ws>£ö7U+ˆM+9K!Ê»°±tG3JUÍ­>Ìl÷ô”; B%k\[ §AUOu:ñÃÂ^õ+¦KN
+Årˆ=°ÙÃ.¬ãÁ]Ì4ÛQÍl‘õ‹ÂÛd†æÎåUh*ÚòŞ}t½£‚ZöW09('Ë|ÜÖ>ï?X‘ÖµáŸÄv—.´E˜ÔEuyDÌ§¡B’›Ë¨‹­ówa˜—N½—k¡hÂÂ‡trQ?VĞ0¯r ğ«ûß"š™ğ¥ ©¼EÉÜúò&kïG»—æ8j/Û>qåµ.•.j¦2‚|Š.5NøñÆø›Ø…|³K/’b
+NpióÊÑIŸ+'Çce€uap¨+OMªğä‰j0‰íM=¶ÁŸ€%€¡¦ŠË¬sKô R¹ÜF´hûFEûCÊzîÆı,:§[dƒ9Ê@lèÚ€Ø.OÊ©°å:]ê¿ b+1&áú9ºöû"‡Ú8³ÓY‚`•zH€|¥Ê¶jCs½ltÓĞƒ½È‹Xêˆ‘¿!@6EjUÁ(D/x/%Ïà/gûÄ<_Î\æ—|UÎFì¹j&gŠŞ5»*"ç$ZcI*`”©ıÖ'¯ÇYBg2r ğÏV‡i`˜ù©!İ@§ã#‡¡¹ŞğL÷Úì=õŞn{Â41a—ôœ×ƒ+ÉçÀOŒ©ŸkĞÂ$GÉÉ„_Ê¤Ê\	_,Ï…Á#Pá^Ã»AXõ <’ÀOÃÍışB|Iüßg­È·wJ··’@§vvÜò™.›ŸLu;Mº–@1¼SŞ<JŒüc;ÈÖ÷¿Yqlf)¹ÔíYJTüà2€³†Îî*‘ÑpÿW=Ù¸Næ‚—qÑ)ãÕÖ®íIªÒ9¯ŸÔëhö¼!¿AıÏ2HŒIkkë=a¥øA‹_ƒÊ£X­Œ|V—˜o'€ÓÅ4\Kğƒª¬W¶Ñò²g&å	2£Ba“œ_ÍÍ}'ğî‚Í3‡\lùû 2¹ãHÁŒ…8˜öz¦gùÖ—ƒ #S
+VEÎrı)ÜØj_ß¾
+&÷Æé5àÉâïKÈ7cLƒ®‘£‰K‡6¶ÆtÂ¥1Jà9&>!ü–fë*f§²Aò©FÔ\&‚Y/A¢é16U1ŒoÃÕŠÓº´R[L7¿¤p}ŠA>YŒˆ‹•zY\È¢uŒÚ"utìé4š*‰°Läô#ŒSâ óx·…&¼ÿÖL·&=†ÓJmgòM.ìèlQZ5½À'H¸¬fØ2p	Bå{±ıÛOrwŸ‚¼Èÿ£‹U9C°fş¤KèlCË¹$kœìúG±a›tÌ(ÙFV x9¡8ÔÚşğ¥_FÒâ°}ÖQ4éKX}•á=¹"ŸÎï›É¥}P!jn+n‡íó–¡(YVgØ âvï†–ÁwPwNµv™ßmÀkYŞ	qL1E(qÚ•ùÂÓ?ñ—	ˆÑrÅ‹1¡Ç½”2hŠ€µ¦$djëùYÓà`¿)m-Öî\™îÎÌ¹©czÀŠ£=ÈIK‹	“z4°²¼(«ÌŞ’ŠEh›¯–Y.Y
+ èÅro¡%kmw‹Q½Xîú²~`Ô¸–Â]š±{¤ÿlõÊ¢#p“£qé1Ø‹¡)9õtŠ0ñ`ï—@2¿“+h:z®¡Â
+*¾¿VÊ¡w<o.ëiüÔeÏegSğAß¹Ö]9ÃÕ!IM2»7½È–û[à÷T-@/mò(ªÏ¢¦óõg%d¬f¿ÉÜ½¤¤˜Y%ášÇuTx"†ÿÄ[mÃ´µÍé-ˆ®ùğĞà4QÈrÀÆ¢ë~è­mU*QÁ|çi‘¼@BÊéÉ»L5	§8tÚGg”‹)(ÔÛçMİ·ÍfLY­=woÏØ¥l¹Á³XB,;J(È*Wœå "¬â†Yy"eh}èU@JšmÛdB;¹%:³ĞOSº%jîÂ3cu·ƒ÷ŠŠ” ÌNê]g‘…ØÏlÑBÖZóÒÕĞƒ4»Ñé0çÂQ¶|"soA†ÂÊ¦¬¬‰?ı32€"am¹ä?j}
+Å'Æñ3NÅ@µ¹\ªaùvL½¡áÕ{<„DÃq´öRÇƒó xÖRÃ™NŸñêáeÖ LF>c‘¹C®ap–×m~¿
+uÕÂ‚YJ@şf»æ]_5Ôª¿‰~s6ùƒí`ØTÀf*ú¤¶…µ‹q¹—QÂ.‚|É‰pğ:º…Ã‹?¼³±ÀÖC|ßPÜ¿d!:^˜oÌ³¡±CÁ° ä÷jß#L†ÒçJSì Ô:õº[#ûÒ$åŒe ™¸ ãg;ˆÛU“ÇR)İ§?|ÃO«Ÿ³Hj£Ÿ4İ·µoA‡š1:ˆÆçà3l[V>–¯Ç9¹`	c,z`ÖnÈµ?kù’™´Z÷E·ifB î¢zä“\€/Ü‰²_|    k  Hû4 kª³d\=ù®‘yß(’qñ'·x`PUÕ\n8š“§~Aä”Á~wªºŠ#ÿoA§Ÿ·œö¦sæUŸHd÷êçY–‡«å>4Å©ÃìloÂi¥DşHæi¦€²B¾Qt§ïáÙ£7q÷n·HV(Ä~{ƒw«#ÆÑ”Ûo÷;®Ö=ŸÚ!&myï˜¿Ö##‘\¯P×¾ZcmïTâ1òphö¹¶b#‰K’B¯§Øé&\ª¸8#?
+ qoí¾”[`s ã£4_Á{G°©¦úÿe›i(ı)eâô/ˆÅ”zò½0	 °è€Ñm½¿Ób/ÎZm¹‹%wÎñR$‘&ÀôßÙ+–f¥tŠú^ó«óUõ®³Û‹nÑpíH¯{ sş	µƒÇqÜ=”ºT1Î¸á¿gä €Ğ¼Á ÚŠİ†k¤híM¹Ïû)°¢ÁE¾ğùøïêùå™EğÕ'ïÙ4eÃÆënWJu!…d!+¿¡”h¤l£ıŸ¿Şå¹“-A™9*A±Oän:¾	* 3Óiia¨äŒ¿Î.;÷Ò-;¦‚Î«<üúqÙD“-“š¶
+Z›¦DıÈhƒÒ•
+
+^m^/E ¿H%÷-·Œ@*¶KiNÉ.<¤ñ(Ó5ÿ†Ò
+ûşJ±ûÚ4&\‘*
+ÊßÂ×ÑÚ8Ø‰Q<wtÀè3Ñoİœ†4â~Ñj—·QT+Ü3ÔÃ<Oz‹ùlL’¡ßÊk ñ Ğ¿{â¢eòHd<ÑÒ%M™ö½±t¡ãP!È÷Z®qÕ(–wåÃ‹CN1X@¾Q
+æ¡ıü¨AW|IÈ‰‚_ıı}{Hux1Wæ9:Ø%VQóÁ§Ìí]…ûs7Ì…5˜B‡g+ª°!¥¨¨¤œ˜qÈÍ‹VˆWÔÆ¡8ı2æ†]úíj“øÇı]Ø-¼ĞÆÚÀ“jß(ÆË»„ÄxKlgk±j#¤©÷N†­|Xèr±¯ßÕ.pró÷G;ë¦·Œ=3¢@µäe5i	[$ê&)Wçg%Do(:÷—hyİeÛ9$Ñ»ë:¯úz]ıBÀä4©<ÜÃ¸àã.[ÁvUaúñÇœ±§ü`B)Kæ­ÿ¢å;9ÀèuïÿÜ†¿8©ã¿V±§ã[‡nœª‹kŠ(sÄ©ê.2†Ãİ’ä®âÈ´Ä>+Â!²=ªEš@<¹ØãƒÊ—|{ŞÔW2ªı_?h‚vw•‰50$äKÎğ(RË)t#¡g	Ä-¨JP%8X^óTu-kÆ;iì“5¸F¾Àu2›)kÛë×
+ÑCÊe˜eb5ì=®§§o¦§gZfG¼„…ßØ£’Fk².*6£ôm4¢H)¹ÛÀ;T/Nyã¹ö/ªà–€ˆíödà-ND°O’äG™‚+°Ò®õ5>·è²bYV„:/†£wËY½W…Ş¾JõøG>¿Ã=šFĞ›EQç¤K~=Adj€q£‘œW8JH•»Æ ÇäñFµp0r0›¿ÒPïFxø~ÍZ^ì ³WÂ´(80`Æßÿº‰HPä~ZéŠùÎ©C/ƒäv¤Úk0ùh|02ñğ*çĞÆ‚aîµ¯­Œ×À›Zî•u=‹Õ>W­%gasƒÒ¿¼°s ù"QCJ=¶{l†¡;B÷mûÆ#Lïøé…4iï‡Ô¼=9a&;ƒ×áuFe¶miaİ’™ıÂdˆm æÚßs*ƒ—>‚Ë}S¢øErÂ”Øoæ2õß›}+¯%ëÌÓJøÈ½õuÏÿPÇbdqì_âçKâİ;¤{¦{Âä©­„¯}="ÌÜ Ï‰ğ„éMF•Â_ì8ôÕ®š©$ ®™°ı< ÃØÊÍŠı,,#¿u+ªvÇˆÄ/1É€¥FÄqõ„áC2§› Qİ<€xÂö¾-öe-8ÈnYä¶L3MŒ­Üv7áŠ´Ö7aœåòúú%Œ¾RÃ+ûÛ´SÕ÷•äÎqÚß×ñ]D…],Ï10»´ÌSl‘íVcwÌßino1LÙN¿+†ã¬A/²”ş³0qD!b§CºrÓËioê2~ã§N¶×ÌóŸìGCh—À«Ğ^;Cİ\ì°z¾ïræ­D/ƒJ0Áüà°(õŠÇ¿×İGwÑFŒs&¤ëÚ+tÔ.v`˜8t)Ôä+’†.‹åºâãht¿)MË‚QÚïœ4ßÇ…œ?kõ7èfÖ—°7—TVQ”ùPJÓÅµùCÇµí;ğ”¤EËuõÔ>ÆÁŸeW?”êµ£¨Ôı
+09Q'Ô€Š R/Ãvğ°~²“¶4°—&ù~†íƒ!ÖJÔØ:áÇfÁ²âë¨+\PÁ–Rÿ4´_-‘hauóï8.(.`5ù zq]lÿi¤ôç¹ÌÕÙ$ËB‚{ná‡cãğ‰<Ç‡ÄıÃÊæ ~Ş¯¤]”Çà [¼B+"c–åß6N0\Š©¸îª]·SjÄ~UI&-N¸Ï`v3\_ôÂfuæY
+l¤®Œ×%P«Ğ¼‹´Ñç›ÁQî¶ÑE6Y™4ò…¡$DAşF;[Ğ¤Äåµ¬ŠÁ&îaˆúaé'ˆ%\»5£¿ê2‰Hü&][¬QK^ÖbI F'Llí·6Çı+Bİ½È¸ÃñÃ›¡%Ñm|ÈAk]\!¡_v5‡;­œ5{ê\¯G+”D]]Í»q\Ï
+lªQòJİèŒˆô(¦?ˆ±ööçFøSäÉ²Æ|û,|ñæ¢–Œ0Õ¶jáğI%`}W¼xåhX éÊÑ½«`)÷©ºêKÂ)‹‡bıïTŒ
+ƒx%‘Ø ¿ğş2dÒ|Õò# vBöì b{•-é:¿vJpXråğƒ‡óF!œ™ğ‚‹•+YÀ¯7«aÂô„ÅmİqÇî•ŞîŸb/IÜLT<û|äQåê -%áÖ­Éyğ3š_fa”Ûe iÃÃg¯@`Ñ½ü½ ³o»tãUØ¹h/ ‘ÎŠ¨¨ü»nÚ»À3Ô™ºpÅiz„˜®À÷P¡q¯¹Lıá‰IO ÑsíŸÚaº> ÷ë;1ı¦àœ2sç¦—v5JióÂãA@9¾@“ä]óytüÒŸƒÜ1æÿË1¹.ßWïÑ0ƒ™/k™8‰d@×ºW/ ÷ Ó€ñí@¢yÏæFÃÍúÂˆc^/¹êĞ¡Îï©ÿê”ŠÌàïâ]jê	ğ9±#Ø§. £}ã®e{Ò^Mœ[ğÙuL€LÌ•rÓÔˆ…5şp§‚CÃ;ËÂ0º«­Ìô= #zf­']^ÿ@`49^öª%ş¿¡À^Úëõ=[âWÀÕ›|vC‘W½[¯'™â` Sä®rX§©. ×Ó€!ÔäÑjZÔ«óŸ¹)‹Úî.É)œšhÜõA¦ˆë7?d.uĞ9–Ø±XD9{ï9‘‹šAÒÏ$Ó¾Ù¼*,+cÂnF7z}Uµe	‘N¼Ê»^ß1VÛ”òúƒ‹ÍE(w½—2Øj”+ÈU¤kå/¾ŠĞ% 1ağƒApÌ‹j©cÁÓ}0
+sÓ{³g™8IîÙ „I¸ôwZşçfth;z“[†^çá=òA¾‹˜Ğ;Ïæ¿	á«Qa‘ˆŸÔL*ö¡Ît„¡#«–è*múÛi£Z*B¼£OS¨qÌãZ¦¥O‡“ƒMÛ,fùt5<÷4XdãÖ¢Ï‘)ÿœòO×ÈB+§ü¶¯+m"=Ûı\ñóô¡¬Ê<{åš¹6šc1_éùü­ú[$%—¹ËNâòÅí¸	_Nyì©fè)çáwYİSn Ïöi%öî~½¸ÈÀRG+bBuĞcv5d{f+Ø­á¯ó»œòŒšàY^$Íz^òÅÏÉdêÇDúé(½ù†@ê;³¥¥Jhµ"‚™‰­Üy
+¡æŒNö”)ub£d¨óÔ|•)rdhÑÏ=—ö’š†àGéÂTÀ€üLí´m)Ğko¥›¿$ì5€ÈÿânîV^ø•´Y†µN¸}»Ü±m>PŸ‹Ş“<Ÿ ¾“ÆGj<Rq©ÆV–´ãylaÒí¿q'^ü…¦e±¾IóúŸgtYÿçe‘îÆÖãXXØQŒŞ[2Ó¶W’éf¿Øp3ŒØ,"‰š]ûHa Š£e5LÚ×<ÇBûmÇp/èÕˆˆÄì~×mh½:U°²—ùâOné#S@îËØÀ {ûËÊ}×y·kZ¢p<”RJ½G‡ïciâœ^IJ»KaŞ.¹¥rò"|ZÑ–:XMÚ]¾ÇCbå¢½+ø!ï_ß"Éz56œüe] Îô²ÈÖÄjâ¾™ÛPˆ'–<(/ØL‚¼›Ø÷Ò£•=DİX˜|#û(…d­—z¡şÛ<P[’Th	iTl°XºŠ%ÓgŠmèK<Çp¾Ü$Ğ€(À/ÖÀÓ1ß¿mÇiÃŒ¸t‹ü¾_ú¯jü’~ÁA:€¤ŠQMë®‡¿ªÒı@1ñ†©ıçÒåˆÉÄºá’7<ƒÏÒãD´{½ëSáºíÓÈkÓ©Âò“¨³O#ª£óBè@§ò¶g‚•¸èÈ~¼|2ğ×1e«Ú%£Œ§^~eXeÚ˜‚!9‘7tê•£©SoÊö$f±jâ¨ó£²t¥¶e¹$>İ*¯>Š[JËb˜‚*×””VdBDÑqÀZ`çïá@³¥Ä—{^.BãßeHˆfL«¢hô¥ö  6©¨Ÿ6„÷,·n‰# é®m®ûœÊİLv(¼¼ÌÉò-ÂëeOù‰¨ã®°îıìo†g‰;ınJ‹ç- /H%ú°ÍÃÉÔÂfe”lE¿ØŸ_ãÆk¢bˆ(aCd.¹o\Ô'ğxb—LRTXÂş!©ê`–qà£ó–´¡!ºÓÙãÊá x2¤x¯NTö¤š³Y%äÑªèüa(q÷“òHEàí¤”IÑQ|ßç2‘3ê
+$3´M¬.6r¢H¶¸‘‘ nG)½ÍWéİõáˆÿu¢Ãp‘÷'v0»­äñ°ŒšD‰ğp¡[•ÛŸÌV®ãKwi¾P¨ZÆJ‰Îe¥íÜĞ¤q6\bíV’jgÜÇ">ß"fËïõ³ÎõL0Ï4~“?C|
+Ïr‚¤ç­‚:Ù—9˜Å5ol¸·_îá–
+Ñşg¹š_EÜn©46,¦:¤ Á-„ûñ6`Ã›ôK&±C±™,4‘XÃkµİÉ(‘@J–t÷‰UCšV€’Á¯ÓiØ×üÌ0V†iô[‚)Yúö~¹¢1çYŒ;ôx²\]åÓ4å•„¶KçšŞÂŠÀ;¤¦`h-|]'WXŒÖ«V8¶>î\$1Š6WÅ~ù*R·b'(/%ÒÕ,k#Ù8…ªO3i{P4[MøŸâ–“KL'{–TÜÄ2Lº^jL¸%Gåk¨{úlù¤&WxK”ßöâû:nGnÈ`Ò•£ÿ¾8%kŞâŠ+Ğ&¬â+‡•NÉÙLUáÌéH+B¥]Ü€(Ên0ğêR>ôMuÏ<lá)Rš©±¸&9LFûäM0š‚GU8fØ¤6!)¨:ÓŞ#¡Œïºüóf—#YjÓøûx3%›e›äĞ†2!å}jiÎÚĞ"½Rµ9¬¤?ÚÇƒû7Š™ôcUzÑ¾’šº×ÄnTöh×Ç_™@KO»h-    µ	  Rü4   )EW         ! Õƒ?iSöyŞÏ½¿‰™5ª±ô_ÄŒ*}Ğ9®j½y‚ló±w‘wî),’äé¶®¶¦£QògÆ–EbzH—µ×)=ÕØÍ¬ˆ´ßa0ZW(‰·^ğì/Eâçò¦¼o9=À?y9+)««KI!™0²™:N	‚¯°Nd¸¡	‹U,U.ˆ§ŸnyúğiV2˜bÒgiñO²°£š·(yä¼(¯M†M˜m1Ç¦ğt¼éPe¨Á é¡¡ÏB´®¼â-
+Ä°D 6™ÚŞ3ü1²ÖÚ’lV ü²Î|š8ä©%'i—Ô×é‹¥¥E]„§X‡ÃµxU€ç?
+©d…|ƒkîÆ•˜.BÌÕLäBò(§Ğ •ê×Ş-æÌË´„*€Y¥hÚÒ W²™6çH¸Öë=¨ÔYC³ ø¿^¸ Ë‡Í¬K‚~FÙæ	i Ær§N:ôï‹§êÇ3X¦'7»JõO÷¶Ç–â7Èığ½Ã$GAz.æÅÙ@ ã‡Ç'#ö¸‘¯ÛÕw-$c|l1käÌìıû]Ó?xzBQœò¹½pyA’Ãs‹±eÀrlèM„}ÃÇTUõ ‚  	]®ğ4 h „-Õ  µ	  Rü4   )EW         ! à„²’©˜ñ| |‚ÖÊ§´›máƒé@<İŞ™#%áE¯/o484i÷º!×4Xc½`}CõR
+›§ÌòæFÚ/DŸ:»ózªG…ìªË È½ù5ÒÎ¶¨ö£•€Ö.1'¥ M€ FÅ˜va¯xSÊ‹Â"ğ?V¼¨•-ÀsQ<iÖ|Õh	ù;¶Là_ı}êÉòŸÅ	' ·4;U1Ê¸«½©’Œ3›Ò.Q÷å³-ˆF%pDóXÁ
+ÈâWT<4\9Ï¬c»³kåšf·’¨ß,òş¥`ÌÏ&‰‚lcãø„ñ-9Œ˜I!yrP›š‰x)îÎ$“ÿ]ùU€%i“Ä”†Öı&0Eí(¹ñÆ$ªğ«şŸÏ<HQ^_\( É¢íU äK±ÇŞ*Ì<WÓ´
+Vº÷QLŞM@&’ •8DX–!èÚ£j¬i[ó’ôÃ¾?¿nÔ‘ïQ)<.Š#Zæ`7’+ù¯|
+PU“yéà,Sí¡å¦e¼Í¡á¯ĞoQí/b4È)×ÃüVªËîÏJø É.ñeÇgãÅn3n.¼+Õü_B*ºİW„kAín´b”şWê?á
+2¢¥½µ‚Á´g’ÁÜzq_²ËjÈ b/Ê.wÎĞ~Ş‘Ğò¢lä¤áßV^´9õĞ!uà	ÄPIÕÅ&–ä|µ‰9ZVK1e.:\®µzq®;!Á’2’–8´ŒÓÑá†	Ä|_¹ûûÜMùŸşÁmÏ½ı3T`¼c_H¢ó‹äÏ¯,½§‰)^oşEÛİÂ²0Ì,Õ))Bë*A÷êK¥Şñ	"Õ+¤üªëæ»w¯@#íç Cû¸¸¬hÕöò—Í'İ‹G•Wúßö@%öğ2.«{:şZ«eE·UK%Cæ‘qïˆ©8\TÉ\pM˜Êåá#"eÀü@õ+¨õ'ÇŸÈÜj Ug†On9dArû«y<°iO?‹€Dì'Õ]=:k:Å Hêà†$§qãXß•Ifua›–”GÁ<«@£pØùÖ¼@³'9-!¶ûÍ‹®-‰væ#,ï05ÔåğŒùêˆî”uÔí~c’ÿbp¦èİØÏ
+”YaĞ2µt¾hˆE=¼y#NµXpä³š·„;6‹}o•êöØ³`9(z-Aén‹¨ëéªm Ås8 –_n„ÉO<ğ3wİhJØ!’µ\|,6ˆŞ§Qeë½–L=Y3¯ç¿ö@ú1Hƒ2ÖFXìŒ`GTìnšF"å,‚wd®‰ñ‚-‹ş~/¿´‹/™ 42¸HOØçØ"BÍì<J€·¦ó!öğºÓÒMÚŞß<lH˜ˆ;Vø»D´q[¬p…fJK¡ç±_a„ç¯şŞì“å‚0	-ÚÚ-ƒ‚ğ+äL‚×Øfº3”_Í¼é±.[[A16¨QïÇÒ½°¿¦š—@şíã1ˆİ…¾±bó¨‘3 ¤£rWô¯^´åy_°%<ú
+ÜêŒ•IÛÀsQ½Áoè,ÅJÖu¸ûĞ›ŞÆ§µ­­ÊÛş+×%ñˆö‚Êôq$$)\'ÑëgÌ ®V§Ö·¦W²$S…gU±Pc‹T>nÉ"' ´³2¾+X]9á'eù‡ıÏı™lFA×@å({ÀĞeÖİk–P Í
+ÿGÜ
+÷ãXXDÙ‰æZ<iˆæÁ’zÅÍî¥Õ!ÖŒJÃÒ¿1wÎ’`–‹ŸKüäÍ9	‘W vÂéSen’|¾]çõ6s?vwnŒĞ
+"®iú¨ËILÌ† fY«À…_À¢¨ ¢ås4keÀ¢VGß8êxbl*0àbÙ‹¬ÙqİïÁ®­t#ff‚¸ƒ°0?÷Ú/KıßÏéÔ_‘¥ßwÈÃGƒ*çRëq²0¿ş8×´Õ×7u˜Vø4”2Zë²:#¬£RJßl
+ií‚ÀÙÁ`_ı¯õ›*Á­	ö¢®,ÀƒÓ'Eì‹£¥kI7÷ƒ|DÍğÛĞÚ»f,®µˆ 
+áKìÌ>í%¯&mj­îı!‰Ûüfå¯:¶Ó¦p˜½|eÅnibb¾Î£7ÈuFfãı‚·Œ% ‚èm;†…ädŠoOñ€_;r-m•š6¹o³ÄDT AœÉA\å|!wµÜãá†’J–XLÚìUà%ødÏ,êF­‘£‘‡•Î²ÑR–<ì¹!Ö—-xÛØ½áêãT%”×—–{yØlœD}€lSÅîD9ÎfÍş{Ï]BAş…³&èÈ€yw(SY~˜Œ‰İSÁ£‰skÕîõHèÏa5ñjfsê‘ Ò˜HP.t@a`4õ–”;Èv6>–KNóthS€IKM<Êù3•=å€³SôÍ³Ødş½±¢‡dÂ®"û4E]·¶ú,J‘QJ”íänsM»†ù°BœÁUìbÆ¬hÔ½Ïº
+%¢Ó ùc,&gMRPßâÊV33
+e´­ÕæØE!¾¶×0hÀFÀcÈ(Æ/vbò–HÌXÿ¼¤°D…½Që0¥l¶†&^ÜÄçÒÊ£Ä¯8”Ï>gÛj+.    
+
+  sü4    FW         ! 
+
+{mğÙW‹Y¥İdš
+VyŒ?ƒsùâó4–‡€ø®¸CiZ\nÏşÌˆ70nó..sNö()*5}aŠöı`dóZJGxâš´×:‰õ0ßô&[şi‹®è>Ça wXNÔRĞÄË16Üj¼ 	ıjí‰+³5Ü§Tç$mˆhºTıçr¨ ‚İdşb2\œç±> ÂTõÇµí¦L#‚ßï;"3V TÃ²†oyc!›éfæÎ¥µ¿YŞpB±v^;|¢}_à£.gg­äKN_÷Šˆ“,5EÁBz$±ÿÄ÷s×0Ñ3¥µÀ70Fşëb
+K, D<Fl™¹ZRèURt°â3¡–q¼dûªFtèe¹Lm4wù«õˆğ"Ş$…ã¤Û¶XÔé‚?1$,ou)ÉÍl> Ú·»]RC¼_›õZs-ÚÖÉôø’vxê¨rwnÄ¨Å¹ƒ83¤×ƒ®›H4áU$ùE6Mi¤¯ÎK·Û û°>Á¡YÔT.Ñ6nàû µÁbA§;~ÄÈ“Ñ±|áˆú$Qò}v|ÊOtËÍ0êSRşÏPØyU4…éTÏíÖl{}ÍyÍÆó|õÊ‚@€U dşøR§{ ¨–…ùN¿¬¬j“ò çÌŠˆ†ápÄ9F+“*É+İH*n­ßUµ…jM‡õ~¡¡.0"ê·b3?{<˜ù_°™$@ŸÍù²!ıs×cÓĞ)Rñê/€²€Æi÷È&vÛ×{$:İˆì	x°U7úÌôoØ»ù8e¦~½¹	Ÿ–"hSK è¤ºÃ$¿7Ğ¼\f8/ŒÏåK‰ğTÇÒªÄ¥—Ò*ˆ>Ê‡Eõ˜®ØïØ
+?ï6Dàzªtxá7L±:½§z¦#—«WÍuZCæ«°7—*›ä Ô#©Õ{#Á/MEÊBUİĞE:Öp°YOÉÎÒÖ\VÌë]ÜŞô LëiµA–.Ir Ÿ˜áËj±¥i 0‰9øfœ6ŠgTöy7.«0Ïn¤»"5=®Dwá£oİ]~©Ê{“®ÅîtU03NòMµùËg;9K—Âê	õ‡„»´êÒçGO²<Mq<°Œ–<ê²×·SòÑ8=N|ÈFîš['Ë´d×(¤#Ñß{´¼yiØşğ—Æ†:ØHw®£gÏ‚(éJEœ9ÑŒG%­Pù
+Q˜;)ÅI¯Ta\g©p;óHk&¾ıôzß¨Dn±=ˆç- ('ÆšA=Ó4Øø^æ»Èüm¬ İ*Èı.¡¿ròì>‰’T9¤Ze†ŠƒÚ|š?Ñ·2ÚZw¼$°€º+ØnœéğeÏÃ­êX[ø\Qö^rü»J
+Å*¥è£Ïš9E¹>ÚKî¦ñÇÅ±@¢‘ğÂ^Na—¡ìm©qze_Àù¨¶¯•4L¶±EõAMˆwÿx˜×[\:Ùô;a§ƒc‹>L‚XwÑPO s`Ø]ôM¹$–.ÛÂÌCŠYµP«…Pí÷Ï+?GÃI·fÃso “³ ß'T1r*ëÒ[U©R‰!+u›9·•Ï°7Ó÷’Øi-ñ{™¸gãéo9¦ğ?«-n« 5^ìø­³š4ê¤Šb",ñi‡	›
+ƒ c"L‚w{V+JÕü_Ü8Ÿ€3˜g¸f¡_·C}ÌôhQLæàxìİ:åkŸJÑZïâ;·€êµE„~¤Dñë3l\7À¬£š
+äÔê*iì÷—7QÉêmê*_±fûp-„L ™“5˜§İ•*@•/WåµÔ—²2!Ñ“ğ}¶ÿ,cR/½q²G~j9ñq­eƒ|gœğ!ÌıÌî·Şñ‡ŞQTß¢<S›MÃÖõïùø’æ`ŒÄÃ’v=xö%E€¹-¥ƒ‹F»µ¦ÕéöÃ#ŞxznÆŞÁÚµ—Åæ·:Ü>©¿ìÇÔÇ€ÑÓ“+>Ü‡g¾p9q'´úíK—A ¿kg<òÁ,D?‰İVòkATÕww†eÛl0ü¥á¶s­9~s¸rHî>9¿•à³a€_eodm­í Ví,DëˆÒG3jYÑšÿgÆ5’Éöü®¶&æ‚“›ìÖ¶(1ü al\ÀPƒÄeomäÕçéw¢~mÙ,®13lê,ÖlR•ûÚºˆãhYÌE™ØŸDº“¤ÊGy60Çólâˆ­ ¿l¢Ë¿åèü”H)kiÒ2³şı¿¿ 5ùO«ßF©Óª¤/ô¨Œê{Ğç}<ÛC/í@ş§•Æ@6Ú›×ÿ «Iı#so¶ß&ÌZà¦wùåFî›™ËÔÏ©n©Ô"€È­~ÓCüYw+¹¸¹‡^=ÊËl&‚“(vŞwüæwå2ûe¢¾¹#ÿĞ‘{™f½S?æ	™~¾‚”o}¶ø(!¶+!*óg—üoÔ/£.÷¸(şV¯øâÅERœı:M‘£CŞ[j€ğ§ìüu²Ä§Û«M-®üÊ[•`¼­3ÏÔ…sªøÒÍZáğ©«ı`ÕhøBŠWù§Ş——ß¹‰õımJdÒËãüyWxj;Ôıñ"|Ü¹˜s™£}Ñ(Ö~tİÂ8òló„ –sM=a;¹GÑüwÚ©wÒƒÆuvÀØ" ùL´İ G+¾[3éœO’ÿxÚÁ8™€$Õ-.b 8;ç5†ğtD×]¢zú\O•D¨2ÉOÏÁ‚ÿD«ÒèĞøQÕêP¾EÍ•$w*¥j«?¤=ÎÀÍùáæ W?}]1¬»jª|‹Ùf[£S»¯8æğBŠ Ú§ŞÈ¦6hmôøW’é¥ÿæ	¿Ğ&=ŠÉû²Ãº&8Õ¤åš6¬üvY_¢íUçÌjúy\¾‘B[iaß§ì
+M?(Â/0„õVs^qZ v‚È´vêÎO&KB¢¯lÛ†ÂQ†9Çf¸L¢¬DZçÄ&PıE¦×m2úˆô9í§µz×4j4…%Ç¨©9}*H“"ØİPÉ°Ï£µH#ô×[“Êxä ¿ÜXœ#YX]ŠŠèÙf™¢+º¬jÅt×\ÁGÛ”Îğ£gşÄÒF¸˜íÓVFBPĞQd®Lµ,xq¢d Lt»"Æ^$gÂÍuĞıM’.âÎÅŸ‘o{£Z¥p_µ©“ƒ·¸bQN…hÚ–xg—Iy£/Ãú+Àã–Ñz$8ù.àĞ$Ò´r	Á€°`®Z(Œ©F9‡¶'şQÒ(ì£[qo«€A3E*ä4AÑ(Ëê-±×fJ{”ìK¦ãQòå¡“~°rÉ‹p£§lµ³Uû/      ”ü4   FW         " _[z›LŞ#Â­æìü{ğ%| ¤ñ€8ñ~£	Ls¼rÓ^¥P]ù»Q‰ùXÇî~„Kák$X¸l¾a-TíĞÙ«1Ô2wG°®™ÓCaäg1z½}¨ñŸ®î£ZI³äÍó-’%Ö ªEB 7µ|OÊÎL¸üLi%ŞÑ¶iŸJFBuoÜbE	@îiDøÃOó²ç Ç,ùò!Ø{´‰u»v{"oAÖ¿‰¯Xè%a¨„„ÚÆS‚T‰¨çğƒºWDbˆcÿ<UîZûÕ">hÃ½<n·§şh^‘3ç·Õ“^Ù/  âš˜A‡u‹úúu%*—‡Oï5VmÎv9¿m´0TïL¡É#(oos”2©[sbI¢™#'±¥R€F@sÅÀH›ÈÖì¾9Ä«Hê“ÖÀŸj¥ƒï| ¡»‡däÁ‰¦¡Kt|ä´+4Oa:ndĞµC¦­1ˆ™l{|'¾†¼5IO~ZŒ7Ïƒu!1ÏU€/R	†æ	.NnxN÷»fªœóö¬*Jk[\#‰f8"†lÖE†¡œ¼ç;Á¤ü,ƒ¢#ül"¾d%ØØ \¿ÆW…Æ}}\:¶ö*+ÿ†ÜæÛÆ&+M~S:‡A bÂòKÆ¾ì¾ÍD­ò¨­=ÖS(€Vù}ó‘¿mC}1ÕÃ^˜ut|ºÆyIîÆ7›5‘Š—Câ®«%än]¯¹Uè´~şıë1kbÓÔ½™M%@É˜êÔ$¯ô†wOX´¤[pFğ`ìr2´WfaŞl»ÿÇĞ³¯2Ìx?7“ûQ5N4¦&äZyÿt…\@ºA2®˜heÊª˜ ¡:å(-*|µ«¦J4/ºF§óeL¡âzAIå7&Uëœœ,q($Å¬r«¤¬y@";Oit%£~ˆö/ÖùÌKæ÷^Ò•Y”DÛË|§Õ6kSÊšv&Ú,IÉ1‰¸Ie§ïNÊFå_ølÙ²Ö=d‰—Ü>ùğ—7¡qµwÿ’^wËq É“ª©o±"ÓGp ¸€Y¤æW¡wãe3ù+«¥–FtìÙ6Ÿ	í‚Q÷ÀÎ·GÖÇ¦*ŒÌŸ)ÒÊ	Ôu$Mê‘æ“0ñÓNÉØ!Âk¶*	A}’–Ê;ÒÄ8G
+”¢—…ÖŞb¾ÉwsZºá(mšbQqP*ÏXµYàË„2)Ê&" Z¸¶5}„Ùã>²áËhÍ±%µµøA¼Xuå{Éø,ÒÛ¢ËÃøf wø´™––cù™4ÆN­ÃW¸ÓáïˆÈ`Ö¾ÉTY¡EzÖÉ îÇGq*X&Ñ»`;”¼}ÏZ¢™¹Y mx9*’aè\î†X_64¢ÁÆV]ò~¬;„×ƒ0`s<;ğc”ÎqLï\0ßæóñ¥[ë­ìÒæ2¼ç«İRsáœH`>¢}`Kæ…ÕŸQ„IBE+èa”\²7õş'äª5˜@ã²™ıp÷u=t¢9mzõ/n' Ö%2Ôq
+]·ë ÀÀì×õ|éi¬wşHúÊ#É{”Dç€¿n»å{}Já­i™ëË'¬d}y3#ù‚²ßïÓK¢º¹I–‰¿£«°ÆS=ğtÀø¸l`9BÛÑôÔ'ÿCûs’¬8»Ú šøÂéŒWÆLÕª”ôv“C²0zà]ÊïÉ5‡ª3vYDÖsƒ¯4Ü¢©1bÎ•ˆö
+ú•ã“5·×¯»Ïó¿âªZ¼[ÌşDoÍ*f¬q«lU~;hE•:7_Zê7mZd["ÓèÅD”¶´ıb¿†‰ZÅu.†)êdS—pT¹¦Hæ6âw•Ğ#	EÏè›C“ğáÔ;	Ñ™Õ¥$¾z§¸÷ë‰ùdAï›ö(!àã°éIhh8û:®k@‡ÚføXc¸yƒz+tâ=ê0äò3.–2ºb~Îjğ¨U«4D°x™(+]õPUŒXdMCµšÓ‹îINÛiØLŒ­¬œßú$mŸp >—£îÇøÄ¢*S¯Á!¼”ì²fÖm±Û£qÔÙó	îÂ¿ªÉÑW©‹³…¬íºÆ½Ä±ôlt¥¿6ìN†¤2Ä}™	ŸŸ¿=˜ş¶ÅPh„»YƒîÉ|~2±B ZÎØM±Do/‰ÒÆ€_$Ó&SşU6hÏÈÓU$¶÷Æè"§\©õ8	 ±)ˆ«è}`x¾–~<¼¹]Şæ£àÔfãªîû üDØFå¿½¸µJóJ'yØÎÃØtjŒÍn”]0qË¦óoTƒ‚(—[7zk 3ãSn+eh­´æ¸X8USâÚ–ˆ=<|n‡îÖü6çÚURÌy –”0    ¥  ¶ü4   FW         ! PÑW¹ù<TÔ»«,×Ñv›¯ûMEãü!™Æ=	b`Ö§6p°AŸd¡èÑÜ)Mo¯ÃÿZ
+:µ¤òúÏ´çìÇÕ±ÅÎÕ)a¬´«ñTƒ¤¼d—ƒMXGşipÛÏ],²ÕäA)ƒ,C$¶bÙT ı
+8[CFxÓ–}5ôFK†;J%#ÇsXIbãD²9DË–Ç(ãˆğ®–³¾°ÿò°¸¿”f›“1¦ªéùcóÂí…iñCø¤“ãçí¢[êAÊKô·eå÷Ÿ/J ÀÖäKÌ›Ë¼$Tî;Ocø‚¸Ä1`0jÑïévPÅ:ê ¬×9zNòÄÈµÃ®PŒ$ÏJëKò™ºÓOÙ5†Ü¨Õ¬Áı®vOI¥½ö­‡ÚnÉ’a3„9µIÕı„¨%ı
+ÅnîíÂVœsŸRßI,dNX¤üC„”Ú^ £ŒÒô³èx.d3,(Äÿì^Â«d+¬•dªç·3|}aÜkÙJœúœŸ8ˆÛ#ÛJ€&øÌ{¢’ÛôH‹U•âon*'CÊ<6úÉ9+OÙ:L§Ç¼(³¬í‚#y°ıÃö]"½i@¶—(<‡ªÈ 

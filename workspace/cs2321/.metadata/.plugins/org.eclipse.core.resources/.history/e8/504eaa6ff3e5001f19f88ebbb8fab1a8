@@ -1,0 +1,235 @@
+package cs2321;
+
+import net.datastructures.*;
+
+/**
+ * @author cdbrown
+ * 
+ */
+public class AdjListGraph<V, E> implements Graph<V, E> {
+	
+	
+	private class vertEntry implements Vertex<E>
+	{
+		private UnorderedMap<Object,Object> vmap = new UnorderedMap<Object,Object>();
+		private E element;
+		
+		@Override
+		public E element() {
+			return element;
+		}
+
+		@Override
+		public Iterable<Entry<Object, Object>> entries() {
+			return vmap.entries() ;
+		}
+
+		@Override
+		public Object get(Object key) throws InvalidKeyException {
+			return vmap.get(key);
+		}
+
+		@Override
+		public boolean isEmpty() {
+			return vmap.isEmpty();
+		}
+
+		@Override
+		public Iterable<Object> keys() {
+			return vmap.keys();
+		}
+
+		@Override
+		public Object put(Object key, Object value) throws InvalidKeyException {
+			return vmap.put(key, value);
+		}
+
+		@Override
+		public Object remove(Object key) throws InvalidKeyException {
+			return vmap.remove(key);
+		}
+
+		@Override
+		public int size() {
+			return vmap.size();
+		}
+
+		@Override
+		public Iterable<Object> values() {
+			return vmap.values();
+		}
+		
+	}
+	private class edgeEntry implements Edge<E>
+	{
+		private UnorderedMap<Object, Object> emap = new un;
+
+		@Override
+		public E element() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Iterable<Entry<Object, Object>> entries() {
+			return emap.entries();
+		}
+
+		@Override
+		public Object get(Object key) throws InvalidKeyException {
+			return emap.get(key);
+		}
+
+		@Override
+		public boolean isEmpty() {
+			return emap.isEmpty();
+		}
+
+		@Override
+		public Iterable<Object> keys() {
+			return emap.keys();
+		}
+
+		@Override
+		public Object put(Object key, Object value) throws InvalidKeyException {
+			return emap.put(key, value);
+		}
+
+		@Override
+		public Object remove(Object key) throws InvalidKeyException {
+			return emap.remove(key);
+		}
+
+		@Override
+		public int size() {
+			return emap.size();
+		}
+
+		@Override
+		public Iterable<Object> values() {
+			return emap.values();
+		}
+		
+	}
+
+	public AdjListGraph() {
+	    
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#areAdjacent(net.datastructures.Vertex, net.datastructures.Vertex)
+	 */
+	public boolean areAdjacent(Vertex<V> u, Vertex<V> v)
+			throws InvalidPositionException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#edges()
+	 */
+	public Iterable<Edge<E>> edges() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#endVertices(net.datastructures.Edge)
+	 */
+	public Vertex[] endVertices(Edge<E> e) throws InvalidPositionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#incidentEdges(net.datastructures.Vertex)
+	 */
+	public Iterable<Edge<E>> incidentEdges(Vertex<V> v)
+			throws InvalidPositionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#insertEdge(net.datastructures.Vertex, net.datastructures.Vertex, java.lang.Object)
+	 */
+	public Edge<E> insertEdge(Vertex<V> u, Vertex<V> v, E o)
+			throws InvalidPositionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#insertVertex(java.lang.Object)
+	 */
+	public Vertex<V> insertVertex(V o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#numEdges()
+	 */
+	public int numEdges() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#numVertices()
+	 */
+	public int numVertices() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#opposite(net.datastructures.Vertex, net.datastructures.Edge)
+	 */
+	public Vertex<V> opposite(Vertex<V> v, Edge<E> e)
+			throws InvalidPositionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#removeEdge(net.datastructures.Edge)
+	 */
+	public E removeEdge(Edge<E> e) throws InvalidPositionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#removeVertex(net.datastructures.Vertex)
+	 */
+	public V removeVertex(Vertex<V> v) throws InvalidPositionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#replace(net.datastructures.Edge, java.lang.Object)
+	 */
+	public E replace(Edge<E> p, E o) throws InvalidPositionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#replace(net.datastructures.Vertex, java.lang.Object)
+	 */
+	public V replace(Vertex<V> p, V o) throws InvalidPositionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#vertices()
+	 */
+	public Iterable<Vertex<V>> vertices() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+}

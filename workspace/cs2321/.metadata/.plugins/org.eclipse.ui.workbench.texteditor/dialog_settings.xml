@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item value="417" key="DIALOG_WIDTH"/>
+		<item value="14" key="DIALOG_Y_ORIGIN"/>
+		<item value="472" key="DIALOG_HEIGHT"/>
+		<item value="567" key="DIALOG_X_ORIGIN"/>
+		<item value="1|Sans|10.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item value="true" key="wrap"/>
+		<item value="false" key="isRegEx"/>
+		<item value="false" key="casesensitive"/>
+		<item value="false" key="incremental"/>
+		<item value="false" key="wholeword"/>
+		<item value="getPos" key="selection"/>
+		<list key="findhistory">
+			<item value="getpos"/>
+			<item value="pos"/>
+			<item value="getpo"/>
+			<item value="get po"/>
+			<item value="package cs2321;"/>
+			<item value="string"/>
+			<item value="map"/>
+			<item value="in"/>
+		</list>
+		<list key="replacehistory">
+			<item value="edges"/>
+			<item value="E"/>
+			<item value="firstN"/>
+			<item value="fnN"/>
+			<item value="cityN"/>
+			<item value="zipN"/>
+			<item value="phN"/>
+			<item value="stN"/>
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.GotoLineAction$GotoLineDialog_dialogBounds">
+		<item value="370" key="DIALOG_Y_ORIGIN"/>
+		<item value="561" key="DIALOG_X_ORIGIN"/>
+	</section>
+</section>

@@ -1,0 +1,29 @@
+       :                
+GND                          : N14       : gnd    :                   :         :           :                
+GND                          : N15       : gnd    :                   :         :           :                
+GND                          : N16       : gnd    :                   :         :           :                
+VCCINT                       : N17       : power  :                   : 1.2V    :           :                
+GND*                         : N18       :        :                   :         : 5         :                
+GND                          : N19       : gnd    :                   :         :           :                
+GND*                         : N20       :        :                   :         : 5         :                
+NC                           : N21       :        :                   :         :           :                
+VCCIO5                       : N22       : power  :                   : 3.3V    : 5         :                
+GND*                         : N23       :        :                   :         : 5         :                
+GND*                         : N24       :        :                   :         : 5         :                
+SW[0]                        : N25       : input  : 3.3-V LVTTL       :         : 5         : Y              
+SW[1]                        : N26       : input  : 3.3-V LVTTL       :         : 5         : Y              
+SW[11]                       : P1        : input  : 3.3-V LVTTL       :         : 1         : Y              
+SW[12]                       : P2        : input  : 3.3-V LVTTL       :         : 1         : Y              
+HEX6[2]                      : P3        : output : 3.3-V LVTTL       :         : 1         : Y              
+HEX6[1]                      : P4        : output : 3.3-V LVTTL       :         : 1         : Y              
+VCCIO1                       : P5        : power  :                   : 3.3V    : 1         :                
+HEX5[1]                      : P6        : output : 3.3-V LVTTL       :         : 1         : Y              
+HEX5[2]                      : P7        : output : 3.3-V LVTTL       :         : 1         : Y              
+GND                          : P8        : gnd    :                   :         :           :                
+HEX7[5]                      : P9        : output : 3.3-V LVTTL       :         : 2         : Y              
+VCCINT                       : P10       : power  :                   : 1.2V    :           :                
+GND                          : P11       : gnd    :                   :         :           :                
+GND                          : P12       : gnd    :                   :         :           :                
+GND                          : P13       : gnd    :                   :         :           :                
+GND                          : P14       : gnd    :                   :         :           :                
+GND                          : P15       : gnd    :                   :         :           :              

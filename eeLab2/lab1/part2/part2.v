@@ -1,0 +1,17 @@
+module part2 (SW,LEDR,LEDG);
+	input[17:0]SW;			//toggle switches
+	output[17:0]LEDR;		//red LED's
+	output[7:0]LEDG;			//green LED's
+	
+	assign LEDR=SW;
+	
+	assign LEDG[7] = ( ~SW[17] & SW[7] ) | ( SW[17] & SW[15] );
+	assign LEDG[6] = ( ~SW[17] & SW[6] ) | ( SW[17] & SW[14] );
+	assign LEDG[5] = ( ~SW[17] & SW[5] ) | ( SW[17] & SW[13] );
+	assign LEDG[4] = ( ~SW[17] & SW[4] ) | ( SW[17] & SW[12] );
+	assign LEDG[3] = ( ~SW[17] & SW[3] ) | ( SW[17] & SW[11] );
+	assign LEDG[2] = ( ~SW[17] & SW[2] ) | ( SW[17] & SW[10] );
+	assign LEDG[1] = ( ~SW[17] & SW[1] ) | ( SW[17] & SW[9] );
+	assign LEDG[0] = ( ~SW[17] & SW[0] ) | ( SW[17] & SW[8] );
+	
+endmodule

@@ -1,0 +1,266 @@
+Quartus II
+Version 9.1 Build 222 10/21/2009 SJ Full Version
+11
+1000
+OFF
+OFF
+OFF
+ON
+ON
+ON
+FV_OFF
+Level2
+0
+0
+VRSM_ON
+VHSM_ON
+0
+-- Start Library Paths --
+-- End Library Paths --
+-- Start VHDL Libraries --
+-- End VHDL Libraries --
+# entity
+part6
+# storage
+db|part6.(0).cnf
+db|part6.(0).cnf
+# logic_option {
+AUTO_RAM_RECOGNITION
+ON
+}
+# case_sensitive
+# source_file
+part6.v
+43f3e590d1a410868d465631d1f1986
+8
+# internal_option {
+HDL_INITIAL_FANOUT_LIMIT
+OFF
+AUTO_RESOURCE_SHARING
+OFF
+AUTO_RAM_RECOGNITION
+ON
+AUTO_ROM_RECOGNITION
+ON
+IGNORE_VERILOG_INITIAL_CONSTRUCTS
+OFF
+VERILOG_CONSTANT_LOOP_LIMIT
+5000
+VERILOG_NON_CONSTANT_LOOP_LIMIT
+250
+}
+# hierarchies {
+|
+}
+# macro_sequence
+
+# end
+# entity
+reg8
+# storage
+db|part6.(1).cnf
+db|part6.(1).cnf
+# logic_option {
+AUTO_RAM_RECOGNITION
+ON
+}
+# case_sensitive
+# source_file
+part6.v
+43f3e590d1a410868d465631d1f1986
+8
+# internal_option {
+HDL_INITIAL_FANOUT_LIMIT
+OFF
+AUTO_RESOURCE_SHARING
+OFF
+AUTO_RAM_RECOGNITION
+ON
+AUTO_ROM_RECOGNITION
+ON
+IGNORE_VERILOG_INITIAL_CONSTRUCTS
+OFF
+VERILOG_CONSTANT_LOOP_LIMIT
+5000
+VERILOG_NON_CONSTANT_LOOP_LIMIT
+250
+}
+# hierarchies {
+reg8:reg8A
+reg8:reg8B
+}
+# macro_sequence
+
+# end
+# entity
+char_7seg
+# storage
+db|part6.(2).cnf
+db|part6.(2).cnf
+# logic_option {
+AUTO_RAM_RECOGNITION
+ON
+}
+# case_sensitive
+# source_file
+part6.v
+43f3e590d1a410868d465631d1f1986
+8
+# internal_option {
+HDL_INITIAL_FANOUT_LIMIT
+OFF
+AUTO_RESOURCE_SHARING
+OFF
+AUTO_RAM_RECOGNITION
+ON
+AUTO_ROM_RECOGNITION
+ON
+IGNORE_VERILOG_INITIAL_CONSTRUCTS
+OFF
+VERILOG_CONSTANT_LOOP_LIMIT
+5000
+VERILOG_NON_CONSTANT_LOOP_LIMIT
+250
+}
+# hierarchies {
+char_7seg:h4
+char_7seg:h5
+char_7seg:h6
+char_7seg:h7
+char_7seg:h0
+char_7seg:h1
+char_7seg:h2
+char_7seg:h3
+}
+# macro_sequence
+
+# end
+# entity
+full_adder
+# storage
+db|part6.(3).cnf
+db|part6.(3).cnf
+# logic_option {
+AUTO_RAM_RECOGNITION
+ON
+}
+# case_sensitive
+# source_file
+part6.v
+43f3e590d1a410868d465631d1f1986
+8
+# internal_option {
+HDL_INITIAL_FANOUT_LIMIT
+OFF
+AUTO_RESOURCE_SHARING
+OFF
+AUTO_RAM_RECOGNITION
+ON
+AUTO_ROM_RECOGNITION
+ON
+IGNORE_VERILOG_INITIAL_CONSTRUCTS
+OFF
+VERILOG_CONSTANT_LOOP_LIMIT
+5000
+VERILOG_NON_CONSTANT_LOOP_LIMIT
+250
+}
+# hierarchies {
+full_adder:fa00
+full_adder:fa01
+full_adder:fa02
+full_adder:fa03
+full_adder:fa04
+full_adder:fa05
+full_adder:fa06
+full_adder:fa07
+full_adder:fa10
+full_adder:fa11
+full_adder:fa12
+full_adder:fa13
+full_adder:fa14
+full_adder:fa15
+full_adder:fa16
+full_adder:fa17
+full_adder:fa20
+full_adder:fa21
+full_adder:fa22
+full_adder:fa23
+full_adder:fa24
+full_adder:fa25
+full_adder:fa26
+full_adder:fa27
+full_adder:fa30
+full_adder:fa31
+full_adder:fa32
+full_adder:fa33
+full_adder:fa34
+full_adder:fa35
+full_adder:fa36
+full_adder:fa37
+full_adder:fa40
+full_adder:fa41
+full_adder:fa42
+full_adder:fa43
+full_adder:fa44
+full_adder:fa45
+full_adder:fa46
+full_adder:fa47
+full_adder:fa50
+full_adder:fa51
+full_adder:fa52
+full_adder:fa53
+full_adder:fa54
+full_adder:fa55
+full_adder:fa56
+full_adder:fa57
+full_adder:fa60
+full_adder:fa61
+full_adder:fa62
+full_adder:fa63
+full_adder:fa64
+full_adder:fa65
+full_adder:fa66
+full_adder:fa67
+}
+# macro_sequence
+
+# end
+# entity
+reg16
+# storage
+db|part6.(4).cnf
+db|part6.(4).cnf
+# logic_option {
+AUTO_RAM_RECOGNITION
+ON
+}
+# case_sensitive
+# source_file
+part6.v
+43f3e590d1a410868d465631d1f1986
+8
+# internal_option {
+HDL_INITIAL_FANOUT_LIMIT
+OFF
+AUTO_RESOURCE_SHARING
+OFF
+AUTO_RAM_RECOGNITION
+ON
+AUTO_ROM_RECOGNITION
+ON
+IGNORE_VERILOG_INITIAL_CONSTRUCTS
+OFF
+VERILOG_CONSTANT_LOOP_LIMIT
+5000
+VERILOG_NON_CONSTANT_LOOP_LIMIT
+250
+}
+# hierarchies {
+reg16:reg16S
+}
+# macro_sequence
+
+# end
+# complete
+

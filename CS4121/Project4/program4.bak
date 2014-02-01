@@ -1,0 +1,7 @@
+(define (last a L)
+  (define i 0)
+  (define (last-helper L)
+    (cond
+      [(null? (first(L))) (define i = -1)]
+      [(eq? (first(L)) a) i]
+      [else (last-helper

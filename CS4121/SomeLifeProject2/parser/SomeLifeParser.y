@@ -1,0 +1,421 @@
+/*******************************************************/
+/*                   SomeLife Parser                   */
+/*                                                     */
+/*******************************************************/
+
+/*********************DEFINITIONS***********************/
+%include{
+#include <stdio.h>
+#include <stdlib.h>
+#include <strings.h>
+#include <assert.h>
+#include <util/general.h>
+#include <util/symtab.h>
+#include <util/symtab_stack.h>
+#include <util/dlink.h>
+#include <util/string_utils.h>
+#include <codegen/symfields.h>
+#include <codegen/codegen.h>
+#include <codegen/reg.h>
+#include "SomeLifeParserHeader.h"
+
+#define SYMTABLE_SIZE 100
+
+/*********************EXTERNAL DECLARATIONS***********************/
+
+}
+
+%token_type {TokenAttributePtr}
+%name SomeLife_Parse
+
+%syntax_error {
+  SomeLife_error("Syntax Error");
+}
+
+%left OR.
+%left AND.
+%left NOT.
+%left LT LE GT GE NE EQ.
+%left PLUS MINUS.
+%left TIMES DIVDE.
+
+/***********************PRODUCTIONS****************************/
+program		::= programHeadAndProcedures compoundStatement DOT.
+			{
+				emitExit(instList);
+				emitDataPrologue(dataList);
+				emitInstructions(instList);
+        		}
+		
+programHeadAndProcedures ::= programHead(phAttr) procedures.
+					{
+						emitProcedurePrologue(instList,symtab,phAttr->symIndex,0);
+						free(phAttr);
+					}
+
+programHead(phAttr) ::= PROGRAM IDENTIFIER SEMICOLON decls(dAttr).
+			{
+				int symIndex = SymIndex(symtab,"main");
+				phAttr = malloc(sizeof(TokenAttribute));
+				phAttr->symIndex = symIndex;
+				globalOffset = dAttr->offset;
+				free(dAttr);
+			}
+
+       
+decls(dAttr)	::=  VAR declList(dlAttr).
+			{
+				dAttr = malloc(sizeof(TokenAttribute));
+				dAttr->offset = dlAttr->offset;
+				free(dlAttr);
+			}
+
+decls(dAttr)	::=  .
+      			{
+				dAttr = malloc(sizeof(TokenAttribute));
+				dAttr->offset = 0;
+			}
+	
+procedures 	::= procedureDecl procedures.
+procedures	::= .
+
+procedureDecl 	::= procedureHead compoundStatement SEMICOLON.
+
+procedureHead ::= functionDecl decls.
+
+functionDecl ::=  FUNCTION IDENTIFIER COLON type SEMICOLON. 
+
+
+declList(dlAttr) ::= identifierList(ilAttr) COLON type SEMICOLON.
+		{
+			dlAttr = malloc(sizeof(TokenAttribute));
+			AddIdStructPtr data = (AddIdStructPtr)malloc(sizeof(AddIdStruct));
+			data->idSymtab = symtab;
+			data->offset = 0;
+			dlinkApply1(ilAttr->idList,(DLinkApply1Func)addIdToSymtab,(Generic)data);
+			dlAttr->offset = data->offset;
+			dlinkFreeNodes(ilAttr->idList);
+			free(data);
+			free(ilAttr);
+		}		
+
+declList(dlAttrLhs) ::= declList(dlAttrRhs) identifierList(ilAttr) COLON type SEMICOLON.
+	 	{
+			dlAttrLhs = malloc(sizeof(TokenAttribute));
+			AddIdStructPtr data = (AddIdStructPtr)malloc(sizeof(AddIdStruct));
+			data->idSymtab = symtab;
+			data->offset = dlAttrRhs->offset;
+			dlinkApply1(ilAttr->idList,(DLinkApply1Func)addIdToSymtab,(Generic)data);
+			dlAttrLhs->offset = data->offset;
+			dlinkFreeNodes(ilAttr->idList);
+			free(data);
+			free(dlAttrRhs);
+			free(ilAttr);
+	 	}
+
+
+identifierList(ilAttr) 	::= IDENTIFIER(idAttr).
+		{
+			ilAttr = malloc(sizeof(TokenAttribute));
+			ilAttr->idList = dlinkListAlloc(NULL);
+			int symtabIndex = SymIndex(symtab,idAttr->name);
+			dlinkAppend(ilAttr->idList,dlinkNodeAlloc((Generic)symtabIndex));
+			free(idAttr);
+		}
+						
+identifierList(ilAttrLhs) ::= identifierList(ilAttrRhs) COMMA IDENTIFIER(idAttr).
+		{
+			int symtabIndex = SymIndex(symtab,idAttr->name);
+			dlinkAppend(ilAttrRhs->idList,dlinkNodeAlloc((Generic)symtabIndex));
+			ilAttrLhs = malloc(sizeof(TokenAttribute));
+			ilAttrLhs->idList = ilAttrRhs->idList;
+			free(idAttr);
+			free(ilAttrRhs);
+		}
+
+type	::= standardType.
+
+type	::= arrayType.
+
+standardType  ::= INTEGER.
+
+standardType  ::= FLOAT.
+
+arrayType ::= ARRAY LBRACKET dim RBRACKET OF standardType.
+
+dim ::= INTNUM DOTDOT INTNUM.
+
+statement	::= matched_stmt.
+statement	::= open_stmt.
+
+matched_stmt	::= matched_if.
+matched_stmt 	::= assignment.
+matched_stmt	::= matchedWhileStatement.
+matched_stmt	::= ioStatement .
+matched_stmt	::= returnStatement.
+matched_stmt	::= compoundStatement.
+
+assignment      ::= variable(varAttr) ASSIGN expr(exAttr).
+		{
+			emitAssignment(instList, symtab,varAttr->symIndex,exAttr->symIndex);
+			free(varAttr);
+			free(exAttr);
+		}
+				
+matched_if	::= IF testAndThen ELSE matched_stmt.
+		{
+			static int brNum = 0;
+			emitElseEnd(instList,brNum);
+		}
+
+open_stmt	::=  IF test(tstAttr) THEN statement.
+		{
+			int brNum = tstAttr->symIndex;
+			emitIf(instList,symtab,brNum);
+			free(tstAttr);
+		}
+open_stmt	::= IF testAndThen ELSE open_stmt.
+open_stmt	::= openWhileStatement.
+
+testAndThen	::= test(tstAttr) THEN matched_stmt.
+		{
+			emitElse(instList,symtab,tstAttr->symIndex);
+			emitIf(instList,symtab,tstAttr->symIndex);
+			free(tstAttr);
+		}
+
+test(tstAttr)	::= expr(exAttr).
+		{
+			static int brNum = 0;
+			tstAttr = malloc(sizeof(TokenAttribute));
+			tstAttr->symIndex = brNum;
+			emitBranch(instList,symtab,brNum++,exAttr->SymIndex);
+			free(exAttr);
+		}
+				
+matchedWhileStatement  ::= whileToken whileExpr DO matched_stmt.
+		{
+			emitWhileEnd(instList);
+		}
+
+openWhileStatement  ::= whileToken whileExpr DO open_stmt.
+                
+whileExpr ::= expr(exAttr).
+		{
+			emitWhileBoolCheck(instList,symtab,exAttr->symIndex);
+			free(exAttr);
+		}
+				
+whileToken ::= WHILE.
+		{
+			static int brNum = 0;
+			emitWhileBegin(instList, brNum++);
+		}
+
+ioStatement     ::= READ LPAREN variable(varAttr) RPAREN.
+		{
+			emitReadVariable(instList, symtab,varAttr->symIndex);
+			free(varAttr);
+		}
+
+ioStatement	::= WRITE LPAREN expr(exAttr) RPAREN.
+		{
+			emitWriteExpression(instList, symtab,exAttr->symIndex,SYSCALL_PRINT_INTEGER);
+			free(exAttr);
+		}
+
+ioStatement 	::= WRITE LPAREN stringConstant(strAttr) RPAREN.
+		{
+			emitWriteExpression(instList, symtab,strAttr->symIndex,SYSCALL_PRINT_STRING);
+			free(strAttr);
+		}
+
+returnStatement ::= RETURN expr.
+
+compoundStatement ::= T_BEGIN statementList END.
+
+statementList   ::= statement.
+		
+statementList	::= statementList SEMICOLON statement.
+
+expr(exAttr)    ::= simpleExpr(seAttr).
+		{
+			exAttr = malloc(sizeof(TokenAttribute));
+			exAttr->symIndex = seAttr->symIndex; 
+			free(seAttr);
+		}
+
+expr(exAttr)	::= expr(leftAttr) OR simpleExpr(rightAttr).
+		{
+			exAttr = malloc(sizeof(TokenAttribute));
+			exAttr->symIndex = emitOrExpression(instList, symtab,leftAttr->symIndex,rightAttr->symIndex);
+			free(leftAttr);
+			free(rightAttr);
+		}
+
+expr(exAttr)	::= expr(leftAttr) AND simpleExpr(rightAttr). 
+		{
+			exAttr = malloc(sizeof(TokenAttribute));
+			exAttr->symIndex = emitAndExpression(instList,symtab,leftAttr->symIndex,rightAttr->symIndex);
+			free(leftAttr);
+			free(rightAttr);
+		}
+
+expr(exAttr)	::= NOT simpleExpr(leftAttr).
+		{
+			exAttr = malloc(sizeof(TokenAttribute));
+			exAttr->symIndex = emitNotExpression(instList,symtab,leftAttr->symIndex);
+			free(leftAttr);
+		}
+
+simpleExpr(seAttr) ::= addExpr(rightAttr).
+		{
+			seAttr = malloc(sizeof(TokenAttribute));
+			seAttr->symIndex = rightAttr->symIndex; 
+			free(rightAttr);
+		}
+
+simpleExpr(seAttr) ::= simpleExpr(leftAttr) EQ addExpr(rightAttr).
+		{
+			seAttr = malloc(sizeof(TokenAttribute));
+			seAttr->symIndex = emitEqualExpression(instList,symtab,leftAttr->symIndex,rightAttr->symIndex);
+			free(leftAttr);
+			free(rightAttr);
+		}
+
+simpleExpr(seAttr) ::= simpleExpr(leftAttr) NE addExpr(rightAttr).
+		{
+			seAttr = malloc(sizeof(TokenAttribute));
+			seAttr->symIndex = emitNotEqualExpression(instList,symtab,leftAttr->symIndex,rightAttr->symIndex);
+			free(leftAttr);
+			free(rightAttr);
+		}
+
+simpleExpr(seAttr) ::= simpleExpr(leftAttr) LE addExpr(rightAttr).
+		{
+			seAttr = malloc(sizeof(TokenAttribute));
+			seAttr->symIndex = emitLessEqualExpression(instList,symtab,leftAttr->symIndex,rightAttr->symIndex);
+			free(leftAttr);
+			free(rightAttr);
+		}
+
+simpleExpr(seAttr) ::= simpleExpr(leftAttr) LT addExpr(rightAttr).
+		{
+			seAttr = malloc(sizeof(TokenAttribute));
+			seAttr->symIndex = emitLessThanExpression(instList,symtab,leftAttr->symIndex,rightAttr->symIndex);
+			free(leftAttr);
+			free(rightAttr);
+		}
+
+simpleExpr(seAttr) ::= simpleExpr(leftAttr) GE addExpr(rightAttr).
+		{
+			seAttr = malloc(sizeof(TokenAttribute));
+			seAttr->symIndex = emitGreaterEqualExpression(instList,symtab,leftAttr->symIndex,rightAttr->symIndex);
+			free(leftAttr);
+			free(rightAttr);
+		}
+
+simpleExpr(seAttr) ::= simpleExpr(leftAttr) GT addExpr(rightAttr).
+		{
+			seAttr = malloc(sizeof(TokenAttribute));
+			seAttr->symIndex = emitGreaterThanExpression(instList,symtab,leftAttr->symIndex,rightAttr->symIndex);
+			free(leftAttr);
+			free(rightAttr);
+		}
+
+addExpr(addAttr) ::=  mulExpr(rightAttr).
+		{
+			addAttr = malloc(sizeof(TokenAttribute));
+			addAttr->symIndex = rightAttr->symIndex; 
+			free(rightAttr);
+		}
+
+addExpr(addAttr) ::=  addExpr(leftAttr) PLUS mulExpr(rightAttr).
+		{
+			addAttr = malloc(sizeof(TokenAttribute));
+			addAttr->symIndex = emitAddExpression(instList,symtab,leftAttr->symIndex,rightAttr->symIndex);
+			free(leftAttr);
+			free(rightAttr);
+		}
+
+addExpr(addAttr) ::=  addExpr(leftAttr) MINUS mulExpr(rightAttr).
+		{
+			addAttr = malloc(sizeof(TokenAttribute));
+			addAttr->symIndex = emitSubtractExpression(instList,symtab,leftAttr->symIndex,rightAttr->symIndex);
+			free(leftAttr);
+			free(rightAttr);
+		}
+
+mulExpr(mulAttr) ::=  factor(rightAttr).
+		{
+			mulAttr = malloc(sizeof(TokenAttribute));
+			mulAttr->symIndex = rightAttr->symIndex; 
+			free(rightAttr);
+		}
+
+mulExpr(mulAttr) ::=  mulExpr(leftAttr) TIMES factor(rightAttr).
+		{
+			mulAttr = malloc(sizeof(TokenAttribute));
+			mulAttr->symIndex = emitMultiplyExpression(instList,symtab,leftAttr->symIndex,rightAttr->symIndex);
+			free(leftAttr);
+			free(rightAttr);
+		}
+
+mulExpr(mulAttr) ::=  mulExpr(leftAttr) DIVIDE factor(rightAttr).
+		{
+			mulAttr = malloc(sizeof(TokenAttribute));
+			mulAttr->symIndex = emitDivideExpression(instList,symtab,leftAttr->symIndex,rightAttr->symIndex);
+			free(leftAttr);
+			free(rightAttr);
+		}		
+				
+factor(facAttr)	::= variable(varAttr).
+		{ 
+			facAttr = malloc(sizeof(TokenAttribute));
+			facAttr->symIndex = emitLoadVariable(instList,symtab,varAttr->symIndex);
+			free(varAttr);
+		}
+
+factor(facAttr) ::= constant(conAttr).
+		{ 
+			facAttr = malloc(sizeof(TokenAttribute));
+			facAttr->symIndex = conAttr->symIndex;
+			free(conAttr);
+		}
+
+factor ::= IDENTIFIER LPAREN RPAREN.
+
+factor(facAttr) ::= LPAREN expr(exAttr) RPAREN.
+		{
+			facAttr = malloc(sizeof(TokenAttribute));
+			facAttr->symIndex = exAttr->symIndex;
+			free(exAttr);
+		}
+
+variable(varAttr) ::= IDENTIFIER(idAttr).
+		{
+			varAttr = malloc(sizeof(TokenAttribute));
+			int symIndex = SymQueryIndex(symtab,idAttr->name);
+			varAttr->symIndex = emitComputeVariableAddress(instList,symtab,symtab,symIndex);
+			free(idAttr);
+		}
+
+variable ::= IDENTIFIER LBRACKET expr RBRACKET.
+
+stringConstant(scAttr) ::= STRING(strAttr).
+		{ 
+			scAttr = malloc(sizeof(TokenAttribute));
+			int symIndex = SymIndex(symtab,strAttr->name);
+			scAttr->symIndex = emitLoadStringConstantAddress(instList,dataList,symtab,symIndex); 
+			free(strAttr);
+		}
+
+constant ::= FLOATCON.
+
+constant(conAttr) ::= INTNUM(intAttr).
+		{ 
+			conAttr = malloc(sizeof(TokenAttribute));
+			int symIndex = SymIndex(symtab,intAttr->name);
+			conAttr->symIndex = emitLoadIntegerConstant(instList,symtab,symIndex); 
+			free(intAttr);
+		}

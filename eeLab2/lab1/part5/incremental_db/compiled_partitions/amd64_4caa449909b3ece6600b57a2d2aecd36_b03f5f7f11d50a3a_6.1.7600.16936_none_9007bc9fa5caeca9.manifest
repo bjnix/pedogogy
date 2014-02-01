@@ -1,0 +1,17 @@
+#########################################################################
+  
+[+] Exploit Title : Quicktech  [ Sql Injection Vulnerability]
+[+] Author : eXeSoul
+[+] Contact : exe.soul@live.com
+[+] Date : 02-03-2011
+[+] category: Web Apps [SQli]
+[+] HomePage : www.indishell.in
+[+] Version : all
+[+] Tested on : windows/linux 
+[+] Vulnerability Style : PHP [ Sql Injection Vunerability ]
+[+] Vendor: www.quicktech.ca
+[+] VCE: ()
+[+] Dork :  "Copyright 2010, Quicktech" OR inurl:leftmenubody.php?id=
+#########################################################################
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-

@@ -1,0 +1,1 @@
+(define (lazyRec a b c) (lazyRec b c (+ c (* 2 b) (* 3a))))

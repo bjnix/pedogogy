@@ -1,0 +1,257 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/DTD/strict.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/bitmaps/favicon.png">
+	<link rel="icon" href="/bitmaps/favicon.png" type="image/png">
+	<link href="../../faq.css" rel="Stylesheet" type="text/css">
+
+	<title>Winsock Programmer&rsquo;s FAQ: Basic Blocking Server</title>
+
+	<style type="text/css">
+		#next-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../../bitmaps/navbar-icons.png);
+			background-position: -38px 0;
+		}
+		#prev-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../../bitmaps/navbar-icons.png);
+			background-position: 0 0;
+		}
+		#stop-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../../bitmaps/navbar-icons.png);
+			background-position: -76px 0;
+		}
+		.navbar {
+			border: 8px solid #d0d0a0;
+			border-spacing: 0;
+			border-radius: 10px;
+			-moz-border-radius: 10px;
+			-webkit-border-radius: 10px;
+			height: 140px;
+			margin: auto;   /* center on page */
+			margin-top: 10px;
+			text-align: center;
+			width: 95%;
+		}
+		.navbar td {
+			background-color: #006000;
+			border: 10px solid #e0e0c0;
+			color: #ffffee;
+			font-size: 182%;
+			font-family:
+				"verdana",
+				"luxi sans",
+				"helvetica narrow",
+				"arial condensed",
+				"arial",
+				"univers",
+				sans-serif;
+			font-weight: bold;
+			text-align: center;
+		}
+		.navbarcap {
+			background-color: #e0e0c0 !important;
+			cursor: pointer;
+			padding-left: 10px;
+			width: 50px;
+		}
+	</style>
+</head>
+
+<body>
+
+
+
+
+
+
+
+
+	
+
+
+
+
+	
+
+	<!--  **** Navigation Bar ****  -->
+	<table class="navbar">
+		<tr>
+			<td class="navbarcap" onclick="location.href='../../examples/basics/CASClient/index.html'">
+				<a id="prev-link" href="../../examples/basics/CASClient/index.html"></a>
+			</td>
+
+			<td>
+				Winsock Programmer&rsquo;s FAQ<br>
+
+				
+
+				
+				
+				
+					Basic Winsock Examples: Basic Blocking Server
+				
+			</td>
+
+			<td class="navbarcap" onclick="location.href='../../examples/basics/threaded-server.html'">
+				<a id="next-link" href="../../examples/basics/threaded-server.html"></a>
+			</td>
+		</tr>
+	</table>
+
+	<!--  **** Body Container ****  -->
+	<div id="body" style="padding-left: 30px" >
+
+
+<p>This program is the direct counterpart of the
+<a href="../../examples/basics/basic-client.html">basic client example</a>: it is the simplest
+possible program of its kind. This program simply sets up a listener
+on the network interface and port passed on the program's command line,
+accepts incoming connections, and echoes the remote peer's packets back
+to them.</p>
+
+<p>The skeleton <code>main()</code> function in <a href="main.cpp">main.cpp</a>
+calls our <code>DoWinsock()</code> function, which contains the main loop
+of the program. The function starts off by setting up the listener. This
+binds the program to a particular network interface and port and tells
+Winsock to forward all connection requests to the program.</p>
+
+<p>The program then enters an endless loop to wait for connections. It
+accepts each incoming connection and then bounces packets back to the
+client until the client closes the connection. When that happens, the
+server closes its side of the socket and then goes back to waiting for
+connections.</p>
+
+<p>Notice that you must pass an address on the command line to
+this program, due to the way the common <code>main()</code> function
+works. For this program, you can safely use "0.0.0.0" all the time: when
+you <code>bind()</code> to the "any" address, Winsock sends incoming
+connections from any network interface to your program.</p>
+
+<h4>Interesting Behavior</h4>
+
+<p>This server exhibits some interesting behavior that you may want to
+experiment with:</p>
+
+<ul>
+	<li>If your computer has more than one network
+	interface (e.g., a modem for connecting to the Internet and
+	a network card for a LAN connection) you can pass a specific
+	network address to the program on the command line. This makes
+	the program bind to only that address, so incoming connection
+	requests from the other network interface are ignored.
+
+	<p>
+	<li>This server will only handle a
+	single connection at a time, but because of Winsock's
+	<a href="../../advanced.html#backlog">connection backlog</a>
+	mechanism, multiple clients can have connections pending
+	at one time. The first client that connects is accepted,
+	and the server will echo its packets back until it closes the
+	connection. Meanwhile, one other client can connect, because we
+	set the connection backlog size to 1 with the <code>listen()</code>
+	call. That additional client will then send data which the
+	stack will queue up, but it won't see a reply until the first
+	client disconnects so that the server can <code>accept()</code> this
+	subsequent connection. Prove this to yourself by running two
+	copies of <a href="../../examples/basics/basic-client.html">basic-client</a> against
+	this server with the "shutdown delay" set to some largish
+	value. Then try running three copies of basic-client.
+
+	<p>
+	<li>Try running the <code>netstat</code> command line program
+	while basic-server is running to see its listener record. (Note
+	that netstat may only work correctly for this under Windows NT
+	derivatives.)
+</ul>
+
+
+<h4>Building the Program</h4>
+
+<p>The only module you will need to compile this program, aside from the
+common files listed on the <a href="../../examples/basics/index.html">main examples page</a>,
+is <a href="basic-server.cpp">basic-server.cpp</a>. The comment at the top of the file gives
+complete compilation instructions; alternately, you can use the common
+<a href="Makefile">Makefile</a>.</p>
+
+
+
+		</div> <!-- end body div -->
+
+<hr class="noshade">
+
+
+<!--  Navigation footer  -->
+<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer nav"> 
+	<tr>
+		<td align="left" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="../../examples/basics/CASClient/index.html">&lt;&lt;&nbsp;CAsyncSocket-based Client</a><br>
+			</span>
+		
+		</td>
+
+		<td align="right" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="../../examples/basics/threaded-server.html">Multithreaded Server&nbsp;&gt;&gt;</a>
+			</span>
+		
+		</td>
+	</tr>
+</table>
+
+
+
+
+
+
+	<!--  Document Footer -->
+
+	<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer info"> 
+		<tr>
+			
+				<td align="left" class="thirdwidth">
+					
+					<span class="annotation">Updated Mon Sep 22 2008 12:15 MDT</span>
+				</td>
+				<td align="center" class="thirdwidth">
+				
+			
+
+			
+				&nbsp;
+			
+			</td>
+
+			<td align="right" class="thirdwidth">
+				<a href="/">Go to my home page</a>
+			</td>
+		</tr>	
+	</table>
+
+
+	<script type="text/javascript" src="/js/awstats_misc_tracker.js"></script>
+</body>
+</html>
+

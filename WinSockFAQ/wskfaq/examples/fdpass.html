@@ -1,0 +1,299 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/DTD/strict.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/bitmaps/favicon.png">
+	<link rel="icon" href="/bitmaps/favicon.png" type="image/png">
+	<link href="../faq.css" rel="Stylesheet" type="text/css">
+
+	<title>Winsock Programmer&rsquo;s FAQ: Passing Sockets Between Processes</title>
+
+	<style type="text/css">
+		#next-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: -38px 0;
+		}
+		#prev-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: 0 0;
+		}
+		#stop-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: -76px 0;
+		}
+		.navbar {
+			border: 8px solid #d0d0a0;
+			border-spacing: 0;
+			border-radius: 10px;
+			-moz-border-radius: 10px;
+			-webkit-border-radius: 10px;
+			height: 140px;
+			margin: auto;   /* center on page */
+			margin-top: 10px;
+			text-align: center;
+			width: 95%;
+		}
+		.navbar td {
+			background-color: #006000;
+			border: 10px solid #e0e0c0;
+			color: #ffffee;
+			font-size: 182%;
+			font-family:
+				"verdana",
+				"luxi sans",
+				"helvetica narrow",
+				"arial condensed",
+				"arial",
+				"univers",
+				sans-serif;
+			font-weight: bold;
+			text-align: center;
+		}
+		.navbarcap {
+			background-color: #e0e0c0 !important;
+			cursor: pointer;
+			padding-left: 10px;
+			width: 50px;
+		}
+	</style>
+</head>
+
+<body>
+
+
+
+
+
+
+
+
+	
+
+
+
+
+	
+
+	<!--  **** Navigation Bar ****  -->
+	<table class="navbar">
+		<tr>
+			<td class="navbarcap" onclick="location.href='../examples/rawping.html'">
+				<a id="prev-link" href="../examples/rawping.html"></a>
+			</td>
+
+			<td>
+				Winsock Programmer&rsquo;s FAQ<br>
+
+				
+
+				
+				
+				
+					Examples: Passing Sockets Between Processes
+				
+			</td>
+
+			<td class="navbarcap" onclick="location.href='../examples/ipaddr.html'">
+				<a id="next-link" href="../examples/ipaddr.html"></a>
+			</td>
+		</tr>
+	</table>
+
+	<!--  **** Body Container ****  -->
+	<div id="body" style="padding-left: 30px" >
+
+
+<p>This example is based on the example in the
+Microsoft documentation for the <code>_pipe()</code> run-time
+library function. It was brought to my attention by
+Valerie&nbsp;Puffet-Michel (<tt>Laurent_Michel at brown dot edu</tt>). I
+took the example and made a few small modifications to it.</p>
+
+<p>Essentially, this example works on the Win32 rule that a child
+process can inherit the file handles that the parent opened. The
+program passes the file handle IDs on the command line to the child
+that it spawns. Since file handles and socket descriptors are the
+same thing in Win32, this works just as well for sockets as it does
+for the pipe handles used in the example.</p>
+
+
+
+
+
+	
+
+
+<hr class="noshade">
+
+<h4 class=lmargin><a href="src/fdpass.cpp">fdpass.cpp</a></h4>
+
+<pre>
+<font color="#444444">// Borland C++ 5.0: bcc32 fdpass.cpp</font>
+<font color="#444444">// Visual C++ 5.0:  cl fdpass.cpp</font>
+<font color="#444444">//</font>
+<font color="#444444">// This sample program is hereby placed in the public domain.</font>
+
+<font color="0000ff"><strong>#include <font color="#008000">&lt;stdlib.h&gt;</font></strong></font>
+<font color="0000ff"><strong>#include <font color="#008000">&lt;stdio.h&gt;</font></strong></font>
+<font color="0000ff"><strong>#include <font color="#008000">&lt;io.h&gt;</font></strong></font>
+<font color="0000ff"><strong>#include <font color="#008000">&lt;fcntl.h&gt;</font></strong></font>
+<font color="0000ff"><strong>#include <font color="#008000">&lt;process.h&gt;</font></strong></font>
+<font color="0000ff"><strong>#include <font color="#008000">&lt;math.h&gt;</font></strong></font>
+
+<strong>enum</strong> <font color="#2040a0">PIPES</font> <font color="4444FF"><strong>{</strong></font>
+    <font color="#2040a0">READ</font> <font color="4444FF">=</font> <font color="#FF0000">0</font>,
+    <font color="#2040a0">WRITE</font> <font color="4444FF">=</font> <font color="#FF0000">1</font>
+<font color="4444FF"><strong>}</strong></font><font color="4444FF">;</font>
+
+<font color="0000ff"><strong>#define NUMPROBLEM 8</strong></font>
+
+<font color="0000ff"><strong>#ifdef _MSC_VER</strong></font>
+<font color="0000ff"><strong>    #define CWAIT _cwait</strong></font>
+<font color="0000ff"><strong>#else</strong></font>
+<font color="0000ff"><strong>    #define CWAIT cwait</strong></font>
+<font color="0000ff"><strong>#endif</strong></font>
+
+<strong>int</strong> <font color="#2040a0">main</font><font color="4444FF">(</font><strong>int</strong> <font color="#2040a0">argc</font>, <strong>char</strong> <font color="4444FF">*</font><font color="#2040a0">argv</font><font color="4444FF">[</font><font color="4444FF">]</font><font color="4444FF">)</font>
+<font color="4444FF"><strong>{</strong></font>
+    <strong>int</strong> <font color="#2040a0">hpipe</font><font color="4444FF">[</font><font color="#FF0000">2</font><font color="4444FF">]</font><font color="4444FF">;</font>
+    <strong>char</strong> <font color="#2040a0">hstr</font><font color="4444FF">[</font><font color="#FF0000">20</font><font color="4444FF">]</font><font color="4444FF">;</font>
+    <strong>int</strong> <font color="#2040a0">pid</font>, <font color="#2040a0">problem</font>, <font color="#2040a0">c</font><font color="4444FF">;</font>
+    <strong>int</strong> <font color="#2040a0">termstat</font><font color="4444FF">;</font>
+
+    <strong>if</strong> <font color="4444FF">(</font><font color="#2040a0">argc</font> <font color="4444FF">=</font><font color="4444FF">=</font> <font color="#FF0000">1</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+        <font color="#444444">//// No arguments, so this must be the parent process</font>
+        <font color="#444444">// Open a set of pipes</font>
+        <strong>if</strong> <font color="4444FF">(</font><font color="#2040a0">_pipe</font><font color="4444FF">(</font><font color="#2040a0">hpipe</font>, <font color="#FF0000">256</font>, <font color="#2040a0">O_BINARY</font><font color="4444FF">)</font> <font color="4444FF">=</font><font color="4444FF">=</font> <font color="4444FF">-</font><font color="#FF0000">1</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+            <font color="#2040a0">perror</font><font color="4444FF">(</font><font color="#008000">&quot;pipe failed&quot;</font><font color="4444FF">)</font><font color="4444FF">;</font>
+            <font color="#2040a0">exit</font><font color="4444FF">(</font><font color="#FF0000">1</font><font color="4444FF">)</font><font color="4444FF">;</font>
+        <font color="4444FF"><strong>}</strong></font>
+
+        <font color="#444444">// Convert read side of pipe to string and pass as an argument </font>
+        <font color="#444444">// to the child process.</font>
+        <font color="#2040a0">itoa</font><font color="4444FF">(</font><font color="#2040a0">hpipe</font><font color="4444FF">[</font><font color="#2040a0">READ</font><font color="4444FF">]</font>, <font color="#2040a0">hstr</font>, <font color="#FF0000">10</font><font color="4444FF">)</font><font color="4444FF">;</font>
+        <strong>if</strong> <font color="4444FF">(</font><font color="4444FF">(</font><font color="#2040a0">pid</font> <font color="4444FF">=</font> <font color="#2040a0">spawnl</font><font color="4444FF">(</font><font color="#2040a0">P_NOWAIT</font>, <font color="#2040a0">argv</font><font color="4444FF">[</font><font color="#FF0000">0</font><font color="4444FF">]</font>, <font color="#2040a0">argv</font><font color="4444FF">[</font><font color="#FF0000">0</font><font color="4444FF">]</font>, <font color="#2040a0">hstr</font>, <font color="#2040a0">NULL</font><font color="4444FF">)</font><font color="4444FF">)</font> <font color="4444FF">=</font><font color="4444FF">=</font> <font color="4444FF">-</font><font color="#FF0000">1</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+            <font color="#2040a0">perror</font><font color="4444FF">(</font><font color="#008000">&quot;Spawn failed&quot;</font><font color="4444FF">)</font><font color="4444FF">;</font>
+        <font color="4444FF"><strong>}</strong></font>
+
+        <font color="#444444">// Put problem in write pipe; it will appear in child's read pipe.</font>
+        <strong>for</strong> <font color="4444FF">(</font><font color="#2040a0">problem</font> <font color="4444FF">=</font> <font color="#FF0000">1000</font><font color="4444FF">;</font> <font color="#2040a0">problem</font> <font color="4444FF">&lt;</font><font color="4444FF">=</font> <font color="#2040a0">NUMPROBLEM</font> <font color="4444FF">*</font> <font color="#FF0000">1000</font><font color="4444FF">;</font> <font color="#2040a0">problem</font> <font color="4444FF">+</font><font color="4444FF">=</font> <font color="#FF0000">1000</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+            <strong>if</strong> <font color="4444FF">(</font><font color="#2040a0">write</font><font color="4444FF">(</font><font color="#2040a0">hpipe</font><font color="4444FF">[</font><font color="#2040a0">WRITE</font><font color="4444FF">]</font>, <font color="4444FF">(</font><strong>char</strong> <font color="4444FF">*</font><font color="4444FF">)</font> <font color="4444FF">&amp;</font><font color="#2040a0">problem</font>, <strong>sizeof</strong><font color="4444FF">(</font><strong>int</strong><font color="4444FF">)</font><font color="4444FF">)</font> <font color="4444FF">=</font><font color="4444FF">=</font> <font color="4444FF">-</font><font color="#FF0000">1</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+                <font color="#2040a0">perror</font><font color="4444FF">(</font><font color="#008000">&quot;parent write failed&quot;</font><font color="4444FF">)</font><font color="4444FF">;</font>
+            <font color="4444FF"><strong>}</strong></font>
+            <strong>else</strong> <font color="4444FF"><strong>{</strong></font>
+                <font color="#2040a0">printf</font><font color="4444FF">(</font><font color="#008000">&quot;Son, what is the square root of %d?<font color="#77dd77">\n</font>&quot;</font>, <font color="#2040a0">problem</font><font color="4444FF">)</font><font color="4444FF">;</font>
+            <font color="4444FF"><strong>}</strong></font>
+        <font color="4444FF"><strong>}</strong></font>
+
+        <font color="#444444">// Wait until spawned program is done processing.</font>
+        <font color="#2040a0">CWAIT</font><font color="4444FF">(</font><font color="4444FF">&amp;</font><font color="#2040a0">termstat</font>, <font color="#2040a0">pid</font>, <font color="#2040a0">WAIT_CHILD</font><font color="4444FF">)</font><font color="4444FF">;</font>
+        <strong>if</strong> <font color="4444FF">(</font><font color="#2040a0">termstat</font> <font color="4444FF">&amp;</font> <font color="#FF0000">0x0</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+            <font color="#2040a0">perror</font><font color="4444FF">(</font><font color="#008000">&quot;Child failed&quot;</font><font color="4444FF">)</font><font color="4444FF">;</font>
+        <font color="4444FF"><strong>}</strong></font>
+
+        <font color="#2040a0">close</font><font color="4444FF">(</font><font color="#2040a0">hpipe</font><font color="4444FF">[</font><font color="#2040a0">READ</font><font color="4444FF">]</font><font color="4444FF">)</font><font color="4444FF">;</font>
+        <font color="#2040a0">close</font><font color="4444FF">(</font><font color="#2040a0">hpipe</font><font color="4444FF">[</font><font color="#2040a0">WRITE</font><font color="4444FF">]</font><font color="4444FF">)</font><font color="4444FF">;</font>
+    <font color="4444FF"><strong>}</strong></font>
+    <strong>else</strong> <font color="4444FF"><strong>{</strong></font>
+        <font color="#444444">//// There is a command line argument, so we must be a child process</font>
+        <font color="#444444">// Convert argument to integer handle value.</font>
+        <font color="#2040a0">hpipe</font><font color="4444FF">[</font><font color="#2040a0">READ</font><font color="4444FF">]</font> <font color="4444FF">=</font> <font color="#2040a0">atoi</font><font color="4444FF">(</font><font color="#2040a0">argv</font><font color="4444FF">[</font><font color="#FF0000">1</font><font color="4444FF">]</font><font color="4444FF">)</font><font color="4444FF">;</font>
+
+        <font color="#444444">// Read problem from pipe and calculate solution.</font>
+        <strong>for</strong> <font color="4444FF">(</font><font color="#2040a0">c</font> <font color="4444FF">=</font> <font color="#FF0000">0</font><font color="4444FF">;</font> <font color="#2040a0">c</font> <font color="4444FF">&lt;</font> <font color="#2040a0">NUMPROBLEM</font><font color="4444FF">;</font> <font color="#2040a0">c</font><font color="4444FF">+</font><font color="4444FF">+</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+            <strong>if</strong> <font color="4444FF">(</font><font color="#2040a0">read</font><font color="4444FF">(</font><font color="#2040a0">hpipe</font><font color="4444FF">[</font><font color="#2040a0">READ</font><font color="4444FF">]</font>, <font color="4444FF">(</font><strong>char</strong> <font color="4444FF">*</font><font color="4444FF">)</font> <font color="4444FF">&amp;</font><font color="#2040a0">problem</font>, <strong>sizeof</strong><font color="4444FF">(</font><strong>int</strong><font color="4444FF">)</font><font color="4444FF">)</font> <font color="4444FF">=</font><font color="4444FF">=</font> <font color="4444FF">-</font><font color="#FF0000">1</font><font color="4444FF">)</font> <font color="4444FF"><strong>{</strong></font>
+                <font color="#2040a0">perror</font><font color="4444FF">(</font><font color="#008000">&quot;child read failed&quot;</font><font color="4444FF">)</font><font color="4444FF">;</font>
+            <font color="4444FF"><strong>}</strong></font>
+            <strong>else</strong> <font color="4444FF"><strong>{</strong></font>
+                <font color="#2040a0">printf</font><font color="4444FF">(</font><font color="#008000">&quot;Dad, the square root of %d is %3.2f.<font color="#77dd77">\n</font>&quot;</font>, <font color="#2040a0">problem</font>,
+                       <font color="#2040a0">sqrt</font><font color="4444FF">(</font><font color="4444FF">(</font><strong>double</strong><font color="4444FF">)</font> <font color="#2040a0">problem</font><font color="4444FF">)</font><font color="4444FF">)</font><font color="4444FF">;</font>
+            <font color="4444FF"><strong>}</strong></font>
+        <font color="4444FF"><strong>}</strong></font>
+    <font color="4444FF"><strong>}</strong></font>
+
+    <strong>return</strong> <font color="#FF0000">0</font><font color="4444FF">;</font>
+<font color="4444FF"><strong>}</strong></font>
+
+</pre>
+
+
+
+		</div> <!-- end body div -->
+
+<hr class="noshade">
+
+
+<!--  Navigation footer  -->
+<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer nav"> 
+	<tr>
+		<td align="left" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="../examples/rawping.html">&lt;&lt;&nbsp;Ping: Raw Sockets Method</a><br>
+			</span>
+		
+		</td>
+
+		<td align="right" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="../examples/ipaddr.html">Get the Local IP Address(es)&nbsp;&gt;&gt;</a>
+			</span>
+		
+		</td>
+	</tr>
+</table>
+
+
+
+
+
+
+	<!--  Document Footer -->
+
+	<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer info"> 
+		<tr>
+			
+				<td align="left" class="thirdwidth">
+					
+					<span class="annotation">Updated Sun Oct 25 2009 01:54 MDT</span>
+				</td>
+				<td align="center" class="thirdwidth">
+				
+			
+
+			
+				&nbsp;
+			
+			</td>
+
+			<td align="right" class="thirdwidth">
+				<a href="/">Go to my home page</a>
+			</td>
+		</tr>	
+	</table>
+
+
+	<script type="text/javascript" src="/js/awstats_misc_tracker.js"></script>
+</body>
+</html>
+

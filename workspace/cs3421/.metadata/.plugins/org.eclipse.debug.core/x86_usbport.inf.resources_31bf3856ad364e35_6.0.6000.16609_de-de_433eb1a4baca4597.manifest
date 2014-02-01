@@ -1,0 +1,73 @@
+ bug on the source. This is the function used to handle the
+
+IOCTL requests at 'SUPDrv-win.cpp'.
+
+/-----------
+
+  NTSTATUS _stdcall VBoxDrvNtDeviceControl(PDEVICE_OBJECT pDevObj, PIRP
+pIrp)
+  {
+    PSUPDRVDEVEXT       pDevExt = (PSUPDRVDEVEXT)pDevObj->DeviceExtension;
+
+    PIO_STACK_LOCATION  pStack = IoGetCurrentIrpStackLocation(pIrp);
+    PSUPDRVSESSION      pSession =
+(PSUPDRVSESSION)pStack->FileObject->FsContext;
+
+    /*
+    * Deal with the two high-speed IOCtl that takes it's arguments from
+
+    * the session and iCmd, and only returns a VBox status code.
+    */
+    ULONG ulCmd = pStack->Parameters.DeviceIoControl.IoControlCode;
+    if (    ulCmd == SUP_IOCTL_FAST_DO_RAW_RUN
+(1)   ||  ulCmd == SUP_IOCTL_FAST_DO_HWACC_RUN
+
+      ||  ulCmd == SUP_IOCTL_FAST_DO_NOP)
+    {
+      KIRQL oldIrql;
+      int   rc;
+
+      /* Raise the IRQL to DISPATCH_LEVEl to prevent Windows from
+rescheduling us to another CPU/core. */
+      Assert(KeGetCurrentIrql() <= DISPATCH_LEVEL);
+
+      KeRaiseIrql(DISPATCH_LEVEL, &oldIrql);
+(2)   rc = supdrvIOCtlFast(ulCmd, pDevExt, pSession);
+      KeLowerIrql(oldIrql);
+
+      /* Complete the I/O request. */
+      NTSTATUS rcNt = pIrp->IoStatus.Status = STATUS_SUCCESS;
+
+      pIrp->IoStatus.Information = sizeof(rc);
+      __try
+      {
+(3)     *(int *)pIrp->UserBuffer = rc;
+      }
+      __except(EXCEPTION_EXECUTE_HANDLER)
+      {
+        rcNt = pIrp->IoStatus.Status = GetExceptionCode();
+
+        dprintf(("VBoxSupDrvDeviceContorl: Exception Code %#x\n", rcNt));
+      }
+      IoCompleteRequest(pIrp, IO_NO_INCREMENT);
+      return rcNt;
+    }
+
+    return VBoxDrvNtDeviceControlSlow(pDevExt, pSession, pIrp, pStack);
+
+  }
+
+- -----------/
+
+At (1), we can see the sentence checking the IOCTL code. The constants
+use are defined at 'SUPDrvIOC.h' in this way:
+
+/-----------
+
+#define SUP_IOCTL_FAST_DO_RAW_RUN               SUP_CTL_CODE_FAST(64)
+
+/** Fast path IOCtl: VMMR0_DO_HWACC_RUN */
+#define SUP_IOCTL_FAST_DO_HWACC_RUN             SUP_CTL_CODE_FAST(65)
+/** Just a NOP call for profiling the latency of a fast ioctl call to
+VMMR0. */
+#define SUP_

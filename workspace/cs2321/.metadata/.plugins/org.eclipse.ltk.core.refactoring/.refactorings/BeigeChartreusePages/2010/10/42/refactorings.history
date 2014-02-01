@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename field &apos;number&apos; in &apos;cs2321.PhoneNumber&apos; to &apos;numb&apos;&#x0A;- Original project: &apos;BeigeChartreusePages&apos;&#x0A;- Original element: &apos;cs2321.PhoneNumber.number&apos;&#x0A;- Renamed element: &apos;cs2321.PhoneNumber.numb&apos;&#x0A;- Update references to refactored element&#x0A;- Update textual occurrences in comments and strings" delegate="false" deprecate="false" description="Rename field &apos;number&apos;" flags="589826" getter="false" id="org.eclipse.jdt.ui.rename.field" input="/src&lt;cs2321{PhoneNumber.java[PhoneNumber^number" name="numb" references="true" setter="false" stamp="1287258071961" textual="true" version="1.0"/>
+</session>

@@ -1,0 +1,25 @@
+package cs2321;
+
+import java.io.FileOutputStream;
+
+public class Assignment2 {
+	static public void main( String [] args )
+	{
+		ArraySequence<Integer> arrList = new ArraySequence<Integer>();
+		LinkedSequence<Integer> lnkList = new LinkedSequence<Integer>();
+		long sTime = System.nanoTime();
+		long sampleT = 0;
+		int n = 0; 
+		System.out.println("Time/input");
+		for( int i = 0 ; i < 5000 ; i ++ )
+
+			arrList.addLast(n);
+		sampleT = System.nanoTime();
+		System.out.println(sampleT + ", " + n);//output values
+
+		n = n + 1;//increment n
+	}
+
+}
+
+

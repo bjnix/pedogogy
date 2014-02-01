@@ -1,0 +1,716 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/DTD/strict.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/bitmaps/favicon.png">
+	<link rel="icon" href="/bitmaps/favicon.png" type="image/png">
+	<link href="../faq.css" rel="Stylesheet" type="text/css">
+
+	<title>Winsock Programmer&rsquo;s FAQ: The Lame List</title>
+
+	<style type="text/css">
+		#next-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: -38px 0;
+		}
+		#prev-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: 0 0;
+		}
+		#stop-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: -76px 0;
+		}
+		.navbar {
+			border: 8px solid #d0d0a0;
+			border-spacing: 0;
+			border-radius: 10px;
+			-moz-border-radius: 10px;
+			-webkit-border-radius: 10px;
+			height: 140px;
+			margin: auto;   /* center on page */
+			margin-top: 10px;
+			text-align: center;
+			width: 95%;
+		}
+		.navbar td {
+			background-color: #006000;
+			border: 10px solid #e0e0c0;
+			color: #ffffee;
+			font-size: 182%;
+			font-family:
+				"verdana",
+				"luxi sans",
+				"helvetica narrow",
+				"arial condensed",
+				"arial",
+				"univers",
+				sans-serif;
+			font-weight: bold;
+			text-align: center;
+		}
+		.navbarcap {
+			background-color: #e0e0c0 !important;
+			cursor: pointer;
+			padding-left: 10px;
+			width: 50px;
+		}
+	</style>
+</head>
+
+<body>
+
+
+
+
+
+
+
+
+	
+
+
+
+
+	
+
+	<!--  **** Navigation Bar ****  -->
+	<table class="navbar">
+		<tr>
+			<td class="navbarcap" onclick="location.href='../articles/effective-tcp.html'">
+				<a id="prev-link" href="../articles/effective-tcp.html"></a>
+			</td>
+
+			<td>
+				Winsock Programmer&rsquo;s FAQ<br>
+
+				
+
+				
+				
+				
+					Articles: The Lame List
+				
+			</td>
+
+			<td class="navbarcap" onclick="location.href='../articles/debugging-tcp.html'">
+				<a id="next-link" href="../articles/debugging-tcp.html"></a>
+			</td>
+		</tr>
+	</table>
+
+	<!--  **** Body Container ****  -->
+	<div id="body" style="padding-left: 30px" >
+
+
+<h3>The Lame List</h3>
+
+<h4>Introduction</h4>
+
+<p>I have reproduced The Lame List here because it is so valuable. This
+text is cut-and-pasted directly from Appendix C of version 2.2.2 of
+the <i>Windows Sockets 2 Application Programming Interface</i>. The
+list originally started out as a list of complaints by Winsock stack
+vendors about wrongheaded applications created back when Winsock was
+new and not as well understood. Despite that, these items are still
+valuable because newbie Winsockers still make the same wrongheaded
+mistakes. Avoiding the items on this list will take you a long way
+along the road toward Winsock guruhood.</p>
+
+<p>This version of the List is slightly different from the original:
+I have changed some punctuation, minor bits of phrasing, etc. And,
+of course, I have added all the pretty HTML formatting.</p>
+
+<h5>The original introduction to the List:</h5>
+
+<p><i>Keith Moore of Microsoft gets the credit for starting this,
+but other folks have begun contributing as well. Bob Quinn, from
+sockets.com, is the kind soul who provided the elaborations on why
+these things are lame and what to do instead. This is a snapshot
+of the list as we went to print (plus a few extras thrown in at the
+last minute).</i></p>
+
+<h4>The Windows Sockets Lame List<br>
+(or What&rsquo;s Weak This Week)</h4>
+
+<p><i>Brought to you by The Windows Sockets Vendor Community</i></p>
+
+<ol>
+  <li>Calling <code>connect()</code> on a non-blocking socket, getting
+  <code>WSAEWOULDBLOCK</code>, then immediately calling <code>recv()</code>
+  and expecting <code>WSAEWOULDBLOCK</code> before the connection has
+  been established. <i>Lame.</i><br><br>
+
+  Reason: This assumes that the connection will never be established by
+  the time the application calls <code>recv()</code>. Lame assumption.<br><br>
+
+  Alternative: Don&rsquo;t do that.  An application using a
+  non-blocking socket must handle the <code>WSAEWOULDBLOCK</code>
+  error value, but must not depend on occurrence of the error.
+
+  <p>
+  <li>Calling <code>select()</code> with three empty <code>fd_set</code>s
+  and a valid <code>TIMEOUT</code> structure as a sleazy delay
+  function. <i>Inexcusably lame.</i><br><br>
+
+  Reason: The <code>select()</code> function is intended as a network
+  function, not a general purpose timer.<br><br>
+
+  Alternative: Use a legitimate system timer service.
+
+  <p>
+  <li>Polling with <code>connect()</code> on a non-blocking socket to
+  determine when the connection has been established. <i>Dog
+  lame.</i><br><br>
+
+  Reason: The Winsock 1.1 spec does not define an error for
+  <code>connect()</code> when a non-blocking connection is pending, so the
+  error value returned may vary.<br><br>
+
+  Alternative: Using asynchronous notification of connection
+  completion is the recommended alternative. An application that
+  prefers synchronous operation mode could use the <code>select()</code>
+  function (but <a href="#item23">see item 23</a>).<br><br>
+
+  Non-Alternative: Changing a non-blocking socket to blocking mode
+  to block on <code>send()</code> or <code>recv()</code> is even more lame than
+  polling on <code>connect()</code>.
+
+  <p>
+  <a name=item4>
+  <li>Assuming socket handles are always less than 16. <i>Mired in
+  a sweaty mass of lameness.</i><br><br>
+
+  Reason: The only invalid socket handle value is defined by the
+  <code>winsock.h</code> file as <code>INVALID_SOCKET</code>. Any other
+  value the <code>SOCKET</code> type can handle is fair game, and an
+  application <i>must</i> handle it. In any case, socket handles are
+  supposed to be opaque, so applications shouldn&rsquo;t depend on
+  specific values for any reason.<br><br>
+
+  Alternative: Expect a socket handle of any value, including 0. And
+  don&rsquo;t expect socket handle values to change with each
+  successive call to <code>socket()</code> or <code>WSASocket()</code>. Socket
+  handles may be reused by the Winsock implementation.
+
+  <p>
+  <li>Polling with <code>select()</code> and a zero timeout in Win16&rsquo;s
+  non-preemptive environment. <i>Nauseatingly lame.</i><br><br>
+
+  Reason: With any non-zero timeout, <code>select()</code> will call the
+  current blocking hook function, so an application anticipating an
+  event will yield to other processes executing in a 16-bit Windows
+  environment. However, with a zero timeout an application will not
+  yield to other processes, and may not even allow network operations
+  to occur (so it will loop forever).</P>
+
+  Alternative: Use a small non-zero timeout. Better yet, use
+  asynchronous notification instead of using <code>select()</code>.
+
+  <p>
+  <li>Calling <code>WSAAsyncSelect()</code> with
+  a zero Event mask just to make the socket
+  non-blocking. <i>Lame. Lame. Lame. Lame. Lame.</i><br><br>
+
+  Reason: <code>WSAAsyncSelect()</code> is designed to allow an application
+  to register for asynchronous notification of network events. The
+  Winsock 1.1 specification didn&rsquo;t specify an error for a zero
+  event mask, but may interpret it as an invalid input argument
+  (so it may fail with <code>WSAEINVAL</code>), or silently ignore
+  the request.<br><br>
+
+  Alternative: To make a socket non-blocking without
+  registering for asynchronous notification, use
+  <code>ioctlsocket(FIONBIO)</code>. That&rsquo;s what it&rsquo;s for.
+
+  <p>
+  <a name="item7">
+  <li>Telnet applications that neither enable
+  <code>SO_OOBINLINE</code>, nor read OOB data. <i>Violently
+  lame.</i><br><br>
+
+  Reason: It is not uncommon for Telnet servers to generate urgent
+  data, like when a Telnet client will send a Telnet BREAK command
+  or Interrupt Process command. The server then employs a "Synch"
+  mechanism which consists of a TCP Urgent notification coupled with
+  the Telnet DATA MARK command. If the telnet client doesn&rsquo;t
+  read the urgent data, then it won&rsquo;t get any more normal data.
+  Not ever, ever, ever, ever.<br><br>
+
+  Alternative: Every telnet client should be able to read and/or detect
+  OOB data. They should either enable inline OOB data by calling
+  <code>setsockopt(SO_OOBINLINE)</code>, or use <code>WSAAsyncSelect()</code>
+  (or <code>WSAEventSelect()</code>) with <code>FD_OOB</code> or <code>select()</code>
+  using <code>except_fds</code> to detect OOB data arrival, and call
+  <code>recv()</code>/<code>WSARecv()</code> with <code>MSG_OOB</code> in response.
+
+  <p>
+  <li>Assuming 0 is an invalid socket handle value. <i>Uncontrollably
+  lame.</i><br><br>
+
+  Reason and Alternative: <a href="#item4">See item 4</a>.
+
+  <p>
+  <li>Applications that don&rsquo;t properly shut down when
+  the user closes the main window while a blocking API is in
+  progress. <i>Totally lame.</i><br><br>
+
+  Reason: Winsock applications that don&rsquo;t close sockets, and
+  call <code>WSACleanup()</code>, may not allow a Winsock implementation
+  to reclaim resources used by the application. Resource leakage
+  can eventually result in resource starvation by all other Winsock
+  applications (i.e. network system failure).<br><br>
+
+  Alternative: While a blocking API is in progress in a 16-bit Winsock
+  1.1 application, the proper way to abort is to:<br><br>
+
+  <ul type=disc>
+    <li>Call <code>WSACancelBlockingCall()</code><br><br>
+
+    <li>Wait until the pending function returns. If the cancellation
+    occurs before the operation completes, the pending function will
+    fail with the <code>WSAEINTR</code> error, but applications must
+    also be prepared for success, due to the race condition involved
+    with cancellation.<br><br>
+
+    <li>Close this socket, and all other sockets. Note: the proper
+    closure of a connected stream socket involves:<br><br>
+
+    <ul type=disc>
+      <li>call <code>shutdown()</code> with the <i>how</i> equal to 1
+      <li>loop on <code>recv()</code> until it returns 0 or fails with any error
+      <li>call <code>closesocket()</code>
+      <li>Call <code>WSACleanup()</code>
+    </ul>
+  </ul>
+  <br>
+
+  This procedure is not relevant to 32-bit Winsock 2 applications,
+  since they really block, so calling <code>WSACancelBlockingCall()</code>
+  from the same thread is impossible. (Therefore, this call is
+  deprecated under Winsock 2.) However, the shutdown procedure above
+  is still useful.
+
+  <p>
+  <li>Out of band data. <i>Intensely lame.</i><br><br>
+
+  Reason: TCP can&rsquo;t do Out of Band (OOB) data reliably. If
+  that isn&rsquo;t enough, there are incompatible differences
+  in the implementation at the protocol level (in the
+  urgent pointer offset). Berkeley (BSD) Unix implements
+  <a href="../../rfcs/official.html#rfc793">RFC 793</a>
+  literally, and many others implement the corrected <a
+  href="../../rfcs/official.html#rfc1122">RFC 1122</a> version. (Some
+  versions also allow multiple OOB data bytes by using the start of
+  the MAC frame as the starting point for the offset.) If two TCP
+  hosts have different OOB versions, they cannot send OOB data to
+  each other.<br><br>
+
+  Alternative: Ideally, you can use a separate socket for urgent data,
+  although in reality it is inescapable sometimes. Some protocols
+  require it (<a href="#item7">see item 7</a>), in which case you
+  need to minimize your dependence, or beef up your technical support
+  staff to handle user calls.
+
+  <p>
+  <li>Calling <code>strlen()</code> on a hostent structure&rsquo;s ip address,
+  then truncating it to four bytes, thereby overwriting part of
+  <code>malloc()</code>&rsquo;s heap header. <i>In all my years of observing
+  lameness, I have seldom seen something this lame.</i><br><br>
+
+  Reason: This doesn&rsquo;t really need a reason, does it?<br><br>
+
+  Alternative: Clearly, the only alternative is a brain
+  transplant.
+
+  <p>
+  <a name=item12>
+  <li>Polling with <code>recv(MSG_PEEK)</code> to determine when
+  a complete message has arrived. <i>Thrashing in a sea of
+  lameness.</i><br><br>
+
+  Reason: A stream socket (TCP) does not preserve message boundaries
+  (<a href="#item20">see item 20</a>). An application that uses
+  <code>recv(MSG_PEEK)</code> or <code>ioctlsocket(FIONREAD)</code> to wait
+  for a complete message to arrive, may never succeed. One reason
+  might be the internal service provider&rsquo;s buffering; if the
+  bytes in a "message" straddle a system buffer boundary, the Winsock
+  may never report the bytes that exist in other buffers.<br><br>
+
+  Alternative: Don&rsquo;t use peek reads. Always read data into your
+  application buffers, and examine the data there.
+
+  <p>
+  <li>Passing a longer buffer length than the actual buffer size
+  since you know you won&rsquo;t receive more than the actual buffer
+  size. <i>Universally lame.</i><br><br>
+
+  Reason: Winsock implementations often check buffers for
+  readability or writability before using them to avoid Protection
+  Faults. When a buffer length is longer than the actual buffer
+  length, this check will fail, so the function call will fail with
+  <code>WSAEFAULT</code>.<br><br>
+
+  Alternative: Always pass a legitimate buffer length.
+
+  <p>
+  <li>Bounding every set of operations with calls to
+  <code>WSAStartup()</code> and <code>WSACleanup()</code>. <i>Pushing the
+  lameness envelope.</i><br><br>
+
+  Reason: This is not illegal, as long as each <code>WSAStartup()</code>
+  has a matching call to <code>WSACleanup()</code>, but it is more work
+  than necessary.<br><br>
+
+  Alternative: In a DLL, custom control or class library, it is
+  possible to register the calling client based on a unique task
+  handle or process ID. This allows automatic registration without
+  duplication. Automatic de-registration can occur when a process
+  closes its last socket. This is even easier if you use the process
+  notification mechanisms available in the 32-bit environment.
+
+  <p>
+  <li>Ignoring API errors. <i>Glaringly lame.</i><br><br>
+
+  Reason: Error values are your friends! When a function fails, the
+  error value returned by <code>WSAGetLastError()</code> or included in an
+  asynchronous message can tell you <i>why</i> it failed. Based on
+  the function that failed, and the socket state, you can often infer
+  what happened, why, and what to do about it.<br><br>
+
+  Alternative: Check for error values, and write your applications to
+  anticipate them, and handle them gracefully when appropriate. When
+  a fatal error occurs, always display an error message that
+  shows:<br><br>
+
+  <ul type=disc>
+    <li>the function that failed
+    <li>the Winsock error number, and/or macro
+    <li>a short description of the error meaning
+    <li>suggestions for how to remedy, when possible 
+  </ul>
+
+  <p>
+  <li>Calling <code>recv(MSG_PEEK)</code> in response to an
+  <code>FD_READ</code> async notification message. <i>Profoundly
+  lame.</i><br><br>
+
+  Reason: It&rsquo;s redundant. It&rsquo;s redundant.<br><br>
+
+  Alternative: Make a plain <code>recv()</code> call in response
+  to an <code>FD_READ</code> message. Even if it fails with
+  <code>WSAEWOULDBLOCK</code>, that error is easy to ignore, and you
+  are guaranteed to get another <code>FD_READ</code> message later
+  since there is data pending.
+
+  <p>
+  <a name=item17>
+  <li>Installing an empty blocking hook that just returns
+  <code>FALSE</code>. <i>Floundering in an endless desert of
+  lameness.</i><br><br>
+
+  Reason: One of the primary purposes of the blocking hook function
+  was to provide a mechanism for an application with a pending
+  blocking operation to yield. By returning <code>FALSE</code> from the
+  blocking hook function, you defeat this purpose and your application
+  will prevent multitasking in the non-preemptive 16-bit Windows
+  environment. This may also prevent some Winsock implementations
+  from completing the pending network operation.<br><br>
+
+  Alternative: Typically this hack is done to try to prevent reentrant
+  messages. There are better ways to do this, like subclassing the
+  active window, although, admittedly, preventing reentrant messages
+  is not an easy problem to avoid.<br><br>
+
+  Note that this is not an issue for Winsock 2 applications, since
+  blocking hooks are now a thing of the past! (Good riddance.)
+
+  <p>
+  <a name=item18>
+  <li>Client applications that bind to a specific port. <i>Suffocating
+  in self lameness.</i><br><br>
+
+  Reason: By definition, client applications actively initiate a
+  network communication, unlike server applications which passively
+  wait for communication. A server must <code>bind()</code> to a specific port
+  which is known to clients that need to use the service, however,
+  a client need not <code>bind()</code> its socket to a specific port in
+  order to communicate with a server.<br><br>
+
+  Not only is it unnecessary for all but a very few application
+  protocols, it is dangerous for a client to <code>bind()</code> to a specific
+  port number. There is a danger in conflicting with another socket
+  that is already using the port number, which would cause the call
+  to <code>bind()</code> to fail with <code>WSAEADDRINUSE</code>.<br><br>
+
+  Alternative: Simply let the Winsock implementation assign the local
+  port number implicitly when you call <code>connect()</code> (on stream or
+  datagram sockets), or <code>sendto()</code> (on datagram sockets).
+
+  <p>
+  <a name=item19>
+  <li>Nagle challenged applications. <i>Perilously teetering on the
+  edge of a vast chasm of lameness.</i><br><br>
+
+  Reason: The Nagle algorithm reduces trivial network traffic. In a
+  nutshell, the algorithm says don&rsquo;t send a TCP segment until
+  either:<br><br>
+
+  <ul type=disc>
+    <li>all outstanding TCP segments have been acknowledged; or
+    <li>there&rsquo;s a full TCP segment ready to send
+  </ul>
+  <br>
+
+  A "Nagle challenged application" is one that cannot wait until
+  either of these conditions occurs, but has such time-critical data
+  that it must send continuously. This results in wasteful network
+  traffic.<br><br>
+
+  Alternative: Don&rsquo;t write applications that depend on the
+  immediate data echo from the remote TCP host.
+
+  <p>
+  <a name=item20>
+  <li>Assuming stream sockets maintain message frame
+  boundaries. <i>Mind bogglingly lame.</i><br><br>
+
+  Reason: Stream sockets (TCP) are called stream sockets, because
+  they provide data streams (duh). As such, the largest message size
+  an application can ever depend on is one-byte in length. No more, no
+  less. This means that with any call to <code>send()</code> or <code>recv()</code>,
+  the Winsock implementation may transfer any number of bytes less
+  than the buffer length specified.<br><br>
+
+  Alternative: Whether you use a blocking or non-blocking socket,
+  on success you should always compare the return from <code>send()</code>
+  or <code>recv()</code> with the value you expected. If it is less than
+  you expected, you need to adjust the buffer length, and pointer,
+  for another function call (which may occur asynchronously, if you
+  are using asynchronous operation mode).<br><br>
+
+  <p>
+  <li>16-bit DLLs that call <code>WSACleanup()</code> from their
+  WEP. <i>Inconceivably lame.</i><br><br>
+
+  Reason: <code>WEP()</code> is lame, ergo depending on it is lame. Seriously,
+  16-bit Windows did not guarantee that <code>WEP()</code> would always be
+  called, and the Windows subsystem was often in such a hairy state
+  that doing <i>anything</i> in <code>WEP()</code> was dangerous.<br><br>
+
+  Alternative: Stay away from <code>WEP()</code>.
+
+  <p>
+  <li>Single byte <code>send()</code>s and <code>recv()</code>s. <i>Festering
+  in a pool of lameness.</i><br><br>
+
+  Reason: Couple one-byte sends with Nagle disabled, and you have at
+  best a 40:1 overhead-to-data ratio. Can you say wasted bandwidth? I
+  thought you could.<br><br>
+
+  As for one-byte receives, think of the effort and inefficiency
+  involved with trying to drink a Guinness Stout through a hypodermic
+  needle. That&rsquo;s about how your application would feel "drinking"
+  data one-byte at a time.<br><br>
+
+  Alternative: Consider Postel&rsquo;s <a
+  href="../../rfcs/official.html#rfc793">RFC 793</a> words to live by:
+  "Be conservative in what you do, be liberal in what you accept from
+  others." In other words, send modest amounts, and receive as much
+  as possible.
+
+  <p>
+  <a name=item23>
+  <li><code>select()</code>. <i>Self abusively lame.</i><br><br>
+
+  Reason: Consider the steps involved in using <code>select()</code>. You need
+  to use the macros to clear the 3 <code>fd_set</code>s, then set the
+  appropriate <code>fd_set</code>s for each socket, then set the timer,
+  then call <code>select()</code>.<br><br>
+
+  Then after <code>select()</code> returns with the number of sockets that
+  have done something, you need to go through all the <code>fd_set</code>s
+  and all the sockets using the macros to find the event that occurred,
+  and even then the (lack of) resolution is such you need to infer
+  the event from the current socket state.<br><br>
+
+  Alternative: Use asynchronous operation mode
+  (e.g. <code>WSAAsyncSelect()</code> or <code>WSAEventSelect()</code>).
+
+  <p>
+  <li>Applications that call <code>gethostbyname()</code> before calling
+  <code>inet_addr()</code>. <i>Words fail to express such all-consuming
+  lameness.</i><br><br>
+
+  Reason: Some users prefer to use network addresses rather than
+  hostnames at times. The Winsock 1.1 specification does not say what
+  <code>gethostbyname()</code> should do with an IP address in standard
+  ASCII dotted IP notation. As a result, it may succeed and do an
+  (unnecessary) reverse-lookup, or it may fail.<br><br>
+
+  Alternative: With any destination input by a user&mdash;which may
+  be a hostname <i>or</i> dotted IP address&mdash;you should call
+  <code>inet_addr()</code> <i>first</i> to check for an IP address, and if
+  that fails call <code>gethostbyname()</code> to try to resolve it.<br><br>
+
+  Furthermore, in some applications, you may want to explicitly
+  check the input string for the broadcast address "255.255.255.255,"
+  since the return value from <code>inet_addr()</code> for this address is
+  the same as <code>SOCKET_ERROR</code>.
+
+  <p>
+  <li>Win32 applications that install blocking hooks. <i>Grossly
+  lame.</i><br><br>
+
+  Reason: Besides yielding to other applications (<a href="#item17">see
+  item 17</a>), blocking hook functions were originally designed to
+  allow concurrent processing within a task while there was a blocking
+  operation pending. In Win32, there&rsquo;s threading.<br><br>
+
+  Alternative: Use threads.
+
+  <p>
+  <li>Polling with <code>ioctlsocket(FIONREAD)</code> on a stream socket
+  until a complete "message" arrives. <i>Exceeds the bounds of earthly
+  lameness.</i><br><br>
+
+  Reason and Alternative: <a href="#item12">See item 12</a>.
+
+  <p>
+  <li>Assuming that a UDP datagram of any length may be
+  sent. <i>Criminally lame.</i><br><br>
+
+  Reason: Various networks all have their limitations on maximum
+  transmission unit (MTU). As a result, fragmentation will occur,
+  and this increases the likelihood of a corrupted datagram (more
+  pieces to lose or corrupt). Also, the TCP/IP service providers
+  at the receiving end may not be capable of re-assembling a large,
+  fragmented datagram.<br><br>
+
+  Alternative: Check for the maximum datagram size with the
+  <code>SO_MAX_MSG_SIZE</code> socket option, and don&rsquo;t send
+  anything larger. Better yet, be even more conservative. A max of
+  8K is a good rule-of-thumb.
+
+  <p>
+  <li>Assuming the UDP transmissions (especially multicast
+  transmissions) are reliable. <i>Sinking in a morass of
+  lameness.</i><br><br>
+
+  Reason: UDP has no reliability mechanisms (that&rsquo;s why we
+  have TCP).<br><br>
+
+  Alternative: Use TCP and keep track of your own message boundaries.
+
+  <p>
+  <li>Applications that require vendor-specific extensions, and cannot
+  run (or worse yet, load) without them. <i>Stooping to unspeakable
+  depths of lameness.</i><br><br>
+
+  Reason: If you can&rsquo;t figure out the reason, it&rsquo;s time
+  to hang up your keyboard.<br><br>
+
+  Alternative: Have a fallback position that uses only base
+  capabilities for when the extension functions are not present.
+
+  <p>
+  <li>Expecting errors when UDP datagrams are dropped by the sender,
+  receiver, or any router along the way. <i>Seeping lameness from
+  every crack and crevice.</i><br><br>
+
+  Reason: UDP is unreliable. TCP/IP stacks don&rsquo;t have to tell
+  you when they throw your datagrams away (a sender or receiver may
+  do this when they don&rsquo;t have buffer space available, and a
+  receiver will do it if they cannot reassemble a large fragmented
+  datagram.<br><br>
+
+  Alternative: Expect to lose datagrams, and deal. Implement
+  reliability in your application protocol, if you need it (or use TCP,
+  if your application allows it).<br><br>
+</ol>
+
+<p><font size=-1>Copyright owned by the authors of the Lame List items,
+including, but not necessarily limited to, the people mentioned in
+the introductory matter at the beginning of this article.</font></p>
+
+
+
+		</div> <!-- end body div -->
+
+<hr class="noshade">
+
+
+<!--  Navigation footer  -->
+<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer nav"> 
+	<tr>
+		<td align="left" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="../articles/effective-tcp.html">&lt;&lt;&nbsp;How to Use TCP Effectively</a><br>
+			</span>
+		
+		</td>
+
+		<td align="right" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="../articles/debugging-tcp.html">Debugging TCP/IP&nbsp;&gt;&gt;</a>
+			</span>
+		
+		</td>
+	</tr>
+</table>
+
+
+
+
+
+
+	<!--  Document Footer -->
+
+	<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer info"> 
+		<tr>
+			
+				<td align="left" class="thirdwidth">
+					
+					<span class="annotation">Updated Sun Oct 25 2009 01:54 MDT</span>
+				</td>
+				<td align="center" class="thirdwidth">
+				
+			
+
+			
+				&nbsp;
+			
+			</td>
+
+			<td align="right" class="thirdwidth">
+				<a href="/">Go to my home page</a>
+			</td>
+		</tr>	
+	</table>
+
+
+	<script type="text/javascript" src="/js/awstats_misc_tracker.js"></script>
+</body>
+</html>
+

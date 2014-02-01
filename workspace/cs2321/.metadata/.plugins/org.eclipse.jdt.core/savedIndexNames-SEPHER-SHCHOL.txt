@@ -1,0 +1,19 @@
+INDEX VERSION 1.126+/home/major/bjnix/workspace/cs2321/.metadata/.plugins/org.eclipse.jdt.core
+3597096861.index
+3544409938.index
+1119711585.index
+2470111891.index
+3585708103.index
+2267259074.index
+418021253.index
+1948023948.index
+4199028429.index
+1825397219.index
+3588765256.index
+2893406043.index
+3276656518.index
+3902306634.index
+2542752636.index
+2344375845.index
+2746323820.index
+1859824394.index

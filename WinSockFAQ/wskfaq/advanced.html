@@ -1,0 +1,848 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/DTD/strict.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/bitmaps/favicon.png">
+	<link rel="icon" href="/bitmaps/favicon.png" type="image/png">
+	<link href="./faq.css" rel="Stylesheet" type="text/css">
+
+	<title>Winsock Programmer&rsquo;s FAQ: Advanced Winsock Issues</title>
+
+	<style type="text/css">
+		#next-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(./bitmaps/navbar-icons.png);
+			background-position: -38px 0;
+		}
+		#prev-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(./bitmaps/navbar-icons.png);
+			background-position: 0 0;
+		}
+		#stop-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(./bitmaps/navbar-icons.png);
+			background-position: -76px 0;
+		}
+		.navbar {
+			border: 8px solid #d0d0a0;
+			border-spacing: 0;
+			border-radius: 10px;
+			-moz-border-radius: 10px;
+			-webkit-border-radius: 10px;
+			height: 140px;
+			margin: auto;   /* center on page */
+			margin-top: 10px;
+			text-align: center;
+			width: 95%;
+		}
+		.navbar td {
+			background-color: #006000;
+			border: 10px solid #e0e0c0;
+			color: #ffffee;
+			font-size: 182%;
+			font-family:
+				"verdana",
+				"luxi sans",
+				"helvetica narrow",
+				"arial condensed",
+				"arial",
+				"univers",
+				sans-serif;
+			font-weight: bold;
+			text-align: center;
+		}
+		.navbarcap {
+			background-color: #e0e0c0 !important;
+			cursor: pointer;
+			padding-left: 10px;
+			width: 50px;
+		}
+	</style>
+</head>
+
+<body>
+
+
+
+
+
+
+
+
+	
+
+
+
+
+	
+
+	<!--  **** Navigation Bar ****  -->
+	<table class="navbar">
+		<tr>
+			<td class="navbarcap" onclick="location.href='./intermediate.html'">
+				<a id="prev-link" href="./intermediate.html"></a>
+			</td>
+
+			<td>
+				Winsock Programmer&rsquo;s FAQ<br>
+
+				
+
+				
+					Section 4: Advanced Winsock Issues<br>
+				
+				
+				
+			</td>
+
+			<td class="navbarcap" onclick="location.href='./resources/index.html'">
+				<a id="next-link" href="./resources/index.html"></a>
+			</td>
+		</tr>
+	</table>
+
+	<!--  **** Body Container ****  -->
+	<div id="body" style="padding-left: 30px" >
+
+
+
+
+
+
+
+<a name="rawsocket"></a>
+<h5>4.1 - Does Winsock support raw sockets?</h5>
+
+<p>Yes, with limitations.</p>
+
+<p>For instance:</p>
+
+<pre>
+         SOCKET sd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
+</pre>
+
+<p>This says we want a raw IP-based socket (<code>AF_INET</code>)
+that uses ICMP&rsquo;s registered IP protocol number,
+1, which the Winsock headers have helpfully provided as
+the <code>IPPROTO_ICMP</code> constant. The Winsock headers
+define several more <code>IPPROTO_*</code> constants, but <a
+href="http://www.iana.org/assignments/protocol-numbers/">many
+more</a> IP-based protocols exist. You can pass any value
+from that list, which allows your program to implement
+that protocol. (There are restrictions, noted below.)
+For instance, you could pass 132 if you wanted to implement <a
+href="http://en.wikipedia.org/wiki/Stream_Control_Transmission_Protocol">SCTP</a>
+in user space. You could even use this feature to implement some new
+IP-based protocol. As I write this, protocol numbers 141-252 are still
+unassigned; you should use 253 or 254 for testing, as they have been
+reserved for that purpose.</p>
+
+<p>You should only use raw sockets if that is the only way to do what
+you want. There are several problems with raw sockets:</p>
+
+<ol>
+    <li><p>Your program needs administrator rights on the machine to
+    use raw sockets.</p></li>
+
+    <li><p>Raw sockets are much slower than an in-kernel protocol
+    driver using the stack&rsquo;s Transport Data Interface. The
+    TDI mechanism is documented and works hand-in-hand with Winsock,
+    just from the other side of the kernel/user space barrier.</p>
+
+    <p>One of the biggest arguments against writing a driver is that
+    you have to have admin rights to install it, but since that applies
+    to raw sockets anyway, it&rsquo;s actually an anti-argument:
+    a TDI protocol driver lets even unprivileged users use it,
+    through Winsock. (Above, I gave the example of SCTP, which you
+    could implement for fun in user space, but for production use,
+    you&rsquo;d probably want to buy one of the existing kernel
+    drivers.)</p></li>
+
+    <li><p>There are some things raw sockets simply cannot do, either
+    because Microsoft hasn&rsquo;t added the feature to Windows yet,
+    or because they&rsquo;ve intentionally prevented it, such as for
+    security reasons.</p></li>
+
+    <li><p>While you <i>can</i> use it to <a href="#pktcapture">capture
+    packets</a>, it&rsquo;s rather buggy. See that FAQ item for the
+    problems and the recommended alternative.</p></li>
+</ol>
+
+<p>Windows NT 4 only supports raw ICMP and raw IGMP. Primarily, this is
+to allow programs to <a href="./examples/rawping.html">send &ldquo;ping&rdquo;
+packets</a> in a standard way. I don&rsquo;t see the point of raw
+IGMP, since Winsock provides APIs for multicast group management,
+which should suffice.</p>
+
+<p>Windows 2000 greatly expanded raw sockets support relative to NT
+4. It shares this level of capability with</p>
+
+<ul>
+    <li>Windows XP (original release)</li>
+    <li>Windows XP SP1</li>
+    <li>Windows Server 2003</li>
+    <li>Windows Server 2008 (original release)</li>
+</ul>
+
+<p>Microsoft added some restrictions on raw sockets in the personal
+versions of Windows starting with XP SP2, and in the server
+versions starting with Windows Server 2008 R2. The first two exist
+to block certain kinds of malware. First, raw TCP is now completely
+disallowed. Less severe, with raw UDP, you can no longer spoof the
+source address. A third restriction, which just seems weird to me, is
+that you are no longer allowed to bind a raw socket to a particular
+network interface. That&rsquo;s almost like an anti-restriction,
+since it means raw sockets always receive incoming packets with the
+requested IP protocol number from all interfaces.</p>
+
+<p>Most of the time with raw sockets, you will simply build on top
+of the IP layer, letting the stack provide the IP header and set
+all its fields. If you need to change one or more of these fields,
+first look in the documentation for <code>setsockopt()</code>. You may find
+that there is an option for that already, such as <code>IP_TTL</code>
+to set the TTL field&rsquo;s default value. If no such option exists
+and you&rsquo;re running a <a href="./intro.html#versions">modern</a>
+version of Windows newer than Windows NT 4, you may be able to get the
+behavior you want with the <code>IP_HDRINCL</code> socket option. This
+tells the stack that data you pass on your raw socket will include
+the IP header as well as that of the next protocol level up.</p>
+
+<a name="pktcapture"></a>
+<h5>4.2 - How can I capture packets on a LAN with Winsock?</h5>
+
+<p>You can do this on Windows 2000 and later by passing
+<code>SIO_RCVALL</code> as the second parameter to <code>WSAIoctl()</code>.</p>
+
+<p>This feature has several problems:</p>
+
+<ol>
+    <li><p>It requires administrator privileges.</p></li>
+
+    <li><p>In all versions of Windows from 2000 through the original
+    Windows Server 2008 release, this method only lets you see incoming
+    packets.  It wasn&rsquo;t until Windows Server 2008 R2 and Windows
+    7 that this mechanism would also show you packets sent <i>from</i>
+    the machine.</p></li>
+
+    <li><p>It&rsquo;s easily broken by things like <a
+    href="http://en.wikipedia.org/wiki/TCP_Offload_Engine">TCP
+    Offload Engines</a>. The alternatives recommended below operate
+    at a lower level, so they can simply ask the network interface
+    to run in &ldquo;promiscuous&rdquo; mode, passing everything
+    through without processing. The current <code>SIO_RCVALL</code>
+    implementation doesn&rsquo;t do this. To be fair, sometimes there
+    is a driver option in the Control Panel that lets you control this,
+    but that&rsquo;s a hassle.</p></li>
+
+    <li><p>Most other common desktop operating systems have some way
+    to ask the kernel to do some of the filtering for you.  Not so
+    with <code>SIO_RCVALL</code>. You want this, because your program is
+    probably interested in only some packets, so you have to filter
+    out the ones you aren&rsquo;t interested in. At gigabit speeds,
+    it can take a surprising amount of CPU power to do this. You might
+    not be able to do it fast enough to prevent the kernel from running
+    out of buffer space, forcing it to drop packets. Doing at least
+    some of the filtering in the kernel can make this practical,
+    since it saves a kernel to user space context switch for each
+    filtered packet.</p></li>
+</ol>
+
+<p>A better plan is to bypass Winsock and talk to either the
+Transport Data Interface (TDI) layer or to the Network Device
+Interface Specification (NDIS) layer. The TDI layer is just above
+the system&rsquo;s NDIS (network driver) layer.</p>
+
+<p>You may not need to write this code yourself. The
+same packet capture driver used by the Windows version of
+<a href="./#Wireshark">Wireshark</a> &mdash; the famous
+open source cross-platform <a href="./newbie.html#debugtools">sniffer</a>
+&mdash; is also freely available. It is called <a
+href="http://www.winpcap.org/">WinPcap</a>. You may remember seeing the
+WinPcap installer run if you&rsquo;ve installed Wireshark already.</p>
+
+<p>WinPcap solves all of the problems above. The only tricky bit is
+that you have to be an admin to install it, and the feature that lets
+non-admins request packet capture services is an install-time option.
+If you&rsquo;re an unpriviledged user on a system where the driver
+is already installed, it&rsquo;s possible your admin installed it
+with this feature disabled.</p>
+
+<p>If you did have to write your own packet capture driver, you
+should look into some helper libraries to ease the creation. As of
+this writing, I know of <a href="./resources/libraries.html#Komodia">Komodia
+TCP/IP Library</a>, <a href="./resources/libraries.html#LibnetNT">LibnetNT</a>
+and <a href="./resources/libraries.html#PCAUSA">WinDis32</a>.</p>
+
+<p>PCAUSA &mdash; the makers of WinDis32 &mdash; also has <a
+href="http://www.pcausa.com/resources/">several FAQs</a> that talk
+about various low-level network stack access methods. These FAQs
+also point you to various bits of sample code, most of it from
+Microsoft&rsquo;s various DDKs.</p>
+
+
+<a name="pktheader"></a>
+<h5>4.3 - How can I change the contents of a packet?</h5>
+
+<p>If you just need to change a particular field in
+an outgoing packet&rsquo;s TCP or IP header, look up
+<code>setsockopt()</code>, <code>ioctlsocket()</code> and <code>WSAIoctl()</code>
+in the <a href="http://msdn.microsoft.com/">MSDN</a> <a
+href="http://msdn.microsoft.com/library/">Library</a>. You might find
+that there is an option specifically for that. For instance, you can
+change the IP header&rsquo;s TTL field by setting the <code>IP_TTL</code>
+socket option.</p>
+
+<p>If those mechanisms don&rsquo;t expose control of the field you
+need to change, you may be able to build your own packet headers with
+<a href="#rawsocket">raw sockets</a>. Beware that newer versions
+of Windows have added restrictions that prevent some types of
+modifications, usually for security reasons.</p>
+
+<p>If you need more complete control, you will have to dig below the
+Winsock API level.</p>
+
+<p>One option is to write a <a
+href="http://en.wikipedia.org/wiki/Layered_service_provider">Layered
+Service Provider</a>. An LSP is able to inject itself into the
+stack, so it can inspect and change data at will. Web filtering
+programs typically do their thing with an LSP, for instance. LSPs
+are a feature of Winsock, but this FAQ concerns itself only with
+the Winsock API. LSPs talk to the <i>other</i> Winsock interface,
+the Service Provider Interface (SPI). The best Winsock SPI reference
+I know of is the MSDN Library.</p>
+
+<p>Another option is to write a driver that talks to the Transport
+Data Interface (TDI) layer or to the Network Driver Interface
+Specification (NDIS) layer. Further information is available in <a
+href="http://www.pcausa.com/resources/">PCAUSA&rsquo;s FAQs</a>.</p>
+
+<p>Finally, don&rsquo;t be too quick to rule out the option of
+building your application on a platform that gives you better access
+to low-level packet details. Most Unix flavors (including Linux) offer
+powerful mechanisms for low-level network I/O. This is one reason more
+network appliances are built on Linux or BSD Unix than on Windows. For
+information on raw network programming on such platforms, see Thamer
+Al-Herbish&rsquo;s <a href="http://www.ntua.gr/rin/rawfaq.html">Raw
+IP Networking FAQ</a>.</p>
+
+
+<a name="ping"></a>
+<h5>4.4 - How can I &ldquo;ping&rdquo; another machine?</h5>
+
+<p>The &ldquo;official&rdquo; method uses the <code>IPPROTO_ICMP</code>
+<a href="#rawsocket">raw socket</a> type, supported by every
+<a href="./intro.html#versions">modern</a> version of Windows,
+and several older ones as well. <a href="./examples/rawping.html">[C++
+example]</a></p>
+
+<p>The other method uses ICMP.DLL, an even older part of Windows that
+Microsoft <a href="http://support.microsoft.com/kb/170591">claims</a>
+they&rsquo;re going to remove some day. They&rsquo;ve been saying
+that since at least the Windows XP days, and it&rsquo;s still in
+Windows 7. They doubtless keep it around because, unlike the raw
+sockets method, it lets you send ping packets without administrator
+privileges. The raw sockets method does have one advantage over the
+ICMP.DLL method: because it requires that you build the raw ICMP
+packet from scratch, you have complete control over its contents. The
+ICMP.DLL is simpler, but less powerful.  <a href="./examples/dllping.html">[C++
+example]</a></p>
+
+<p>Many programs misuse ping. Naturally it has good uses,
+but it&rsquo;s a sign of a broken program or protocol if you
+find yourself resorting to regular use of ping packets. The
+most common case of ping abuse is when the program needs to
+<a href="./newbie.html#abnormalclose">detect dropped connections</a>. See
+that FAQ item for better solutions to this problem.</p>
+
+
+<a name="dllsockets"></a>
+<h5>4.5 - Is it possible to create sockets that map to a DLL rather than an application?</h5>
+
+<p>Under Windows, a DLL&rsquo;s data is actually owned by the
+application that loads the DLL. If you need the DLL to own a single
+socket no matter how many processes load the DLL, you need to
+create a &ldquo;helper process&rdquo; which will perform all Winsock
+operations on behalf of the DLL. Naturally you&rsquo;ll need some
+kind of interprocess communication channel between the DLL and the
+helper process.</p>
+
+<p>Note that this issue only matters if you&rsquo;re using a DLL to let
+multiple processes share a socket. If you only have one process using
+the DLL, or if it&rsquo;s okay for each process to remain ignorant
+of the other processes using the DLL, this issue won&rsquo;t matter
+to you.</p>
+
+
+<a name="snmp"></a>
+<h5>4.6 - How can I get access to the {route, ARP, interface, etc.} table?</h5>
+
+<p>Use Windows&rsquo; <a
+href="http://msdn.microsoft.com/library/aa379100.aspx">SNMP API</a>.
+It allows you to access many &ldquo;hidden&rdquo; parts of the Windows
+networking subsystem, including the network interface list, the route
+and ARP tables, the list of connected network sockets, your Ethernet
+cards&rsquo; hardware addresses, etc.</p>
+
+<p><a href="./examples/getmac-snmp.html">One</a> of the FAQ&rsquo;s
+<a href="./examples/index.html">examples</a> uses this API.</a>
+
+<a name="macaddr"></a>
+<h5>4.7 - How do I get the MAC (a.k.a. hardware) address of the local Ethernet adapter?</h5>
+
+<p>This FAQ has example code for two hackish methods and one complex
+but reliable method.</p>
+
+<p>The <a href="./examples/getmac-netbios.html">first method</a> involves asking
+the NetBIOS API for the adapter addresses. This method will fail on
+systems where NetBIOS isn&rsquo;t present, and it sometimes gives
+bogus answers.</p>
+
+<p>There is a <a href="./examples/getmac-rpc.html">second method</a> that depends
+on a property of the RPC/OLE API. This property is documented but not
+guaranteed to do what we want, and in fact it fails in a number of
+situations. (Details in the example program&rsquo;s commentary.) As
+a result, I have to recommend that you give this method a miss.</p>
+
+<p>The <a href="./examples/getmac-snmp.html">third method</a> uses the
+sparsely-documented SNMP API to get MAC addresses. This method seems
+to work all the time, but it&rsquo;s far more complex than the other
+two methods.</p>
+
+<p>There is one other method for which I don&rsquo;t yet
+have an example: the IP Helper API has a function called
+<code>GetIfTable()</code> which returns a table containing MAC addresses,
+among many other tasty bits of info. This method works on all
+<a href="./intro.html#versions">modern</a> versions of Windows, and on a
+few older ones as well. Reportedly, you have to use <code>LoadLibrary()</code>
+to dig this function out of <tt>iphlpapi.dll</tt>, as it isn&rsquo;t
+exposed for direct linking. It&rsquo;s just as well, since implicitly
+linking to <tt>iphlpapi.dll</tt> lets your program fail gracefully
+when run on versions of Windows without this function.</p>
+
+<p>There are some <a
+href="http://www.pcausa.com/resources/ndisfaq.htm#FindMACAddress">lower-level
+methods</a> in PCAUSA&rsquo;s NDIS FAQ that may also be helpful
+to you.</p>
+
+
+<a name="maxsockets"></a>
+<h5>4.8 - How many simultaneous sockets can I have open?</h5>
+
+<p>There is no fixed connection or socket limit on any
+<a href="./intro.html#versions">modern</a> version of Windows. The limit
+depends on the <a href="./articles/io-strategies.html">I/O strategy</a> you use,
+the amount of memory in the system, and your program&rsquo;s network
+usage pattern:</p>
+
+<p class=inset><b>The I/O Strategy Factor:</b> As the above-linked
+article points out, there are many possible I/O strategies with
+Winsock. This is because they have different strengths and weaknesses,
+one of which is how well the strategy fares in high connection count
+situations. If you have to get into the thousands of connections,
+you want to use overlapped I/O, the only strategy that reliably allows
+you to achieve such high connection counts. Other strategies &mdash;
+asynchronous notification, <code>select()</code>, thread-per-socket... &mdash;
+will hit some other performance wall before the network stack
+itself starts running out of resources. Some take too much CPU,
+others require lots of context switches, others use inefficient
+notification mechanisms.</p>
+
+<p class=inset><b>The Memory Factor:</b> According to Microsoft, all
+modern versions of Windows allocate sockets out of the non-paged memory
+pool. (That is, memory that cannot be swapped to the page file by the
+virtual memory subsystem.) The size of this pool is necessarily fixed,
+and is dependent on the amount of physical memory in the system. On
+Intel x86 machines, the non-paged memory pool stops growing at 1/8
+the size of physical memory, with a hard maximum of 128 megabytes for
+Windows NT 4.0, and 256 megabytes for Windows 2000. You thus hit the
+maxium with 1 or 2&nbsp;GB of RAM, respectively. (I do not have any
+information on whether these limits have increased in newer versions
+of Windows, or if something different happens on 64-bit CPUs. If you
+do, <a href="/email/">email me</a>.)</p>
+
+<p class=inset><b>The &ldquo;Busy-ness&rdquo; Factor:</b> The amount
+of data associated with each socket varies depending on how that
+socket&rsquo;s used, but the minimum size is around 2 KB. Overlapped
+I/O buffers also eat into the non-paged pool, in blocks of 4 KB. (4 KB
+is the x86 memory management unit&rsquo;s page size.) Thus a simplistic
+application that&rsquo;s regularly sending and receiving on a socket
+will tie up at least 10 KB of non-pageable memory. Assuming that
+simple case of 10 KB of data per connection, the theoretical maximum
+number of sockets on NT 4.0 is about 12,800, and on Win2K 25,600.</p>
+
+<p>I have seen reports of a 64 MB Windows NT 4.0 machine hitting
+the wall at 1,500 connections, a 128 MB machine at around 4,000
+connections, and a 192 MB machine maxing out at 4,700 connections. It
+would appear that on these machines, each connection is using between
+4 KB and 6 KB. The discrepancy between these numbers and the 10 KB
+number above is probably due to the fact that in these servers, not
+all connections were sending and receiving all the time. The idle
+connections will only be using about 2 KB each.</p>
+
+<p>So, adjusting our &ldquo;average&rdquo; size down to 6 KB per
+socket, NT 4.0 could handle about 22,000 sockets and Win2K about 44,000
+sockets. The largest value I&rsquo;ve seen reported is 16,000 sockets
+on Windows NT 4.0. This lower actual value is probably partially
+due to the fact that the entire non-paged memory pool isn&rsquo;t
+available to a single program. Other running programs (such as core
+OS services) will be competing with yours for space in the non-paged
+memory pool.</p>
+
+
+<a name="64sockets"></a>
+<h5>4.9 - What are the &ldquo;64 sockets&rdquo; limitations?</h5>
+
+<p>There are two 64-socket limitations:</p>
+
+<p>The Windows event mechanism (e.g. <code>WaitForMultipleObjects()</code>)
+can only wait on 64 event objects at a time. Winsock 2 provides the
+<code>WSAEventSelect()</code> function which lets you use Windows&rsquo;
+event mechanism to wait for events on sockets. Because it uses
+Windows&rsquo; event mechanism, you can only wait for events on 64
+sockets at a time. If you want to wait on more than 64 Winsock event
+objects at a time, you need to use multiple threads, each waiting on
+no more than 64 of the sockets.</p>
+
+<p>The <code>select()</code> function is also limited in certain situations
+to waiting on 64 sockets at a time. The <code>FD_SETSIZE</code>
+constant defined in the Winsock header determines the size of the
+<code>fd_set</code> structures you pass to <code>select()</code>. The default
+value is 64, but if you define this constant to a different value
+before including the Winsock header, it accepts that value instead:</p>
+
+<pre>
+        #define FD_SETSIZE 1024
+        #include &lt;wsock32.h&gt;
+</pre>
+
+<p>The problem is that modern network stacks are complex, with
+many parts coming from various sources, including third parties via
+things like Layered Service Providers. When you change this constant,
+you&rsquo;re depending on all these components to play by the new
+rules. They&rsquo;re supposed to, but not all do. The typical symptom
+is that they ignore sockets beyond the 64th in larger <code>fd_set</code>
+structures. You can get around this limitation with threads, just as
+in the event object case.</p>
+
+
+<a name="forceif"></a>
+<h5>4.10 - How do I make Winsock use a specific network interface?</h5>
+
+<p>Before I answer the stated question, keep in mind that the
+routing layer of the stack exists to handle this for you. If your
+setup isn&rsquo;t working the way you want, maybe you just need to
+change the routing tables. (This is done with the <code>route</code>
+and <code>netstat</code> command-line programs.)</p>
+
+<p>There are two common reasons you might want to force the stack to
+use a particular network interface. The first is when you only want
+your server program to handle incoming connections on a particular
+interface. For example, perhaps one of the interfaces on your machine
+is an Ethernet card connected to a private LAN and the other is a USB
+DSL modem connected to the big bad Internet. In such a case, listening
+only on the trusted network is safer, if you can get away with it. The
+other reason is that you have two or more possible outgoing routes,
+and you want your client program to connect using a particular one
+without the routing layer getting in the way.</p>
+
+<p>You can do both of these things with the <code>bind()</code>
+function. Using one of the &ldquo;get my IP addresses&rdquo;
+<a href="./examples/index.html">examples</a>, you can present your user with
+a list of possible addresses. Then they can pick the appropriate
+address to use, which your program will use in the <code>bind()</code>
+call. Obviously, this is only feasible for programs intended for
+advanced users.</p>
+
+<p><a href="./intro.html#versions">Modern</a> versions of Windows let
+you give a network interface multiple IP addresses in the Network
+control panel. Get into the Advanced settings, where the other TCP/IP
+settings are, and you will find a place where you can enter multiple
+IP addresses for that single interface. The last time I tried this,
+the workstation and home class versions of Windows limited you to 5
+addresses here, with the server class versions being unlimited.</p>
+
+<p class="aside"><b>Aside:</b> One of the ways Internet hosting
+companies provide virtual shared hosting involves this technique of
+adding multiple IP aliases for a single network interface.  Each site
+hosted on that server is assigned one of these IP addresses, and
+the web server listens on each of them individually. This lets it
+detect which IP address an incoming connection came in on, and thus
+which site&rsquo;s web pages it should serve up. A single physical
+server thus appears, to outside clients, to be many servers. There
+are other varieties of virtual hosting, but diving deeper would take
+us off the topic of this FAQ item.</p>
+
+<a name="waitstates"></a>
+<h5>4.11 - What do the FIN_WAIT_<i>x</i>, TIME_WAIT, CLOSE_WAIT and other states mean?</h5>
+
+<p>These socket states are dispayed by the <code>netstat</code>
+tool. For information on what they mean and what to do about them,
+see the FAQ article <a href="./articles/debugging-tcp.html">Debugging TCP/IP</a>.</p>
+
+<a name="tcpbits"></a>
+<h5>4.12 - What is the { SYN, ACK, FIN, RST } bit?</h5>
+
+<p>See the FAQ article <a href="./articles/debugging-tcp.html">Debugging TCP/IP</a>.</p>
+
+
+<a name="clientbind"></a>
+<h5>4.13 - Is it a bad idea to <tt>bind()</tt> to a particular port in a client program?</h5>
+
+<p>It&rsquo;s occasionally justifiable, but most of the time
+it&rsquo;s a very bad idea. I&rsquo;ve only heard of two good uses
+of this feature:</p>
+
+<ol>
+  <li><p>Some protocols demand that the client connection come in from
+  a port in a particular range. Some implementations of the Berkeley
+  &ldquo;r-commands&rdquo; (e.g.  <code>rlogin</code>, <code>rsh</code>,
+  <code>rcp</code>, etc.) do this for security purposes. Because only
+  privileged users can bind to a low-numbered port (1-1023) on modern
+  operating systems, a connection coming from such a port implies
+  that the remote user is a privileged user. This is one of the very
+  tiny nods to security in the r-command scheme, in that the server
+  program only believes a remote user claiming to be <code>root</code>
+  is who they say they are if the connection comes in on a low-numbered
+  port. (These protocols are otherwise horribly insecure, and thus
+  no longer used on any system that has a clueful sysadmin.) These
+  commands achieve this by attempting to bind, one by one, to each
+  port in this range until it succeeds. This is a Unix-centric view,
+  though it does also apply on <a href="./intro.html#versions">modern</a>
+  versions of Windows where normal users aren&rsquo;t running as
+  Administrator.</p></li>
+
+  <li><p>The other common example is FTP in its &ldquo;active&rdquo;
+  mode: the client binds to a random port and then tells the server to
+  connect to that port for the next data transfer. This is justifiable
+  because it arguably cleans up the protocol, and the FTP client
+  doesn&rsquo;t need to bind to any particular port, it just needs to
+  bind to <i>a</i> port. (Incidentally, it does this by binding to port
+  0 &mdash; the stack chooses an available port when you do this.) This
+  is also justifiable because the FTP client is acting as a server in
+  this case, so it makes sense that it has to bind to a port.</p></li>
+</ol>
+
+<p>Note that in neither example are we trying to bind to a
+<i>particular</i> port. This is good design, for a client. Both
+examples have the client being flexible about the ports they bind to,
+because by nature client connections are typically transient, while
+servers tend to run for long periods of time, often as long as the
+physical machine runs.  A long-running process has a better claim on
+a particular port than a transient one, since if it fails to acquire
+access to that port, the system administrator is far more likely to
+figure out the problem. A program that&rsquo;s expected to always
+run will fail to start, and it is likely to fail again if you reboot
+the server because the conflicting program will grab the same port
+again itself. If there&rsquo;s a port conflict in a client, it likely
+won&rsquo;t happen every time, and even if it does, it only happens
+when the client runs.  It is therefore much trickier to debug.</p>
+
+<p>For another reason it&rsquo;s bad to bind to a particular port
+in a client, consider a web browser. They typically create several
+connections to download a single web page, one each to fetch all
+of the individual pieces of the page: images, applets, sound clips,
+etc. Often it has multiple connections open to a single server so the
+downloads can proceed in parallel. If a web browser were to bind to
+a particular local port, this wouldn&rsquo;t work. They could only
+have one connection going at a time, or depending on how it&rsquo;s
+done, even just one instance of the web browser prgoram running at
+a time.</p>
+
+<p>On top of all that, there&rsquo;s another problem. When you close
+a TCP connection, it goes into the <tt>TIME_WAIT</tt> state for a
+short period (between 30 and 120 seconds, typically), during which
+you cannot reuse that connection&rsquo;s &ldquo;5-tuple:&rdquo;
+the combination of {local host, local port, remote host, remote
+port, transport protocol}. (This timeout period is a feature
+of all correctly-written TCP/IP stacks, and is covered in <a
+href="/rfcs/official.html#rfc793">RFC 793</a> and especially <a
+href="/rfcs/official.html#rfc1122">RFC 1122</a>.) In practical terms,
+this means that if you bind to a specific port all the time, you
+cannot connect to the same host using the same remote port until the
+<tt>TIME_WAIT</tt> period expires. I have personally seen anomalous
+cases where the <tt>TIME_WAIT</tt> period does not occur, but when
+this happens, it&rsquo;s a bug in the stack, not something you should
+count on.</p>
+
+<p>For more on this matter, see the
+<a href="./articles/lame-list.html#item18">Lame List</a>.</p>
+
+
+<a name="backlog"></a>
+<h5>4.14 - What is the connection backlog?</h5>
+
+<p>When a connection request comes into a
+<a href="./glossary.html#stack">network&nbsp;stack</a>, it first checks to see if
+any program is listening on the requested port. If so, the stack
+replies to the <a href="./glossary.html#peer">remote&nbsp;peer</a>, completing the
+connection. The stack stores the connection information in a queue
+called the connection backlog. (When there are connections in the
+backlog, the <code>accept()</code> call simply causes the stack to remove
+the oldest connection from the connection backlog and return a socket
+for it.)</p>
+
+<p>One of the parameters to the <code>listen()</code> call sets the size
+of the connection backlog for a particular socket. When the backlog
+fills up, the stack begins rejecting connection attempts.</p>
+
+<p>Rejecting connections is a good thing if your program is written to
+accept new connections as fast as it reasonably can. If the backlog
+fills up despite your program&rsquo;s best efforts, it means your
+server has hit its load limit. If the stack were to accept more
+connections, your program wouldn&rsquo;t be able to handle them as
+well as it should, so the client will think your server is hanging. At
+least if the connection is rejected, the client will know the server
+is too busy and will try again later.</p>
+
+<p>The proper value for <code>listen()</code>&rsquo;s <code>backlog</code>
+parameter depends on how many connections you expect to see in the
+time between <code>accept()</code> calls. Let&rsquo;s say you expect an
+average of 1000 connections per second, with a burst value of 3000
+connections per second. (I picked these values because they&rsquo;re
+easy to manipulate, not because they&rsquo;re representative of the
+real world!) To handle the burst load with a short connection backlog,
+your server&rsquo;s time between <code>accept()</code> calls must be under 0.3
+milliseconds. Let&rsquo;s say you&rsquo;ve measured your time-to-accept
+under load, and it&rsquo;s 0.8 milliseconds: fast enough to handle the
+normal load, but too slow to handle your burst value. In this case,
+you could make <code>backlog</code> relatively large to let the stack
+queue up connections under burst conditions. Assuming that these
+bursts are short, your program will quickly catch up and clear out
+the connection backlog.</p>
+
+<p>The traditional value for <code>listen()</code>&rsquo;s <code>backlog</code>
+parameter is 5. This is actually the limit on the home and
+workstation class versions of Windows. On Windows Server, the maximum
+connection backlog size is 200, unless the dynamic backlog feature
+is enabled. (More info on dynamic backlogs below.) Because the stack
+will use its maximum backlog value if you pass in a larger value, you
+can pass a special constant, <code>SOMAXCONN</code>, to <code>listen()</code>
+which tells it to use whatever the platform maximum is, since the
+constant&rsquo;s value is 0x7FFFFFFF. There is no standard way to
+find out what backlog value the stack chose to use if it overrides
+your requested value.</p>
+
+<p>If your program is quick about calling <code>accept()</code>, low backlog
+limits are not normally a problem. However, it does mean that concerted
+attempts to make lots of connections in a short period of time can
+fill the backlog queue. This makes non-Server flavors of Windows
+a bad choice for a <a href="./intermediate.html#high-load">high-load
+server</a>: either a legitimate load or a <code>SYN</code> flood attack
+can overload a server on such a platform. (See below for more on
+<code>SYN</code> attacks.)</p>
+
+<p>Beware that large backlogs make <code>SYN</code> flood attacks much
+more, shall we say, effective. When Winsock creates the backlog queue,
+it starts small and grows as required. Since the backlog queue is
+in non-pageable system memory, a <code>SYN</code> flood can cause the
+queue to eat a lot of this precious memory resource.</p>
+
+<p>After the first <code>SYN</code> flood attacks in 1996, Microsoft
+added a feature to Windows NT 4.0 SP3 called the &ldquo;dynamic
+backlog.&rdquo; This feature is normally off for backwards
+compatibility, but when you turn it on, the stack can increase or
+decrease the size of the connection backlog in response to network
+conditions. (It can even increase the backlog beyond the normal maximum
+of 200, in order to soak up malicious <code>SYN</code>s.) The Microsoft
+Knowledge Base <a href="http://support.microsoft.com/kb/142641">article</a> that describes the feature
+also has some good practical discussion about connection backlogs.</p>
+
+<p>You will note that <code>SYN</code> attacks are dangerous for systems
+with both very short and very long backlog queues. The point is that a
+middle ground is the best course if you expect your server to withstand
+<code>SYN</code> attacks. Either use Microsoft&rsquo;s dynamic backlog
+feature, or pick a value somewhere in the 20-200 range and tune it
+as required.</p>
+
+<p>A program can rely too much on the backlog feature. Consider a
+single-threaded blocking server: the design means it can only handle
+one connection at a time. However, it can set up a large backlog,
+making the stack accept and hold connections until the program gets
+around to handling the next one. (See <a href="./examples/basics/basic-server.html">this
+example</a> to see the technique at work.) You should not take
+advantage of the feature this way unless your connection rate is very
+low and the connection times are very short. (Pedagogues excepted.
+Everyone else designing such a program should probably use 1, 0, or
+even close the listening socket while there is a client connected.)</p>
+
+
+
+
+
+		</div> <!-- end body div -->
+
+<hr class="noshade">
+
+
+<!--  Navigation footer  -->
+<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer nav"> 
+	<tr>
+		<td align="left" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="./intermediate.html">&lt;&lt;&nbsp;Intermediate Winsock Issues</a><br>
+			</span>
+		
+		</td>
+
+		<td align="right" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="./resources/index.html">Winsock Resources&nbsp;&gt;&gt;</a>
+			</span>
+		
+		</td>
+	</tr>
+</table>
+
+
+
+
+
+
+	<!--  Document Footer -->
+
+	<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer info"> 
+		<tr>
+			
+				<td align="left" class="thirdwidth">
+					
+					<span class="annotation">Updated Mon Sep 22 2008 12:15 MDT</span>
+				</td>
+				<td align="center" class="thirdwidth">
+				
+			
+
+			
+				&nbsp;
+			
+			</td>
+
+			<td align="right" class="thirdwidth">
+				<a href="/">Go to my home page</a>
+			</td>
+		</tr>	
+	</table>
+
+
+	<script type="text/javascript" src="/js/awstats_misc_tracker.js"></script>
+</body>
+</html>
+

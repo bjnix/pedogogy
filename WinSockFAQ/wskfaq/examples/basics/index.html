@@ -1,0 +1,311 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/DTD/strict.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/bitmaps/favicon.png">
+	<link rel="icon" href="/bitmaps/favicon.png" type="image/png">
+	<link href="../../faq.css" rel="Stylesheet" type="text/css">
+
+	<title>Winsock Programmer&rsquo;s FAQ: Basic Example Programs</title>
+
+	<style type="text/css">
+		#next-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../../bitmaps/navbar-icons.png);
+			background-position: -38px 0;
+		}
+		#prev-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../../bitmaps/navbar-icons.png);
+			background-position: 0 0;
+		}
+		#stop-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../../bitmaps/navbar-icons.png);
+			background-position: -76px 0;
+		}
+		.navbar {
+			border: 8px solid #d0d0a0;
+			border-spacing: 0;
+			border-radius: 10px;
+			-moz-border-radius: 10px;
+			-webkit-border-radius: 10px;
+			height: 140px;
+			margin: auto;   /* center on page */
+			margin-top: 10px;
+			text-align: center;
+			width: 95%;
+		}
+		.navbar td {
+			background-color: #006000;
+			border: 10px solid #e0e0c0;
+			color: #ffffee;
+			font-size: 182%;
+			font-family:
+				"verdana",
+				"luxi sans",
+				"helvetica narrow",
+				"arial condensed",
+				"arial",
+				"univers",
+				sans-serif;
+			font-weight: bold;
+			text-align: center;
+		}
+		.navbarcap {
+			background-color: #e0e0c0 !important;
+			cursor: pointer;
+			padding-left: 10px;
+			width: 50px;
+		}
+	</style>
+</head>
+
+<body>
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+	
+
+	<!--  **** Navigation Bar ****  -->
+	<table class="navbar">
+		<tr>
+			<td class="navbarcap" onclick="location.href='../../examples/index.html'">
+				<a id="prev-link" href="../../examples/index.html"></a>
+			</td>
+
+			<td>
+				Winsock Programmer&rsquo;s FAQ<br>
+
+				
+					
+				
+
+				
+					Section 6.1: Basic Example Programs<br>
+				
+				
+				
+			</td>
+
+			<td class="navbarcap" onclick="location.href='../../examples/basics/basic-client.html'">
+				<a id="next-link" href="../../examples/basics/basic-client.html"></a>
+			</td>
+		</tr>
+	</table>
+
+	<!--  **** Body Container ****  -->
+	<div id="body" style="padding-left: 30px" >
+
+
+<p>These examples show you how to implement several of the
+<a href="../../articles/io-strategies.html">various I/O strategies</a> that Winsock
+allows.</p>
+
+
+<h3>The Echo Protocol</h3>
+
+<p>Each example is either an echo client or an echo server. The servers
+read everything they receive and send it back verbatim. The clients send
+data to the server and check that the reply matches what was sent. The
+client programs can wait a bit before shutting the connection down,
+so that you can run multiple clients to test multi-connection servers.</p>
+
+<p>The echo server idea lets us focus more on the structure of the program
+and less on its function, and yet still provide a fairly functional
+program. I could have chosen something more substantial, like a "chat"
+program, but then you end up spending more time on user interface details
+than on Winsock programming issues.</p>
+
+<p>The clients will actually work with any echo server: the Windows NT
+derivatives and most Unixes have an optional service that sits on port
+7 and works just like my servers do. Because the echo service can be
+harnessed to attack a network, most system administrators leave that
+service disabled. You'll probably have to start such a server yourself
+to do your testing.</p>
+
+
+<h3>Structure and Philosophy</h3>
+
+<p>Although these programs are "minimal" in the sense that they don't
+do much, they are still complete in that they do all the proper error
+checking, shut their connections down gracefully, are fully commented,
+etc. Some thought has been given to making it easy to swipe pieces of
+code from these examples.</p>
+
+<p>These programs all follow the same form as much as possible. Any
+time you find two functions named the same in two different examples,
+you can be sure that they have the same purpose, so you can study them
+comparatively. For example, you can study <code>AcceptConnection()</code>
+in the basic and threaded servers to see how threads change the way you
+accept client connections.</p>
+
+
+<h3>Supported Compilers</h3>
+
+<p>I've tested all of the console mode programs with the command
+line compilers from Microsoft Visual C++ 5.0 SP3, the free version
+of Borland C++ 5.5, and the Cygwin 1.0 port of the GNU tools to Win32
+(EGCS 1.12). The Makefile below is compatible with the make tools from
+all three environments.</p>
+
+<p>The GUI programs are built around MFC, and tested under Visual
+C++ 5.0. The use of MFC is not an arbitrary decision: Aside from the
+simplifications in MFC itself, these programs use some of my MFC-based
+framework code which makes the examples more powerful and easier to
+follow. If I wrote straight Win32 code, you'd end up with either weaker
+examples, or harder-to-follow code.</p>
+
+
+<h3>Common Program Files</h3>
+
+<p>You should probably download all of these before you begin, because
+all the console mode examples require all of these files. The GUI programs
+require some of the files in this set, too.</p>
+
+	<p class=inset><b><a href="Makefile">Makefile</a></b> - The Makefile that
+	builds the console mode examples. (Not required, but makes
+	building the examples easier.)</p>
+
+	<p class=inset><b><a href="main.cpp">main.cpp</a></b> - The <code>main()</code>
+	function for the console mode example programs. Parses the command
+	line, initializes Winsock, calls the example's driver function,
+	and then shuts Winsock back down.</p>
+
+	<p class=inset><b><a href="ws-util.cpp">ws-util.cpp</a></b> - A set of Winsock
+	utility functions used by all the example programs.</p>
+
+	<p class=inset><b><a href="ws-util.h">ws-util.h</a></b> - Header file for
+	ws-util.cpp.</p>
+
+
+<h3>The Examples</h3>
+
+<p>Each of these examples illustrates a particular design choice. You
+can read more about the plusses and minuses of each choice in the FAQ
+article <a href="../../articles/io-strategies.html">Which I/O Strategy Should I Use?</a>. Obviously, no one design choice is
+best for all situations, or we would not have so many choices. Between
+the article's advice and these concrete examples, you should be able to
+make your decision fairly easily.</p>
+
+<p>You can test each server's multi-connection handling by running
+it in one command window and then running two or more instances
+of <a href="../../examples/basics/basic-client.html">the basic client</a> from another
+command window. The basic client has a shutdown delay that makes it
+keep its connection open for a bit after it receives the reply from the
+server. The delay gives you time to switch among a few command windows,
+to run a client from each before the first clients start closing their
+connections.</p>
+
+
+
+	<p class=inset><b><a href="../../examples/basics/basic-client.html">Basic Blocking Client</a></b> -  A client that uses blocking
+	sockets. This is the simplest of the programs here.</p>
+
+	<p class=inset><b><a href="../../examples/basics/AsyncClient/index.html">Asynchronous I/O Client</a></b> -  A client that uses asynchronous
+	sockets. This program is a GUI MFC program, but it does <i>not</i>
+	use CAsyncSocket or its derivatives.</p>
+
+	<p class=inset><b><a href="../../examples/basics/CASClient/index.html">CAsyncSocket-based Client</a></b> -  A client that uses MFC's asynchronous
+	sockets wrapper class: CAsyncSocket.</p>
+
+	<p class=inset><b><a href="../../examples/basics/basic-server.html">Basic Blocking Server</a></b> -  A simple server that uses blocking
+	sockets.</p>
+
+	<p class=inset><b><a href="../../examples/basics/threaded-server.html">Multithreaded Server</a></b> -  A server that sends each new connection
+	off to its own thread to be handled while the main thread sits
+	in a loop accepting connections.</p>
+
+	<p class=inset><b><a href="../../examples/basics/select-server.html">select()-based Server</a></b> -  A server that handles many connections
+	using the <code>select()</code> function to manage them all within a
+	single thread.</p>
+
+
+
+		</div> <!-- end body div -->
+
+<hr class="noshade">
+
+
+<!--  Navigation footer  -->
+<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer nav"> 
+	<tr>
+		<td align="left" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="../../examples/index.html">&lt;&lt;&nbsp;Example Programs</a><br>
+			</span>
+		
+		</td>
+
+		<td align="right" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="../../examples/basics/basic-client.html">Basic Blocking Client&nbsp;&gt;&gt;</a>
+			</span>
+		
+		</td>
+	</tr>
+</table>
+
+
+
+
+
+
+	<!--  Document Footer -->
+
+	<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer info"> 
+		<tr>
+			
+				<td align="left" class="thirdwidth">
+					
+					<span class="annotation">Updated Mon Sep 22 2008 12:15 MDT</span>
+				</td>
+				<td align="center" class="thirdwidth">
+				
+			
+
+			
+				&nbsp;
+			
+			</td>
+
+			<td align="right" class="thirdwidth">
+				<a href="/">Go to my home page</a>
+			</td>
+		</tr>	
+	</table>
+
+
+	<script type="text/javascript" src="/js/awstats_misc_tracker.js"></script>
+</body>
+</html>
+

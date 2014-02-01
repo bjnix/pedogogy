@@ -1,0 +1,20 @@
+#!/bin/bash
+gcc -ansi -pedantic -lm -Wall mkpram.c
+a.out
+rm -f t.cache.trace.*
+
+
+for ff in cache.trace.*	
+do
+	touch t."$ff".csv
+	
+	for f in *.goo 
+	do
+	echo $f
+	cachesim -p "$f" "$ff"|cat>> t."$ff".csv
+	
+	done	
+
+done
+rm -f *.goo
+rm -f a.out

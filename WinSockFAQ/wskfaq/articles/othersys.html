@@ -1,0 +1,351 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/DTD/strict.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/bitmaps/favicon.png">
+	<link rel="icon" href="/bitmaps/favicon.png" type="image/png">
+	<link href="../faq.css" rel="Stylesheet" type="text/css">
+
+	<title>Winsock Programmer&rsquo;s FAQ: Winsock for Non-Windows Systems</title>
+
+	<style type="text/css">
+		#next-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: -38px 0;
+		}
+		#prev-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: 0 0;
+		}
+		#stop-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: -76px 0;
+		}
+		.navbar {
+			border: 8px solid #d0d0a0;
+			border-spacing: 0;
+			border-radius: 10px;
+			-moz-border-radius: 10px;
+			-webkit-border-radius: 10px;
+			height: 140px;
+			margin: auto;   /* center on page */
+			margin-top: 10px;
+			text-align: center;
+			width: 95%;
+		}
+		.navbar td {
+			background-color: #006000;
+			border: 10px solid #e0e0c0;
+			color: #ffffee;
+			font-size: 182%;
+			font-family:
+				"verdana",
+				"luxi sans",
+				"helvetica narrow",
+				"arial condensed",
+				"arial",
+				"univers",
+				sans-serif;
+			font-weight: bold;
+			text-align: center;
+		}
+		.navbarcap {
+			background-color: #e0e0c0 !important;
+			cursor: pointer;
+			padding-left: 10px;
+			width: 50px;
+		}
+	</style>
+</head>
+
+<body>
+
+
+
+
+
+
+
+
+	
+
+
+
+
+	
+
+	<!--  **** Navigation Bar ****  -->
+	<table class="navbar">
+		<tr>
+			<td class="navbarcap" onclick="location.href='../articles/firewalls.html'">
+				<a id="prev-link" href="../articles/firewalls.html"></a>
+			</td>
+
+			<td>
+				Winsock Programmer&rsquo;s FAQ<br>
+
+				
+
+				
+				
+				
+					Articles: Winsock for Non-Windows Systems
+				
+			</td>
+
+			<td class="navbarcap" onclick="location.href='../articles/history.html'">
+				<a id="next-link" href="../articles/history.html"></a>
+			</td>
+		</tr>
+	</table>
+
+	<!--  **** Body Container ****  -->
+	<div id="body" style="padding-left: 30px" >
+
+
+<h3>Winsock for Non-Windows Systems</h3>
+
+<p><i>by Warren Young</i></p>
+
+<p>This FAQ is about using Winsock, with the focus of using
+<a href="../general.html#version">Winsock on Windows</a>. However,
+networking is inherently multiplatform, so many people writing Winsock
+programs also need to write programs for another platform. This article
+is about Winsock work-alikes on other platforms, and the alternatives
+to Winsock on these platforms.</p>
+
+<p>Before I begin, I want to point out that the Winsock API depends
+greatly on Windows' messaging, DLL, and I/O mechanisms. All of the
+Winsock work-alikes mentioned below have limitations with respect
+to Winsock. Most of the solutions below are a subset of Winsock,
+and others manage to emulate Windows mechanisms, with an associated
+speed hit.</p>
+
+
+<h4>DOS</h4>
+
+<h5>Windows Console Mode</h5>
+
+<p>Before I discuss alternatives to Winsock for DOS programmers, I want
+to clear up a common confusion. Command-line windows under
+<a href="../intro.html#versions">modern</a> versions of Windows are
+sometimes called &ldquo;DOS boxes.&rdquo; This is a historical term, and
+is now inaccurate. Modern Windows supports a class of programs called
+&ldquo;console mode programs.&rdquo; Such programs run in these
+&ldquo;DOS boxes&rdquo; and can look and feel like old DOS programs, but
+they can call any Windows API function, including Winsock. Note for
+example that most of the <a href="../examples/index.html">FAQ&rsquo;s examples</a>
+are console programs.</p>
+
+<p>If you have a choice, I urge you to use real Winsock in a console
+mode program rather than one of the truly DOS-based alternatives that
+follow. The only ways I can think of that this is not possible is that
+you are either building a system that boots purely into DOS with no
+Windows at all, or that you are somehow stuck running DOS box programs
+under Windows 3.1. (Poor souls!)</p>
+
+<h5>Real DOS Alternatives</h5>
+
+<p>Still not deterred? Okay, you have several options.</p>
+
+<p>Your first stop should probably be Richard Dawe&rsquo;s <a
+href="http://rich.phekda.org/richdawe/dossock/">dossock Mailing List</a>
+page. There are many useful-looking resources here.</p>
+
+<p>I have personal experience with only one of the options mentioned on
+that page, Erick Engelke&rsquo;s <a
+href="http://www.erickengelke.com/wattcp/">Waterloo TCP</a> package.
+This is a freeware TCP/IP stack that runs under DOS. I used this library
+myself years ago, and it works very well. The only problem I have with
+it is that its API is nothing like BSD sockets, which makes for more of
+a learning curve than is strictly necessary. The library itself is free
+to use, but they charge you if you want a programmer&rsquo;s manual.  If
+you plan on using this package to develop serious applications, trust
+me, this is a worthwhile investment. (If you&rsquo;re just puttering
+around, you can probably figure things out by spending lots of time
+messing around with the example programs.)</a>
+
+<p>There is an extended version of WatTCP called <a
+href="http://home.broadpark.no/~gvanem/">Watt-32</a>. Among other
+things, this adds support for 32-bit protected mode DOS and a BSD
+sockets API. I haven&rsquo;t used this version, so I can&rsquo;t comment
+further on it.</p>
+
+<p>There used to be several commercial BSD sockets libraries for DOS.
+I&rsquo;m not aware of any that are still available, alas.</p>
+
+<p>WatTCP uses <a href="http://www.crynwr.com/">Crynwr</a> packet
+drivers to access your network card. Becuase of this, you can&rsquo;t
+run these stacks under Windows NT derivatives, and it requires jumping
+through some hoops to make them run under Windows 95 derivatives.</p>
+
+<p>One final method I&rsquo;ve found that looks interesting enough to
+call out by name is <a
+href="http://www.trumpet.com.au/index.php/products/4-products/5-dos-tcpip-driver.html">offered</a>
+by <a href="http://www.trumpet.com.au/">Tattam Software Enterprises</a>.
+These are the same folk behind Trumpet Winsock, which was at one time
+one of the more popular third-party implementations of Winsock for
+Windows 3.<i>x</i> systems.</p>
+
+
+<h4>Unix</h4>
+
+<p>All modern Unixes offer BSD sockets, the ancestor of Winsock. All of
+the calls not beginning with &ldquo;WSA&rdquo; are in BSD sockets,
+either directly or with some small name change. See <a
+href="bsd-compatibility.html">this FAQ article</a> for details.</p>
+
+<p>Older versions of System V Unix had a competing API called XTI.
+(Also called TLI in its older form). XTI is similar enough to Winsock
+and BSD sockets that you won&rsquo;t have much trouble learning it if
+you know the sockets API, but you should only use it if BSD sockets
+are unavailable or broken on your system. XTI is a dead API.</p>
+
+<p>There&rsquo;s also the <a href="http://www.winehq.com/">WINE</a>
+option. WINE is a clean-room reimplementation of the Windows API for
+Unix/Linux including Winsock support. Years ago when I looked at this,
+they hadn&rsquo;t gotten around to finishing their Winsock 2 support,
+but I expect that this has changed. I tried to verify it, but
+couldn&rsquo;t find the tables showing the implementation status for the
+various parts of the Windows API. If anyone can point me to such
+resources, <a href="/email/">drop me a line</a>.</p>
+
+
+<h4>Mac OS and iOS</h4>
+
+<p>OS X is based on BSD Unix, so naturally it has BSD sockets
+support.</p>
+
+<p>iOS, being based on OS X, also supports BSD sockets.</p>
+
+<p>The original stack for MacOS was called MacTCP, which first came out
+for System 6 (?) back in 1988. It was replaced in 1995 with Open
+Transport, which first shipped with System 7.5.2 and was available
+through Mac OS 9. Neither API is BSD-compatible, though since both were
+built to support TCP/IP, the concepts should transfer reasonably
+well.</p>
+
+
+<h4>Palm OS and webOS</h4>
+
+<p>The modern &ldquo;Palm&rdquo; OS is webOS, which is based on browsewr
+technologies. The nearest thing to Winsock you would expect to see in
+such a platform is <a
+href="http://en.wikipedia.org/wiki/Web_Sockets">WebSockets</a>, which
+were not yet supported on webOS the last I checked. Lacking such
+support, the best you can do is use web protocols like HTTP and FTP.</p>
+
+<p>webOS does have a Plug-in Development Kit which supports both BSD
+Sockets and a higher-level wrapper API. It means you have to write in
+C/C++ instead of JavaScript, however.</p>
+
+<p>The &ldquo;classic&rdquo; Palm OS had a native network library that
+used different function names from BSD sockets, but newer SDKs have a
+wrapper that lets you use plain old sockets calls. Most of these are
+#defines in the SDK file Core/System/Unix/sys_socket.h. There are a few
+other calls (e.g., <code>select()</code>) that are implemented in a glue
+function. If you&rsquo;re using the PRC-Tools toolchain, you get this in
+your program by linking with the libNetSocket.a library.</p>
+
+
+<h4>NetWare</h4>
+
+<p>NetWare has had Winsock support since September of 1998. It&rsquo;s
+included in NetWare 5, and can be had for NetWare 4 in Support
+Pack 8.</p>
+
+
+<h4>OS/2</h4>
+
+<p>As of OS/2 Warp 4, OS/2 supports Winsock as well as its own sockets
+API. The Winsock emulation is part of OS/2&rsquo;s Open32 API.
+OS/2&rsquo;s native sockets API is based on pure Berkeley sockets.  In a
+sense, then, you can have a subset of Winsock without using the Open32
+API. You mainly lose all the functions that begin with
+&ldquo;WSA.&rdquo;</p>
+
+<p>OS/2 Warp 3.0 and earlier have extra-cost packages available that
+add TCP/IP support, including some support for the Winsock API.</p>
+
+
+
+
+		</div> <!-- end body div -->
+
+<hr class="noshade">
+
+
+<!--  Navigation footer  -->
+<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer nav"> 
+	<tr>
+		<td align="left" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="../articles/firewalls.html">&lt;&lt;&nbsp;Dealing with Firewalls</a><br>
+			</span>
+		
+		</td>
+
+		<td align="right" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="../articles/history.html">The History of Winsock&nbsp;&gt;&gt;</a>
+			</span>
+		
+		</td>
+	</tr>
+</table>
+
+
+
+
+
+
+	<!--  Document Footer -->
+
+	<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer info"> 
+		<tr>
+			
+				<td align="left" class="thirdwidth">
+					
+					<span class="annotation">Updated Mon Feb 21 2011 03:10 MST</span>
+				</td>
+				<td align="center" class="thirdwidth">
+				
+			
+
+			
+				&nbsp;
+			
+			</td>
+
+			<td align="right" class="thirdwidth">
+				<a href="/">Go to my home page</a>
+			</td>
+		</tr>	
+	</table>
+
+
+	<script type="text/javascript" src="/js/awstats_misc_tracker.js"></script>
+</body>
+</html>
+

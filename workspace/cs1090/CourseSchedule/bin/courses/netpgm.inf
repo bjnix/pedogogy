@@ -1,0 +1,528 @@
+
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIMilRed01
+FamilyName:ESRI MilRed 01
+StyleName:Regular
+MenuName:ESRI MilRed 01
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI MilRed 01
+WritingScript:Roman
+WinName:ESRI MilRed 01
+FileLength:49908
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIMilSym01
+FamilyName:ESRI MilSym 01
+StyleName:Regular
+MenuName:ESRI MilSym 01
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI MilSym 01
+WritingScript:Roman
+WinName:ESRI MilSym 01
+FileLength:73604
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIIGLFont16
+FamilyName:ESRI IGL Font16
+StyleName:Regular
+MenuName:ESRI IGL Font16
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI IGL Font16
+WritingScript:Roman
+WinName:ESRI IGL Font16
+FileLength:26528
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIMilSym02
+FamilyName:ESRI MilSym 02
+StyleName:Regular
+MenuName:ESRI MilSym 02
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI MilSym 02
+WritingScript:Roman
+WinName:ESRI MilSym 02
+FileLength:75640
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIIGLFont20
+FamilyName:ESRI IGL Font20
+StyleName:Regular
+MenuName:ESRI IGL Font20
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI IGL Font20
+WritingScript:Roman
+WinName:ESRI IGL Font20
+FileLength:12544
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIIGLFont21
+FamilyName:ESRI IGL Font21
+StyleName:ESRI IGL Font21
+MenuName:ESRI IGL Font21
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI IGL Font21
+WritingScript:Roman
+WinName:ESRI IGL Font21
+FileLength:14976
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIIGLFont22
+FamilyName:ESRI IGL Font22
+StyleName:ESRI IGL Font22
+MenuName:ESRI IGL Font22
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI IGL Font22
+WritingScript:Roman
+WinName:ESRI IGL Font22
+FileLength:15092
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIIGLFont23
+FamilyName:ESRI IGL Font23
+StyleName:ESRI IGL Font23
+MenuName:ESRI IGL Font23
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI IGL Font23
+WritingScript:Roman
+WinName:ESRI IGL Font23
+FileLength:12256
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIIGLFont24
+FamilyName:ESRI IGL Font24
+StyleName:ESRI IGL Font24
+MenuName:ESRI IGL Font24
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI IGL Font24
+WritingScript:Roman
+WinName:ESRI IGL Font24
+FileLength:22852
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIIGLFont25
+FamilyName:ESRI IGL Font25
+StyleName:ESRI IGL Font25
+MenuName:ESRI IGL Font25
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI IGL Font25
+WritingScript:Roman
+WinName:ESRI IGL Font25
+FileLength:16712
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIMilSym03
+FamilyName:ESRI MilSym 03
+StyleName:Regular
+MenuName:ESRI MilSym 03
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI MilSym 03
+WritingScript:Roman
+WinName:ESRI MilSym 03
+FileLength:73700
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIMilSym04
+FamilyName:ESRI MilSym 04
+StyleName:Regular
+MenuName:ESRI MilSym 04
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI MilSym 04
+WritingScript:Roman
+WinName:ESRI MilSym 04
+FileLength:88368
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIMilSym05
+FamilyName:ESRI MilSym 05
+StyleName:Regular
+MenuName:ESRI MilSym 05
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI MilSym 05
+WritingScript:Roman
+WinName:ESRI MilSym 05
+FileLength:36736
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIMilMod01
+FamilyName:ESRI MilMod 01
+StyleName:Regular
+MenuName:ESRI MilMod 01
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI MilMod 01
+WritingScript:Roman
+WinName:ESRI MilMod 01
+FileLength:73820
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIPublic1
+FamilyName:ESRI Public1
+StyleName:Regular
+MenuName:ESRI Public1
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI Public1
+WritingScript:Roman
+WinName:ESRI Public1
+FileLength:94844
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIGeometricSymbols
+FamilyName:ESRI Geometric Symbols
+StyleName:Regular
+MenuName:ESRI Geometric Symbols
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI Geometric Symbols
+WritingScript:Roman
+WinName:ESRI Geometric Symbols
+FileLength:57584
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIArcPad
+FamilyName:ESRI ArcPad
+StyleName:Regular
+MenuName:ESRI ArcPad
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI ArcPad
+WritingScript:Roman
+WinName:ESRI ArcPad
+FileLength:29740
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIDefaultMarker
+FamilyName:ESRI Default Marker
+StyleName:Regular
+MenuName:ESRI Default Marker
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI Default Marker
+WritingScript:Roman
+WinName:ESRI Default Marker
+FileLength:60792
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRITransportationCivic
+FamilyName:ESRI Transportation & Civic
+StyleName:Regular
+MenuName:ESRI Transportation & Civic
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI Transportation & Civic
+WritingScript:Roman
+WinName:ESRI Transportation & Civic
+FileLength:145580
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRICaves1
+FamilyName:ESRI Caves 1
+StyleName:Regular
+MenuName:ESRI Caves 1
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI Caves 1
+WritingScript:Roman
+WinName:ESRI Caves 1
+FileLength:91344
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRICaves2
+FamilyName:ESRI Caves 2
+StyleName:Regular
+MenuName:ESRI Caves 2
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI Caves 2
+WritingScript:Roman
+WinName:ESRI Caves 2
+FileLength:154352
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRICaves3
+FamilyName:ESRI Caves 3
+StyleName:Regular
+MenuName:ESRI Caves 3
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI Caves 3
+WritingScript:Roman
+WinName:ESRI Caves 3
+FileLength:39328
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIDimensioning
+FamilyName:ESRI Dimensioning
+StyleName:Regular
+MenuName:ESRI Dimensioning
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI Dimensioning
+WritingScript:Roman
+WinName:ESRI Dimensioning
+FileLength:11892
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIOilGasWater
+FamilyName:ESRI Oil, Gas, & Water
+StyleName:Regular
+MenuName:ESRI Oil, Gas, & Water
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI Oil, Gas, & Water
+WritingScript:Roman
+WinName:ESRI Oil, Gas, & Water
+FileLength:64008
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRINorth
+FamilyName:ESRI North
+StyleName:Regular
+MenuName:ESRI North
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI North
+WritingScript:Roman
+WinName:ESRI North
+FileLength:109740
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIGeologyUSGS95-525
+FamilyName:ESRI Geology USGS 95-525
+StyleName:Regular
+MenuName:ESRI Geology USGS 95-525
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI Geology USGS 95-525
+WritingScript:Roman
+WinName:ESRI Geology USGS 95-525
+FileLength:39992
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIElements
+FamilyName:ESRI Elements
+StyleName:Regular
+MenuName:ESRI Elements
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI Elements
+WritingScript:Roman
+WinName:ESRI Elements
+FileLength:42208
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRICommodities
+FamilyName:ESRI Commodities
+StyleName:Regular
+MenuName:ESRI Commodities
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI Commodities
+WritingScript:Roman
+WinName:ESRI Commodities
+FileLength:51940
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIShields
+FamilyName:ESRI Shields
+StyleName:Regular
+MenuName:ESRI Shields
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI Shields
+WritingScript:Roman
+WinName:ESRI Shields
+FileLength:55400
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIUSMUTCD1
+FamilyName:ESRI US MUTCD 1
+StyleName:Regular
+MenuName:ESRI US MUTCD 1
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI US MUTCD 1
+WritingScript:Roman
+WinName:ESRI US MUTCD 1
+FileLength:130728
+%EndFont
+
+%BeginFont
+Handler:WinTTHandler
+FontType:TrueType
+FontName:ESRIUSMUTCD2
+FamilyName:ESRI US MUTCD 2
+StyleName:Regular
+MenuName:ESRI US MUTCD 2
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ESRI US MUTCD 2
+WritingScript:Roman
+WinName:ESRI US MUTCD 2
+FileLength:92116
+%EndFont

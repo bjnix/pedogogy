@@ -1,0 +1,26 @@
+|part4
+D => D~0.IN3
+Clk => Clk~0.IN3
+Qa <= D_latch:comb_3.port2
+Qb <= pos_D_FlipFlop:comb_4.port2
+Qc <= neg_D_FlipFlop:comb_5.port2
+
+
+|part4|D_latch:comb_3
+D => Q$latch.DATAIN
+Clk => Q$latch.LATCH_ENABLE
+Q <= Q$latch.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|part4|pos_D_FlipFlop:comb_4
+D => Q~reg0.DATAIN
+Clk => Q~reg0.CLK
+Q <= Q~reg0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|part4|neg_D_FlipFlop:comb_5
+D => Q~reg0.DATAIN
+Clk => Q~reg0.CLK
+Q <= Q~reg0.DB_MAX_OUTPUT_PORT_TYPE
+
+

@@ -1,0 +1,18 @@
+*GPDSpecVersion: "1.0"
+*%
+*%    Created:  2006/05/22
+*%    Modified: 
+*%
+*%    Copyright (c) 2006 Ricoh Co., Ltd.
+*%    All rights reserved.
+*%
+*GPDFileName: "IFC615G6.GPD"
+*Include: "STDNAMES.GPD"
+*ModelName: "infotec  ISC 615G PCL6"
+*PrintRatePPM: 15
+*PrintRate: 15
+*PrintRateUnit: PPM
+*Ifdef: WINNT_51
+*Define: RI_PCLXL
+*Endif:
+*Include: "RIAPGC1.GPD"

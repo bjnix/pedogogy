@@ -1,0 +1,480 @@
+package cs2321;
+
+import net.datastructures.*;
+
+/**
+ * @author cdbrown
+ * SCJ: the space complexity is d+p because d is the number of locations and p is the number of paths.
+ * the locations are stored in a hashmap, which has a Space Complexity of 
+ */
+public class AdjListGraph<V, E> implements Graph<V, E> {
+
+	/**
+	 * Edge Entry method
+	 * @author bjnix
+	 * 
+	 *SCJ: The space complexity is constant.
+	 *Even though there is a map used to implement 
+	 *decorable position, the amount of entries  should 
+	 *be a small number. 
+	 *
+	 * @param <E>
+	 */
+	@SpaceComplexity("O(1)")
+	private class edgeEntry<E>  implements Edge<E> 
+	{		
+		//create pointers to vertices defining the edge
+		private vertEntry<V> vert0;//reference to the first end Vertex	
+		private vertEntry<V> vert1;//reference to the second end Vertex
+		private UnOrderedMap<Object,Object> edgmap;//map for decorable position
+		private E element;//element stored in edge
+		private Position<edgeEntry<E>> edgePos;//position of the edge in edgeL
+		private Position<Edge<E>> edgeVertPosVert0;//position of the edge in the edge list "edges" inside of vert0
+		private Position<Edge<E>> edgeVertPosVert1;//position of the edge in the edge list "edges" inside of vert1
+
+		//constructor
+		public edgeEntry(Vertex<V> u, Vertex<V> v, E e){
+			element = e;
+			edgmap = new UnOrderedMap<Object,Object>();
+			vert0 = (vertEntry<V>) u;
+			vert1 = (vertEntry<V>) v;
+
+		}
+
+
+
+
+		//Simple toString method
+		public String toString(){
+			return  "<"+ element + ";" + vert0 + "," + vert1 + ">" ; 
+		}
+
+		//-----Position implementation
+		public void setElement(E e){
+			element = e;
+		}
+
+		public E element() {
+			return element;
+		}
+		//-----Position-awareness methods
+		public void setPosition(Position<edgeEntry<E>> position){
+			edgePos = position;
+		}
+		public void setEdgePosVert1( Position<Edge<E>> pos)
+		{
+			edgeVertPosVert1 = pos;
+		}
+		public void setEdgePosVert0( Position<Edge<E>> pos){
+			edgeVertPosVert0 = pos;
+		}
+		public Position<edgeEntry<E>> getPosition()
+		{
+			return edgePos;
+		}
+		public Position<Edge<E>> getEdgePosVert1()
+		{
+			return edgeVertPosVert1;
+		}
+
+		public Position<Edge<E>> getEdgePosVert0()
+		{
+			return edgeVertPosVert0;
+		}
+
+
+		//-----Map implementation
+		public Iterable<Entry<Object, Object>> entries() {
+			return edgmap.entries() ;
+		}
+
+		public Object get(Object key) throws InvalidKeyException {
+			return edgmap.get(key);
+		}
+
+		public boolean isEmpty() {
+			return edgmap.isEmpty();
+		}
+
+		public Iterable<Object> keys() {
+			return edgmap.keys();
+		}
+
+		public Object put(Object key, Object value) throws InvalidKeyException {
+			return edgmap.put(key, value);
+		}
+
+		public Object remove(Object key) throws InvalidKeyException {
+			return edgmap.remove(key);
+		}
+
+		public int size() {
+			return edgmap.size();
+		}
+
+		public Iterable<Object> values() {
+			return edgmap.values();
+		}
+
+	}
+	/**
+	 * A simple vertex class
+	 * @author bjnix
+	 *
+	 *SCJ: even though this class holds multiple items, the space of it's instantiation is always constant.
+	 *The size of the input has no influence over the amount of space used
+	 *
+	 * @param <V>
+	 */
+	@SpaceComplexity("O(1)")
+	public class vertEntry<V> implements Vertex<String>
+	{
+		//Declare logfiles of pointers to ingoing and outgoing edges
+		private UnOrderedMap<Object,Object> vertmap;//
+		private String element;
+		private LinkedSequence<Edge<E>> edges;
+		private Position<Entry<V, vertEntry<V>>> vertPos = null;
+		private int degree = 0;
+
+		//Constructor
+		public vertEntry(String v) {
+			edges = new LinkedSequence<Edge<E>>();
+			vertmap = new UnOrderedMap<Object,Object>();
+			element = v;
+			degree = 0;
+
+		}	
+		public String toString()
+		{
+			return "["+ element + "," + degree + "]";
+		}
+		public void degreePlus(){
+			degree ++;
+		}
+		public void degreeMinus(){
+			degree --;
+		}
+		public int degree(){
+			return degree;
+		}
+		//--------Position implementation
+
+		public boolean equals(vertEntry<V> m ){
+			return element.compareTo(m.element) == 0;
+
+		}
+
+
+		public void setElement(String e){
+			element = e;
+		}
+
+		public String element() {
+			return element;
+		}
+
+		public void setPosition(Position<Entry<V, vertEntry<V>>> position){
+			vertPos = position;
+		}
+		public Position<Entry<V, vertEntry<V>>> getPosition()
+		{
+			return vertPos;
+		}
+
+		//--------Map implementation
+		public Iterable<Entry<Object, Object>> entries() {
+			return vertmap.entries() ;
+		}
+
+
+		public Object get(Object key) throws InvalidKeyException {
+			return vertmap.get(key);
+		}
+
+
+		public boolean isEmpty() {
+			return vertmap.isEmpty();
+		}
+
+
+		public Iterable<Object> keys() {
+			return vertmap.keys();
+		}
+
+
+		public Object put(Object key, Object value) throws InvalidKeyException {
+			return vertmap.put(key, value);
+		}
+
+
+		public Object remove(Object key) throws InvalidKeyException {
+			return vertmap.remove(key);
+		}
+
+
+		public int size() {
+			return vertmap.size();
+		}
+
+
+		public Iterable<Object> values() {
+			return vertmap.values();
+		}
+
+	}
+
+	private int numEdg;//number of edges
+	private int numVert;//number of vertices
+	private HashMap<V,vertEntry<V>> vertL;//hash map of vertices 
+	private LinkedSequence<edgeEntry<E>> edgeL;//linked Sequence of edges
+
+	//constructor
+	public AdjListGraph() {
+		vertL = new HashMap<V,vertEntry<V>>(657);
+		edgeL = new LinkedSequence<edgeEntry<E>>();
+		numEdg = 0;
+		numVert = 0;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#areAdjacent(net.datastructures.Vertex, net.datastructures.Vertex)
+	 */
+	@TimeComplexity(" O(min(deg(d),deg(p)))")
+	public boolean areAdjacent(Vertex<V> u, Vertex<V> v)
+	throws InvalidPositionException {
+		//TCJ: the time compexity is the degree of the vertex with the smaller degree. This is because we pick the 
+		//vertex with the smaller degree and in the worst case, we go through all of the entries in the "edges" list 
+		//to find the edge with the matching adjacency.
+
+		if(u.element() == null || v.element() == null)throw new InvalidPositionException("Invalid Position @areAdjacent()");
+		//find vertex of lower degree and use child method areadj() to determine adjacency
+		if (((vertEntry<V>)u).degree() > ((vertEntry<V>)v).degree())
+			return areadj(((vertEntry<V>)v),((vertEntry<V>)u));
+		else
+			return areadj(((vertEntry<V>)u),((vertEntry<V>)v));
+	}
+	@TimeComplexity("O(deg(d))")
+	private boolean areadj(vertEntry<V> n, vertEntry<V> m)
+	{
+		//TCJ: see areAdjacent()
+		for(Edge<E> b: n.edges)
+			if ( ((edgeEntry<E>)b).vert0.equals(m) || ((edgeEntry<E>)b).vert1.equals(m))
+				return true;
+		return false;
+
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#edges()
+	 */
+	@TimeComplexity("O(p)")
+	public Iterable<Edge<E>> edges() {
+		//TCJ: must iterate through the list of edges so the time complexity varies linearly with size of the list.
+		LinkedSequence<Edge<E>> temp = new LinkedSequence<Edge<E>>();
+		for ( edgeEntry<E> e : edgeL)
+		{
+			temp.addLast(e);
+		}
+		return temp;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#endVertices(net.datastructures.Edge)
+	 */
+	@TimeComplexity("O(1)")
+	public Vertex[] endVertices(Edge<E> e) throws InvalidPositionException {
+		if(((edgeEntry<E>)e).vert0 == null || ((edgeEntry<E>)e).vert1 == null) 
+			throw new InvalidPositionException("Invalid Position @ endVertices()");
+		//TCJ: an edge will only have two vertices, so it will just return the stored elements in constant time. 
+		Vertex[] temp = new Vertex[2];
+
+		temp[0] = ((edgeEntry<E>)e).vert0;
+		temp[1] = ((edgeEntry<E>)e).vert1;
+
+		return temp;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#incidentEdges(net.datastructures.Vertex)
+	 */
+	@TimeComplexity("O(deg(v)")
+	public Iterable<Edge<E>> incidentEdges(Vertex<V> v) throws InvalidPositionException {
+		//TCJ: v = vertex. It has to go through the list of incident edges requiring as many iterations as the degree of the vertex.
+		//This means that the time complexity will be the degree of the vertex.
+	
+		if(v == null)throw new InvalidPositionException("Invalid Position @ incidentEdges()");
+		return ((vertEntry<V>)v).edges;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#insertEdge(net.datastructures.Vertex, net.datastructures.Vertex, java.lang.Object)
+	 */
+	@TimeComplexity("O(1)")
+	public Edge<E> insertEdge(Vertex<V> u, Vertex<V> v, E o)
+	throws InvalidPositionException {
+		//TCJ:because this method uses a linked list to add last, the time is constant.
+		//the amount of input has no bearing over the operation of this method.
+
+		if(((vertEntry<V>)u).getPosition() == null || ((vertEntry<V>)v).getPosition()== null)
+		{throw new InvalidPositionException("Invalid Position @ insertEdge");}
+
+		edgeEntry<E> edge = new edgeEntry<E>(u, v, o);
+		((vertEntry<V>)u).edges.addLast(edge);
+		edge.setEdgePosVert0(((vertEntry<V>)u).edges.last());
+		((vertEntry<V>)u).degreePlus();
+		if(!u.equals(v)){
+		((vertEntry<V>)v).edges.addLast(edge);
+		edge.setEdgePosVert1(((vertEntry<V>)v).edges.last());
+		((vertEntry<V>)v).degreePlus();
+		}
+		edgeL.addLast(edge);
+		edge.setPosition(edgeL.last());
+		numEdg ++;
+		return edge;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#insertVertex(java.lang.Object)
+	 */
+	@TimeComplexity("O(1)")
+	public Vertex<V> insertVertex(V o) {
+		//TCJ: Because the vertex collection is a hash map, the insert time is constant.
+		vertEntry<V> ent;
+		vertEntry<V> temp = vertL.get(o);
+		//check to see if entry is already in list
+		if(temp == null){
+			ent = new vertEntry<V>((String) o);
+			vertL.put(o, ent);
+			ent.setPosition(vertL.getMap(o).last());
+			numVert ++;
+		}
+		else
+			ent = temp; 
+
+		return (Vertex<V>) ent;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#numEdges()
+	 */
+	public int numEdges() {
+		return numEdg;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#numVertices()
+	 */
+	public int numVertices() {
+		return numVert;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#opposite(net.datastructures.Vertex, net.datastructures.Edge)
+	 */
+	public Vertex<V> opposite(Vertex<V> v, Edge<E> en)
+	throws InvalidPositionException {
+
+		if(((edgeEntry<E>)en).vert0.equals(v))
+			return (Vertex<V>) ((edgeEntry<E>)en).vert1;
+		else if(((edgeEntry<E>)en).vert1.equals(v))
+			return (Vertex<V>) ((edgeEntry<E>)en).vert0;
+
+		else
+		{throw new InvalidPositionException ("Invalid position @ opposite()");}
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#removeEdge(net.datastructures.Edge)
+	 */
+	@TimeComplexity("O(1)")
+	public E removeEdge(Edge<E> e) throws InvalidPositionException {
+		//TCJ: see removeEdge(Edge<E>,Boolean)
+		return removeEdge(e,true);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#removeVertex(net.datastructures.Vertex)
+	 */
+	public V removeVertex(Vertex<V> v) throws InvalidPositionException {
+
+		for(Edge<E> e: ((vertEntry<V>)v).edges )
+			removeEdge(e,false);
+		V temp = v.element();
+		vertL.remove(temp);
+		numVert --;
+		return temp;
+	}
+	/**
+	 * private method called by removeVertex and removeEdge
+	 * to remove edge
+	 */
+	@TimeComplexity("O(1)")
+	private E removeEdge(Edge<E> e, Boolean tf){
+		//TCJ: because the edges are position aware, 
+		vertEntry<V> temp0 = ((vertEntry<V>) ((edgeEntry<E>)e).vert0);
+		vertEntry<V> temp1 = ((vertEntry<V>) ((edgeEntry<E>)e).vert1);
+
+		temp0.edges.remove(((edgeEntry<E>)e).getEdgePosVert0());
+		if (tf)
+			temp0.degreeMinus();
+
+		if (temp0.degree() == 0) 
+			removeVertex((Vertex<V>) temp0);
+
+		if (!tf)
+			temp0.degreeMinus();
+		temp1.edges.remove(((edgeEntry<E>)e).getEdgePosVert1());
+
+		if (tf)
+			temp1.degreeMinus();
+
+		if (temp1.degree() == 0)
+			removeVertex((Vertex<V>) temp1);
+
+		if (!tf)
+			temp1.degreeMinus();
+
+		edgeL.remove(((edgeEntry<E>)e).getPosition());
+
+
+		numEdg --;
+		return e.element();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#replace(net.datastructures.Edge, java.lang.Object)
+	 */
+	public E replace(Edge<E> p, E o) throws InvalidPositionException {
+		E temp = p.element();
+		((edgeEntry<E>)p).setElement(o);
+		return temp;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#replace(net.datastructures.Vertex, java.lang.Object)
+	 */
+	public V replace(Vertex<V> p, V o) throws InvalidPositionException {
+
+		V temp = p.element();
+		Vertex<V> rr = p;
+		((vertEntry<V>)rr).setElement((String) o);
+		vertL.put(o, (vertEntry<V>) rr);
+		vertL.remove(temp);
+		return temp;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.datastructures.Graph#vertices()
+	 */
+	public Iterable<Vertex<V>> vertices() {
+		Iterable<Entry<V, vertEntry<V>>> i = vertL.entries();
+		LinkedSequence<Vertex<V>> temp = new LinkedSequence<Vertex<V>>();
+		for(Entry<V, vertEntry<V>> e: i){
+			temp.addLast((Vertex<V>) e.getValue());
+		}
+		return temp;
+	}
+	//	public static void main(V[] args){
+	//		adj
+	//	}
+}

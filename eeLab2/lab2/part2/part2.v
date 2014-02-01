@@ -1,0 +1,76 @@
+module part2(SW,HEX0,HEX1,HEX2,HEX3,HEX4,HEX5,HEX6,HEX7,LEDR);
+	input [17:0] SW;		//toggle switches
+	output [6:0] HEX0;		//7-seg display 0 
+	output [6:0] HEX1;		//"			  " 1
+	output [6:0] HEX2; 		//"           " 2
+	output [6:0] HEX3;		//"           " 3
+	output [6:0] HEX4;		//"           " 4
+	output [6:0] HEX5;		//"           " 5
+	output [6:0] HEX6;		//"           " 6
+	output [6:0] HEX7;		//"           " 7
+	
+	output [17:0] LEDR;
+	assign LEDR = SW;			//assign the red leds to the switches
+	wire [15:0]M;
+	
+	
+	
+	char_7seg H0 (SW[3:0],HEX0,HEX1);
+	assign HEX2 = 7'b1111111;
+	assign HEX3 = 7'b1111111;
+	assign HEX4 = 7'b1111111;
+	assign HEX5 = 7'b1111111;
+	assign HEX6 = 7'b1111111;
+	assign HEX7 = 7'b1111111;
+	
+
+endmodule
+
+//implements a 7-segment decoder for binary to decimal
+module char_7seg (C,Display0,Display1);
+	input[3:0] C;		//input code
+	output[6:0]Display0; //output 7-seg code
+	output[6:0]Display1; //output 7-seg code
+//code for 7-segment decoder
+
+	wire[6:0] b0,b1,b2,b3,b4,b5,b6,b7,b8,b9,BLANK;			
+	reg[13:0]OUT;
+					//  6543210
+	assign b0[6:0] = 7'b1000000;
+	assign b1[6:0] = 7'b1111001;
+	assign b2[6:0] = 7'b0100100;
+	assign b3[6:0] = 7'b0110000;
+	assign b4[6:0] = 7'b0011001;
+	assign b5[6:0] = 7'b0010010;
+	assign b6[6:0] = 7'b0000010;
+	assign b7[6:0] = 7'b1111000;
+	assign b8[6:0] = 7'b0000000;
+	assign b9[6:0] = 7'b0010000;
+	assign BLANK[6:0] = 7'b1111111;
+	
+	always@(C)
+		case(C)
+							
+			4'b0000 : OUT = { BLANK , b0 };
+			4'b0001 : OUT = { BLANK , b1 };
+			4'b0010 : OUT = { BLANK , b2 };
+			4'b0011 : OUT = { BLANK , b3 };
+			4'b0100 : OUT = { BLANK , b4 };
+			4'b0101 : OUT = { BLANK , b5 };
+			4'b0110 : OUT = { BLANK , b6 };
+			4'b0111 : OUT = { BLANK , b7 };
+			4'b1000 : OUT = { BLANK , b8 };
+			4'b1001 : OUT = { BLANK , b9 };
+			4'b1010 : OUT = { b1 , b0 };	//10
+			4'b1011 : OUT = { b1 , b1 };	//11
+			4'b1100 : OUT = { b1 , b2 };	//12
+			4'b1101 : OUT = { b1 , b3 };	//13
+			4'b1110 : OUT = { b1 , b4 };	//14
+			4'b1111 : OUT = { b1 , b5 };	//15
+			//default : OUT = BLANK;
+	endcase	
+	assign Display0 = OUT[6:0];
+	assign Display1 = OUT[13:7];
+	
+	
+endmodule

@@ -1,0 +1,59 @@
+/**
+ * 
+ */
+package trie;
+
+import java.io.FileNotFoundException;
+
+/**
+ * @author Costco
+ *
+ */
+public class PasswordTrie implements PasswordTrieInterface {
+
+	/* (non-Javadoc)
+	 * @see trie.PasswordTrieInterface#addPassword(java.lang.String)
+	 */
+	@Override
+	public String addPassword(String password) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see trie.PasswordTrieInterface#checkPassword(java.lang.String)
+	 */
+	@Override
+	public boolean checkPassword(String password) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see trie.PasswordTrieInterface#deletePassword(java.lang.String)
+	 */
+	@Override
+	public String deletePassword(String password) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see trie.PasswordTrieInterface#printPasswords()
+	 */
+	@Override
+	public void printPasswords() {
+		// TODO Auto-generated method stub
+
+	}
+
+	/* (non-Javadoc)
+	 * @see trie.PasswordTrieInterface#readInFile(java.lang.String)
+	 */
+	@Override
+	public void readInFile(String filename) throws FileNotFoundException {
+		// TODO Auto-generated method stub
+
+	}
+
+}

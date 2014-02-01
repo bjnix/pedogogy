@@ -1,0 +1,207 @@
+package cs2321;
+
+import net.datastructures.*;
+
+import java.util.Comparator;
+
+public class LookupTable<K, V> implements Map<K, V> {
+
+	private Entry<K,V>[] data;
+	private Comparator<K> comparator;
+	private int mCurrentSize = 0;
+	private int mArraySize = 10;
+
+	private static class MyEntry<K,V> implements Entry<K,V> {
+		//proclaim variables
+		private K key;
+		private V value;
+
+		//**constructor**
+		public MyEntry(K k,V v){
+			key = k;
+			value = v;
+		}
+
+		@Override
+		public K getKey() { return key; }
+
+		@Override
+		public V getValue() { return value; }
+
+	}
+	//**constructor**
+	public LookupTable(){
+		comparator = new DefaultKeyComparator<K>();
+		data = (Entry<K,V>[])new Entry[mArraySize];
+	}
+
+	/**
+	 * 
+	 * @param comparator - on construction, set comparator
+	 */
+	public LookupTable(Comparator<K> comparator) {
+		this.comparator = comparator;
+	}
+
+	/**
+	 * @param comparator the comparator to set
+	 */
+	public void setComparator(Comparator<K> comparator) {
+		this.comparator = comparator;
+	}
+
+	@TimeComplexity("O(n)")
+	public Iterable<Entry<K, V>> entries() {
+		//TCJ: the time varies linearly with the size of list
+		LinkedSequence<Entry<K, V>> iter = new LinkedSequence<Entry<K, V>>();//create iterable list
+		for (int i = 0; i < mCurrentSize ; i ++)//for each entry in data,
+			iter.addLast(data[i]);//add the entry to the list
+		return iter;
+	}
+
+	public V get(K key) throws InvalidKeyException { 
+		int k = find(key);	
+		if (data[k].getKey() != key) { throw new InvalidKeyException("Invalid Key");}
+		return data[k].getValue();	
+	}
+	public boolean isEmpty() {		
+		return (mCurrentSize == 0);
+	}
+	@TimeComplexity("O(n)")
+	public Iterable<K> keys() {
+		//TCJ: the time varies linearly with the size of list
+		LinkedSequence<K> iter = new LinkedSequence<K>();//create iterable list
+		for (int i = 0; i < mCurrentSize ; i ++)//for each entry in data,
+			iter.addLast(data[i].getKey());//add the entry to the list
+		return iter;		
+	}
+
+	public V put(K key, V value) throws InvalidKeyException {
+		Entry<K, V> temp = null;
+		Entry<K, V> nue = new MyEntry<K, V>(key, value); 
+		if (mCurrentSize == mArraySize)
+			resize();
+		if (isEmpty())//check if list is empty
+		{
+			data[0] = nue;
+			mCurrentSize ++;
+			return null;
+		}
+		for ( int i = 0 ; i < mCurrentSize ; i ++ )//iterate through list
+		{
+
+			if ( comparator.compare(data[i].getKey(),key) == 0)//if the keys are equal, swap elements
+			{
+				temp = data[i];//save original entry
+				data[i] = nue;//insert element 
+				return temp.getValue();//return old entry
+			}
+
+			else if ( comparator.compare(data[i].getKey(),key) > 0 )//if nue entry is less than the current key, insert.
+			{
+
+				for(int j = mCurrentSize-1; j > i + 1 ; j--)
+				{
+					data[j] = data[j-1];//shift elements
+
+				}
+				data[i] = nue;//insert element
+				mCurrentSize ++;//increment size
+				return null;
+			}
+
+		}
+		data[mCurrentSize] = nue;//insert item at end of array
+		mCurrentSize ++ ;//increment size
+		return null;
+	}
+
+	private void resize() {
+		mArraySize = mArraySize * 2;//double array size
+		Entry<K, V>[] temp = (Entry<K,V>[])new Entry[mArraySize];//create new list
+		for ( int i = 0 ; i < mCurrentSize ; i ++ )//map all elements from data to temp
+			temp[i] = data [i];
+		data = temp;//map temp to data
+	}
+
+	public V remove(K key) throws InvalidKeyException {
+		int j = find(key);
+		//if ( data[j].getKey() != key ) { throw new InvalidKeyException("Invalid Key");}//throw exception if key not in list
+			
+		for ( int i = j ; i < mCurrentSize ; i ++)//shift elements, removing the element
+			data[i] = data[i+1];
+		mCurrentSize --;
+		return null;
+	}
+	@TimeComplexity("O(1)")
+	public int size() {
+		//TCJ: time does not vary with size
+		return mCurrentSize ;
+	}
+
+	public Iterable<V> values() {
+
+		//TCJ: the time varies linearly with the size of list
+		LinkedSequence<V> iter = new LinkedSequence<V>();//create iterable list
+		for (int i = 0; i < mCurrentSize ; i ++)//for each entry in data,
+			iter.addLast(data[i].getValue());//add the entry to the list
+		return iter;		
+
+	}
+	private int find(K key){
+
+		int left = 0; 
+		int right = mCurrentSize;
+		int mid = left + ((right - left)/2);
+		
+		while (!(data[mid] == key) && right > left)
+		{
+			mid = left + ((right - left)/2);
+			if ( comparator.compare(key,data[ mid ].getKey() ) > 0)
+				left = mid + 1;
+			else 
+				right = mid - 1;
+
+		}
+
+		return mid;
+
+	}
+	public String toString(){
+		String gum = " ";
+		for ( int i = 0 ; i < mCurrentSize ; i ++ )
+		{
+			gum = gum + data[i].getKey() + " , " + data[i].getValue() + " \n ";
+		}
+		return gum;
+	}
+
+	public static void main(String[] args){
+		LookupTable<Integer, String> lut = new LookupTable<Integer, String>();
+		System.out.println(lut.isEmpty());
+		lut.put(0, "A");
+		lut.put(1, "B");
+		lut.put(2, "C");
+		lut.put(3, "D");
+		lut.put(4, "E");
+		lut.put(5, "F");
+		lut.put(6, "G");
+		lut.put(7, "H");
+		lut.put(8, "I");
+		lut.put(9, "J");
+		lut.put(10, "K");
+		lut.put(11, "L");
+		lut.put(3, "foo");
+		lut.put(12, "M");
+		lut.put(13, "N");
+		lut.put(14, "O");
+		lut.put(15, "P");
+		lut.put(16, "Q");
+		lut.remove(7);
+		System.out.println(lut.isEmpty());
+		System.out.println(lut);
+		System.out.println(lut.entries());
+		
+	}
+}
+

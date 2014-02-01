@@ -1,0 +1,447 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/DTD/strict.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/bitmaps/favicon.png">
+	<link rel="icon" href="/bitmaps/favicon.png" type="image/png">
+	<link href="../faq.css" rel="Stylesheet" type="text/css">
+
+	<title>Winsock Programmer&rsquo;s FAQ: Debugging TCP/IP</title>
+
+	<style type="text/css">
+		#next-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: -38px 0;
+		}
+		#prev-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: 0 0;
+		}
+		#stop-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(../bitmaps/navbar-icons.png);
+			background-position: -76px 0;
+		}
+		.navbar {
+			border: 8px solid #d0d0a0;
+			border-spacing: 0;
+			border-radius: 10px;
+			-moz-border-radius: 10px;
+			-webkit-border-radius: 10px;
+			height: 140px;
+			margin: auto;   /* center on page */
+			margin-top: 10px;
+			text-align: center;
+			width: 95%;
+		}
+		.navbar td {
+			background-color: #006000;
+			border: 10px solid #e0e0c0;
+			color: #ffffee;
+			font-size: 182%;
+			font-family:
+				"verdana",
+				"luxi sans",
+				"helvetica narrow",
+				"arial condensed",
+				"arial",
+				"univers",
+				sans-serif;
+			font-weight: bold;
+			text-align: center;
+		}
+		.navbarcap {
+			background-color: #e0e0c0 !important;
+			cursor: pointer;
+			padding-left: 10px;
+			width: 50px;
+		}
+	</style>
+</head>
+
+<body>
+
+
+
+
+
+
+
+
+	
+
+
+
+
+	
+
+	<!--  **** Navigation Bar ****  -->
+	<table class="navbar">
+		<tr>
+			<td class="navbarcap" onclick="location.href='../articles/lame-list.html'">
+				<a id="prev-link" href="../articles/lame-list.html"></a>
+			</td>
+
+			<td>
+				Winsock Programmer&rsquo;s FAQ<br>
+
+				
+
+				
+				
+				
+					Articles: Debugging TCP/IP
+				
+			</td>
+
+			<td class="navbarcap" onclick="location.href='../articles/sniffer.html'">
+				<a id="next-link" href="../articles/sniffer.html"></a>
+			</td>
+		</tr>
+	</table>
+
+	<!--  **** Body Container ****  -->
+	<div id="body" style="padding-left: 30px" >
+
+
+<h3>Debugging TCP/IP</h3>
+
+<p><i>by Warren Young</i></p>
+
+<p><font size=-1>(This article was written with the Winsock programmer
+in mind, but the information in it can be used by Unix programmers,
+as well as administrators and technicians.)</font></p>
+
+<p>TCP is a simple protocol in a certain sense: you send data, it
+delivers it. Because it was engineered for reliability in networks of
+uncertain quality, it works around a lot of problems without bothering
+the end user. But partially because of this reliability, TCP exhibits
+behaviors that surprise those that don&rsquo;t truly understand the
+protocol. This tutorial will introduce you to the most important of
+these issues, but it&rsquo;s really the tip of the iceberg. For the
+submerged part, see <a href="../reviews/tcpillus.html">TCP/IP Illustrated</a>;
+the state/transition diagram below comes from volume 2 of that
+series. It happens to be printed in Volume 1 of the series as well, and
+in Stevens' <a href="../reviews/unpv1.html">Unix Network Programming</a>, volume
+1. You can also get that diagram in Postscript format off the web;
+see the <a href="../"></a> section of the FAQ for a pointer.</p>
+
+<p>In this tutorial, the term "packet" refers to data wrapped in a
+TCP frame. As a TCP packet goes through the network from one peer
+to another, the packet may be split into separate hardware frames,
+or the data within multiple TCP frames may be coalesced.  This is as
+opposed to the "datagram" sense of the term "packet," for an inviolable
+block of data that is unchanged from sender to receiver.</p>
+
+<h4>TCP Control Bits</h4>
+
+<p>When a TCP implementation decides to send a packet of data to the
+remote peer, it first wraps the data with 20-plus bytes of data called
+the "header". Headers are an essential part of network protocols,
+because they enable the participants in the network make decisions
+regarding the data flowing over it. Every protocol adds headers (and
+sometimes trailers) to your data. We won&rsquo;t discuss the TCP and
+IP headers in detail here, as that&rsquo;s better left to books like
+W. Richard Stevens'.</p>
+
+<p>Within the header is a field that I will call the "control bits,"
+for lack of a better term. The bits that interest us here are called
+SYN, ACK, FIN and RST, for "synchronize," "acknowledge," "finish,"
+and "reset," respectively. These bits are set in TCP packets for
+the sole benefit of the remote peer&rsquo;s network stack &mdash;
+that is, they are the machinery under the hood that most people never
+have occasion to examine.</p>
+
+<h4>The State/Transition Diagram</h4>
+
+<p>Below is the state/transition diagram for the TCP protocol. The
+states are in round-ended boxes, and the transitions are the labelled
+arrows. The transitions show how how your program can make TCP move
+from one state to another. It also shows how the remote peer can make
+your stack change TCP states, and how you can recognize these changes
+at the application level. Note that transition labels come from the
+names of BSD sockets functions; although there are differences in
+the Winsock API, the effects are the same at this level. (I apologize
+for the so-so readability of the text in this image, but it&rsquo;s
+already too big at 20K, so I&rsquo;m unwilling to make it any bigger
+&mdash; if you want a pretty, readable diagram, get the Postscript
+file and print your own copy.)</p>
+
+<p class=lmargin align=center><img
+src="bitmaps/state-diagram-small.gif" alt="TCP/IP state-transition
+diagram" width=420 height=502>&nbsp;</p>
+
+<p>Understanding this diagram is really one of the keys to
+understanding TCP, so let&rsquo;s go through a few exercises. But
+first, you need to know about the <code>netstat</code> tool. This tool
+comes with all Microsoft TCP/IP stacks, and probably others as well. It
+is modelled after a Unix tool of the same name, with virtually the
+same output. (The differences between each version of this tool are
+slight enough that once you learn to use one, the rest are trivial
+to pick up.)</p>
+
+<p>The <code>netstat</code> tool is usually run from the command line,
+often with the <code>-n</code> flag to make it faster. (<code>-n</code>
+suppresses the DNS name lookups, displaying the raw address and port
+numbers instead.) Another useful flag is the <code>-a</code> flag, which
+shows "all" entries, including listeners. (This only works correctly
+in Windows NT derivatives.)  It is also very helpful to use this tool
+in combination with a "grep" tool &mdash; I recommend installing <a
+href="http://cygwin.com/">Cygwin</a>, which includes GNU grep.</p>
+
+<p>Microsoft <code>netstat</code>s output four columns: the protocol
+(e.g. TCP or UDP), the local address/port combination, the remote
+address/port combination, and the current state of that connection. The
+first three columns are self-explanatory, and are often collectively
+called the "connection 5-tuple," which uniquely describes a given
+TCP or UDP connection. The last column corresponds directly to the
+states in the diagram above.</p>
+
+<h4>A Micro-FAQ</h4>
+
+<p>Now for those exercises I promised:</p>
+
+<ol>
+  <li><b>Problem:</b> From the default CLOSED state, how does a client
+  program normally get to the ESTABLISHED state?<br><br>
+
+  <b>Solution:</b> The client calls the <code>connect()</code> function
+  (or similar), which causes TCP to send an empty packet with the
+  SYN control bit set (SYN_SENT). The remote peer&rsquo;s stack sees
+  this "synchronize" request, and sends back an empty packet with
+  the SYN and ACK bits set (i.e. "I acknowledge your synchronize
+  request"). When the client receives the SYN/ACK packet, it sends
+  back an ACK packet, and reports a successful connection to the
+  client program.<br><br>
+
+  <li><b>Problem:</b> What is the normal TCP shutdown sequence?<br><br>
+
+  <b>Solution:</b> The important thing to understand is that TCP is
+  a bidirectional protocol. So, the connection is shut down in two
+  identical stages, one for each "direction". One peer sends a packet
+  with the FIN bit set, which the other end ACKnowledges; when the
+  other end is also finished sending data, it sends out a FIN packet,
+  which the other end ACKs, closing the connection.<br><br>
+
+  <li><b>Problem:</b> What is the significance of the RST bit?<br><br>
+
+  <b>Solution:</b> This is an abnormal close, also called "slamming
+  the connection shut." It happens under several circumstances, but
+  none of the common ones are documented in the Stevens diagram. Two
+  of these cases you can cause from Winsock: the first method
+  is to set <code>SO_LINGER</code> to 0 with <code>setsockopt()</code>
+  and then call <code>closesocket()</code>. The second method is to call
+  <code>shutdown()</code> with <code>how</code> equal to 2, optionally followed
+  by a <code>closesocket()</code> call.<br><br>
+
+  From the Winsock client level, the two other common RST occurrences
+  are &ldquo;connection refused&rdquo; and &ldquo;remote peer
+  terminated connection.&rdquo; The first happens when you try to
+  connect to a port that isn&rsquo;t open on a remote machine. The
+  second happens as a result of the remote peer using one of
+  the two RST-forcing methods above; alternately, the application
+  could have crashed, and the peer&rsquo;s stack sent out a RST for
+  its connection. Another way this can happen is the remote peer
+  catastrophically crashed, and then after the remote machine came
+  back up, your program sent it a packet which the stack rightfully
+  had no way of delivering, so it replied with a RST packet, because
+  the connection&rsquo;s 5-tuple is now invalid.<br><br>
+
+  Generally speaking, RST signals a problem of some kind: either
+  something bad happened to the connection, or there&rsquo;s a bug
+  somewhere. For example, some firewalls improperly use the RST bit to
+  signal a closed connection. The solution, of course, is to replace
+  the firewall product. <tt><b>:)</b></tt><br><br>
+
+  <li><b>Problem:</b> Netstat shows lots of sockets in the TIME_WAIT
+  state. What&rsquo;s wrong?<br><br>
+
+  <b>Solution:</b> Nothing&rsquo;s wrong. TIME_WAIT is absolutely
+  normal. If you go through the state-transition diagram above, you
+  see that every socket that gets closed normally goes through this
+  state after it&rsquo;s closed. The TIME_WAIT state is a safety
+  mechanism, to catch stray packets for that connection after the
+  connection is "officially" closed. Since the maximum time that such
+  stray packets can exist is 2 times the "maximum segment lifetime"
+  (the time for a packet to go from your machine to the remote peer
+  and for the response to come back), the TIME_WAIT state lasts for 2 *
+  MSL. The only tricky bit is, there is no easy way to estimate MSL on
+  the fly, so stacks traditionally hard-code a value for it, from 15
+  to 60 seconds. Thus, TIME_WAIT usually lasts 30-120 seconds.<br><br>
+
+  <li><b>Problem:</b> My sockets keep getting into a FIN_WAIT_<i>x</i>
+  state. What&rsquo;s wrong?<br><br>
+
+  <b>Solution:</b> Either your program or the remote peer is not
+  closing the socket properly. If you walk through the state-transition
+  diagram above, you can see that FIN_WAIT_1 usually happens when the
+  local program calls <code>shutdown()</code> with the "how" parameter set
+  to 1 or SD_SEND, but the remote peer doesn&rsquo;t respond. Likewise
+  FIN_WAIT_2 happens when the remote peer shuts down its sending half
+  of the connection, and your program doesn&rsquo;t respond. Since
+  FIN_WAIT states often last up to 10 minutes, it&rsquo;s well worth
+  the effort to fix the problem that&rsquo;s causing these FIN_WAIT
+  states. (The exact length of the state depends on the stack and
+  the circumstances that got it into that state.)<br><br>
+
+  <li><b>Problem:</b> Often my calls to <code>bind()</code> fail when I try to
+  re-bind to a port that I was just using. What&rsquo;s wrong?<br><br>
+
+  <b>Solution:</b> The socket is probably in one of the FIN_WAIT
+  states or in the TIME_WAIT state. If it&rsquo;s a FIN_WAIT problem
+  and you can&rsquo;t fix it, or if it&rsquo;s the normal TIME_WAIT
+  state, the best thing to do is to redesign your program so that it
+  doesn&rsquo;t need to keep re-binding. For example, a server program
+  generally keeps its listener socket alive so that it doesn&rsquo;t
+  have to keep re-binding it to the port; if you <code>closesocket()</code>
+  the listener for some reason after each successful connection,
+  your listener socket will go into the TIME_WAIT state for somewhere
+  between 30 and 120 seconds, during which you won&rsquo;t be able
+  to re-bind to that port. However, if you find that re-binding is
+  absolutely necessary, setting the <code>SOREUSEADDR</code> option with
+  <code>setsockopt()</code> will usually get you around the problem.<br><br>
+</ol>
+
+<h4>Tools for TCPers</h4>
+
+<p>Below is a small batch file I find helpful in dealing with TCP state
+issues, which I call &ldquo;showwait.bat.&rdquo; Basically, it shows
+you the current WAIT states every second until you hit Ctrl-C.</p>
+
+<pre>
+    @echo off
+    :loop
+    netstat -na | grep WAIT
+    sleep 1
+    goto loop
+</pre>
+
+<p>This script assumes you have the &ldquo;grep&rdquo; and
+&ldquo;sleep&rdquo; programs on your system, and that they&rsquo;re in
+the PATH. The easiest way to get it is to install Cygwin, mentioned
+above. (Are you maybe getting the impression that I don&rsquo;t
+program only for Windows? Oh, noooo.... <tt><b>:)</b></tt> ) The Unix version
+is slightly nicer, since the Bourne shell has real loops:</p>
+
+<pre>
+    #!/bin/sh
+    while true; do
+        netstat -a | grep WAIT
+        sleep 1
+    done
+</pre>
+
+<p>This runs fine on Cygwin, too.</p>
+
+<p>There&rsquo;s one problem with this tool: it only catches
+problems with <tt>WAIT</tt> in their name. Less common states like
+<tt>LAST_ACK</tt> and <tt>SYN_RCVD</tt> won&rsquo;t be seen by this
+script. <tt>SYN_RCVD</tt> in particular signals serious problems if
+it stays around for a prolonged amount of time, because it indicates
+that a remote machine sent your machine a SYN packet, your machine
+ACK&rsquo;d it, and the remote machine has failed to ACK your
+SYN/ACK. Since this exchange typically only takes from a few tens
+to a few hundreds of milliseconds, a persistent SYN_RCVD indicates
+a badly-written network stack, or a very "crashy" computer. If you
+see many of these states at once, it may mean you&rsquo;re under a
+"SYN attack", one of several Denial of Service attacks that are going
+around these days. At that point, it&rsquo;s time to break out the
+network sniffer and start some detective work.</p>
+
+<h4>Conclusion</h4>
+
+<p>The techniques and information in this article reflect the
+basic mental tools that your organization needs to develop,
+even if it&rsquo;s just appointing a single &ldquo;networking
+guru&rdquo; who will master this material, and become a resource
+for the other developers in the company. This knowledge
+is very widely useful; for example, it can make reading <a
+href="../resources/debugging.html">sniffer</a> dumps less painful and
+more productive. Also, these techniques can reasonably be applied by
+technicians working with knowledgeable users over the phone to gather
+information about failures in your program that otherwise would get
+logged as random failures.</p>
+
+<p><font size=-1>Copyright &copy; 1998-2000 by Warren Young. All
+rights reserved.</font></p>
+
+
+
+		</div> <!-- end body div -->
+
+<hr class="noshade">
+
+
+<!--  Navigation footer  -->
+<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer nav"> 
+	<tr>
+		<td align="left" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="../articles/lame-list.html">&lt;&lt;&nbsp;The Lame List</a><br>
+			</span>
+		
+		</td>
+
+		<td align="right" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="../articles/sniffer.html">The Straight Dope on Packet Sniffers&nbsp;&gt;&gt;</a>
+			</span>
+		
+		</td>
+	</tr>
+</table>
+
+
+
+
+
+
+	<!--  Document Footer -->
+
+	<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer info"> 
+		<tr>
+			
+				<td align="left" class="thirdwidth">
+					
+					<span class="annotation">Updated Sun Feb 21 2010 02:38 MST</span>
+				</td>
+				<td align="center" class="thirdwidth">
+				
+			
+
+			
+				&nbsp;
+			
+			</td>
+
+			<td align="right" class="thirdwidth">
+				<a href="/">Go to my home page</a>
+			</td>
+		</tr>	
+	</table>
+
+
+	<script type="text/javascript" src="/js/awstats_misc_tracker.js"></script>
+</body>
+</html>
+

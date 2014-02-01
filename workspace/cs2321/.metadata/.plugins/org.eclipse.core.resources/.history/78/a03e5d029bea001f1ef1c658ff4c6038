@@ -1,0 +1,77 @@
+package cs2321;
+
+import net.datastructures.Edge;
+import net.datastructures.Vertex;
+
+public class AdjListTester {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		AdjListGraph<String, Integer> gr = new AdjListGraph<String, Integer>();
+		Vertex<String> a = gr.insertVertex("happy");
+		Vertex<String> b = gr.insertVertex("sad");
+		Vertex<String> c = gr.insertVertex("fun");
+		Vertex<String> d = gr.insertVertex("bad");
+		Vertex<String> e = gr.insertVertex("gunny");
+		Vertex<String> f = gr.insertVertex("lunny");
+		Vertex<String> g = gr.insertVertex("lappy");
+		Vertex<String> h = gr.insertVertex("poppy");
+		Vertex<String> i = gr.insertVertex("poop");
+		Vertex<String> j = gr.insertVertex("foo");
+		Vertex<String> k = gr.insertVertex("fight");
+		Vertex<String> l = gr.insertVertex("Band");
+		Vertex<String> m = gr.insertVertex("BOrg");
+		Vertex<String> n = gr.insertVertex("qwerty");
+		Vertex<String> o = gr.insertVertex("hahoo");
+		Vertex<String> p = gr.insertVertex("r2d2");
+		Vertex<String> q = gr.insertVertex("foonda");
+		Vertex<String> r = gr.insertVertex("hots");
+		Vertex<String> s = gr.insertVertex("Colds");
+		Vertex<String> t = gr.insertVertex("yup");
+		Edge<Integer> e1 = gr.insertEdge(a, b, 3);
+		Edge<Integer> e2 = gr.insertEdge(a, c, 3);
+		Edge<Integer> e3 = gr.insertEdge(a, d, 3);
+		Edge<Integer> e4 = gr.insertEdge(a, e, 3);
+		Edge<Integer> e5 = gr.insertEdge(a, f, 3);
+		Edge<Integer> e6 = gr.insertEdge(a, g, 3);
+		Edge<Integer> e7 = gr.insertEdge(a, h, 3);
+		Edge<Integer> e8 = gr.insertEdge(a, i, 3);
+		Edge<Integer> e9 = gr.insertEdge(a, j, 3);
+		Edge<Integer> e10 = gr.insertEdge(a, k, 3);
+		Edge<Integer> e11 = gr.insertEdge(a, l, 3);
+		Edge<Integer> e12 = gr.insertEdge(a, m, 3);
+		Edge<Integer> e13 = gr.insertEdge(a, n, 3);
+		Edge<Integer> e14 = gr.insertEdge(a, o, 3);
+		Edge<Integer> e15 = gr.insertEdge(a, p, 3);
+		Edge<Integer> e16 = gr.insertEdge(a, q, 3);
+		Edge<Integer> e17 = gr.insertEdge(a, r, 3);
+		Edge<Integer> e18 = gr.insertEdge(a, s, 3);
+		Edge<Integer> e19 = gr.insertEdge(a, t, 3);
+		Edge<Integer> e20 = gr.insertEdge(a, b, 1);
+		Edge<Integer> e21 = gr.insertEdge(a, b, 2);
+		Edge<Integer> e22 = gr.insertEdge(a, b, 4);
+		Edge<Integer> e23 = gr.insertEdge(a, b, 5);
+		Edge<Integer> e24 = gr.insertEdge(a, b, 6);
+		Edge<Integer> e25 = gr.insertEdge(a, b, 7);
+		Edge<Integer> e26 = gr.insertEdge(a, b, 3);
+		Edge<Integer> e27 = gr.insertEdge(a, b, 3);
+		Edge<Integer> e28 = gr.insertEdge(a, b, 3);
+		Edge<Integer> e29 = gr.insertEdge(a, b, 3);
+		Edge<Integer> e30 = gr.insertEdge(a, b, 3);
+		Edge<Integer> e31 = gr.insertEdge(a, b, 3);
+		Edge<Integer> e32 = gr.insertEdge(a, b, 3);
+		Edge<Integer> e33 = gr.insertEdge(a, b, 3);
+		Edge<Integer> e34 = gr.insertEdge(a, b, 3);
+		Edge<Integer> e35 = gr.insertEdge(a, b, 3);
+		Edge<Integer> e36 = gr.insertEdge(a, b, 3);
+		Edge<Integer> e37 = gr.insertEdge(a, b, 3);
+		Edge<Integer> e38 = gr.insertEdge(a, b, 3);
+		Edge<Integer> e39 = gr.insertEdge(a, b, 3);
+		
+		
+
+	}
+
+}

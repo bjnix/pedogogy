@@ -1,0 +1,681 @@
+package cs2321;
+
+import java.io.*;
+import java.util.Scanner;
+
+import cs2321.sorting.Sorter;
+import net.datastructures.*;
+
+/**
+ * @author bsiever
+ * 
+ *
+ *	TODO: Add fields for appropriate data structures, 
+ *        Complete initForSize() method to initialize data structures
+ *        complete addRecord() to add a new record to all data structures
+ *        complete removeRecord() to remove a record from all data structures
+ *        complete search methods to access data
+ */
+public class BeigeChartreuseLibrary {	
+
+	private HashMap<String, LinkedSequence<Record>> firstN;
+	private HashMap<String, LinkedSequence<Record>> lastN;
+	private HashMap<String, LinkedSequence<Record>> city;
+	private HashMap<StateAbbr, LinkedSequence<Record>> state;
+	private HashMap<ZipCode, LinkedSequence<Record>> zip;
+	private HashMap<PhoneNumber, LinkedSequence<Record>> phone;
+	private ModifiedLookupTable<ZipCode, ZipCode>range;
+	private MergeSort<Record> mSort;
+
+	//# TODO Add any necessary fields:
+
+
+	/**
+	 * Create data structures for the expected size
+	 * Any existing data is lost.
+	 * 
+	 * @param size - The expected amount of data 
+	 */
+	@TimeComplexity("O(n)")
+	private void initForSize(int size) {
+		//TCJ: Hash maps Take a linear amount of time to set up so this takes
+		//O(n) time.
+
+		int[]ini = {10407, 12007, 107,16007,220007,8000};
+		if(size > 110000){
+			for(int i: ini)
+				i = i * ((size/110000)+1);
+		}
+
+		firstN = new HashMap<String, LinkedSequence<Record>>(ini[0]);
+		lastN = new HashMap<String, LinkedSequence<Record>>(ini[0]);
+		city = new HashMap<String, LinkedSequence<Record>>(ini[1]);
+		state = new HashMap<StateAbbr, LinkedSequence<Record>>(ini[2]);
+		zip = new HashMap<ZipCode, LinkedSequence<Record>>(ini[3]);
+		phone = new HashMap<PhoneNumber, LinkedSequence<Record>>(ini[4]);
+		range = new ModifiedLookupTable<ZipCode, ZipCode>(ini[5]);
+		mSort = new MergeSort<Record>();
+
+	}
+
+	/**
+	 * 
+	 * @param rec - a record to be added to all dictionaries
+	 */
+	@TimeComplexity("(n)")
+	@TimeComplexityExpected("O(1)")
+	public void addRecord(Record rec) {
+		//TCJ: Because the hash table add is linear and the get is used which has a possibility of
+		//being linear time in the case of a collision
+
+//		System.out.println(rec);
+		//save record data for ease of coding and faster retrieval
+		ZipCode zipC = rec.getZipCode();
+		String citY = rec.getCity();
+		String fName = rec.getFirstName();
+		String lName = rec.getLastName();
+		StateAbbr st = rec.getState();
+		PhoneNumber ph = rec.getPhoneNo();
+
+
+		//-----------------------------------------------
+		//add phone number to phone
+		LinkedSequence<Record> phN = phone.get(ph);
+		if ( phN == null )
+		{
+			phN = new LinkedSequence<Record>(); 
+			phone.put(ph, phN);
+		}
+
+		phN.addLast(rec);
+
+		//set positions of phone number
+		rec.setPhoneNoPosition(phN.last());
+
+		//-----------------------------------------------
+		//add zip code to zip
+		LinkedSequence<Record> zipN = zip.get(zipC);
+		if ( zipN == null )
+		{
+			zipN = new LinkedSequence<Record>(); 
+			range.add(zipC,null);
+			zip.put(zipC, zipN);
+		}
+
+		zipN.addLast(rec);
+
+		//set positions of zip code
+		rec.setZipCodePosition(zipN.last());
+
+		//-----------------------------------------------
+		//add city name to city
+		LinkedSequence<Record> cityN = city.get(citY);
+		if ( cityN == null )
+		{
+			cityN = new LinkedSequence<Record>(); 
+			city.put(citY, cityN);
+		}
+
+		cityN.addLast(rec);
+
+		//set positions of city name
+		rec.setCityPosition(cityN.last());
+
+		//-----------------------------------------------
+		//add first name to firstN
+		LinkedSequence<Record> fnN = firstN.get(fName);
+		if ( fnN == null )
+		{
+			fnN = new LinkedSequence<Record>(); 
+			firstN.put(fName, fnN);
+		}
+
+		fnN.addLast(rec);
+
+		//set positions of first name
+		rec.setFirstNamePosition(fnN.last());
+
+		//-----------------------------------------------
+		//add last name to lastN
+		LinkedSequence<Record> lsN = lastN.get(lName);
+		if ( lsN == null )
+		{
+			lsN = new LinkedSequence<Record>(); 
+			lastN.put(lName, lsN);
+		}
+
+		lsN.addLast(rec);
+
+		//set positions of first name
+		rec.setLastNamePosition(lsN.last());
+
+		//-----------------------------------------------
+		//add state abbreviation name to state
+		LinkedSequence<Record> stN = state.get(st);
+		//*see zip code add*
+		if ( stN == null )
+		{
+			stN = new LinkedSequence<Record>(); 
+			state.put(st, stN);
+		}
+
+		stN.addLast(rec);
+
+		//set positions of phone number
+		rec.setStatePosition(stN.last());
+
+
+
+
+		//		System.out.println("-Adding " + rec);
+
+	}
+
+	/**
+	 * 
+	 * @param rec - a record to be removed from all dictionaries
+	 */
+	@TimeComplexity("O(1)")
+	public void removeRecord(Record rec) {
+		//TCJ: Because the hash get is constant and the remove is constant(due to location aware entries
+		//time is constant.
+		zip.get(rec.getZipCode()).remove(rec.getZipCodePosition());
+		city.get(rec.getCity()).remove(rec.getCityPosition());
+		firstN.get(rec.getFirstName()).remove(rec.getFirstNamePosition());
+		lastN.get(rec.getLastName()).remove(rec.getLastNamePosition());
+		state.get(rec.getState()).remove(rec.getStatePosition());
+		phone.get(rec.getPhoneNo()).remove(rec.getPhoneNoPosition());
+
+
+	}
+
+	/**
+	 * Returns a sorted collection of records which include the given Last name.
+	 * @param name - a first or last name
+	 * @return Sorted Iterable collection of matching Records
+	 */
+	@TimeComplexity("O(d lg d)")
+	public Iterable<Record> searchByLastName(String lastName) {
+		//TCJ:Because the number of objects we are sorting is d, and in this case n lg n (sort time) 
+		//is the highest order big "O" notation (as compared to d)
+		//		System.out.println("Search by last name for: " + lastName);
+		LinkedSequence<Record> tmp = new LinkedSequence<Record>();
+		LinkedSequence<Record> temp = this.lastN.get(lastName);
+		if (temp != null)
+		{
+			for(Record r : temp)
+			{
+				tmp.addLast(r);
+			}		
+			tmp = sort(tmp);			
+		}
+		else{
+			//			System.out.println("\nLast name not in Phone Book\n--------");
+		}
+
+		return tmp;
+
+	}
+
+	/**
+	 * Returns a sorted collection of records which include the given First and Last name.
+	 * @param name - a first or last name
+	 * @return Sorted Iterable collection of matching Records
+	 */ 
+	@TimeComplexity("d log d")
+	public Iterable<Record> searchByFullName(String lastName, String firstName) {
+		//TCJ:Because the number of objects we are sorting is d, and in this case n lg n (sort time) 
+		//is the highest order big "O" notation (as compared to d)
+				System.out.println("Searching by Full Name for:" + firstName + " " + lastName);
+		LinkedSequence<Record> tmp = new LinkedSequence<Record>();
+		LinkedSequence<Record> temp = this.lastN.get(lastName);
+		if (temp != null)
+		{
+			for(Record r : temp)
+			{
+				if (r.getFirstName().equals(firstName))
+				{
+					tmp.addLast(r);
+				}
+
+			}		
+			if(!tmp.isEmpty())
+			tmp = sort(tmp);
+
+		}
+		else{
+			//			System.out.println("\nLast name not in Phone Book\n--------");			
+		}
+
+		return tmp;
+
+	}
+
+	/**
+	 * Returns a sorted collection of records which include either a matching first name or last name. 
+	 * Duplicates should only be included once.
+	 * 
+	 * @param name - a first or last name
+	 * @return Sorted Iterable collection of matching Records
+	 */ 
+	@TimeComplexity("O(d lg d")
+	public Iterable<Record> searchByName(String name) {
+		//TCJ:Because the number of objects we are sorting is d, and in this case n lg n (sort time) 
+		//is the highest order big "O" notation (as compared to d for first + d for last)
+		//		System.out.println("Searching by Name for:" + name);
+		LinkedSequence<Record> tmp = new LinkedSequence<Record>();
+		LinkedSequence<Record> tempL = this.lastN.get(name);
+		LinkedSequence<Record> tempF = this.firstN.get(name);
+		boolean sortYN = false;
+		if (tempL != null )
+		{
+			for(Record r : tempL)
+			{
+				tmp.addLast(r);
+			}
+			sortYN = true;
+		}
+		else 
+		{
+			//		System.out.println("\nLast name not in Phone Book\n--------");
+		}
+
+
+		if( tempF != null)
+		{
+			for(Record r : tempF)
+			{
+				if (!r.getLastName().equals(name))
+				{
+					tmp.addLast(r);
+				}
+			}
+			sortYN = true;
+		}
+		else
+		{
+			//			System.out.println("\nFirst name not in Phone Book\n--------");
+		}
+
+		if(sortYN) tmp = sort(tmp);
+		return tmp;
+
+	}
+
+	/**
+	 * Returns a sorted collection of records which include the given phone number.
+	 * @param phoneNumber
+	 * @return Sorted Iterable collection of matching Records
+	 */
+	@TimeComplexity("O(d log d")
+	public Iterable<Record> searchByPhoneNumber(PhoneNumber phoneNumber) {
+		//TCJ:Because the number of objects we are sorting is d, and in this case n lg n (sort time) 
+		//is the highest order big "O" notation (as compared to d)
+		//		System.out.println("Searching by Phone Number for: " + phoneNumber);
+		LinkedSequence<Record> tmp = new LinkedSequence<Record>();
+		LinkedSequence<Record> temp = this.phone.get(phoneNumber);
+		if (temp != null)
+		{
+			for(Record r : temp)
+			{
+
+				tmp.addLast(r);
+
+			}		
+			tmp = sort(tmp);
+		}
+		else{
+//			System.out.println("\nPhone number not in Phone Book\n--------");
+		}
+
+		return tmp;
+	}
+	/**
+	 * Sorts the LinkedSequence that is given to it 
+	 * @param tmp
+	 * @return 
+	 */
+	@TimeComplexity("O(n lg n")
+	private LinkedSequence<Record> sort(LinkedSequence<Record> tmp)
+	{
+		//TCJ:the merge sort takes n lg n and the transfer from the linked sequence 
+		//to the array and back costs 2n. n lg n is a higher order than n.
+
+		Record[] tt = new Record[tmp.size()];
+		int i = 0;
+		for(Record r: tmp)
+		{
+			tt[i] = tmp.removeFirst();
+			i++;
+		}
+
+		mSort.sort(tt);
+
+		for(Record r: tt)
+			tmp.addLast(r);
+
+		return tmp;
+	}
+
+	/**
+	 * Returns a sorted collection of records which include cities with the given name.
+	 * @param city
+	 * @return Sorted Iterable collection of matching Records
+	 */
+	@TimeComplexity("O(d log d)")
+	public Iterable<Record> searchByCity(String city) {
+		//TCJ:Because the number of objects we are sorting is d, and in this case n lg n (sort time) 
+		//is the highest order big "O" notation (as compared to d)
+//		System.out.println("Searching by City for:" + city);
+		LinkedSequence<Record> tmp = new LinkedSequence<Record>();
+		LinkedSequence<Record> temp = this.city.get(city);
+
+		if (temp != null)
+		{
+			for(Record r : temp)
+			{
+				tmp.addLast(r);
+			}		
+			tmp = sort(tmp);
+
+		}
+		else{
+//			System.out.println("\nCity not in Phone Book\n--------");
+		}
+
+
+		return tmp;
+	}
+
+	/**
+	 * Returns a sorted collection of records which include the given city and state.
+	 * @param city
+	 * @param state
+	 * @return Sorted Iterable collection of matching Records
+	 */
+	@TimeComplexity("O(d lg d)")
+	public Iterable<Record> searchByCityState(String city, StateAbbr state) {
+		//TCJ:Because the number of objects we are sorting is d, and in this case n lg n (sort time) 
+		//is the highest order big "O" notation (as compared to d)
+//		System.out.println("Searching by City for:" + city + ", "+state);		
+		LinkedSequence<Record> tmp = new LinkedSequence<Record>();
+		LinkedSequence<Record> temp = this.city.get(city);
+		if (temp != null)
+		{
+			for(Record r : temp)
+			{
+				if (r.getState().equals(state))
+				{
+					tmp.addLast(r);
+				}
+
+			}
+			tmp = sort(tmp);			
+		}
+		else{
+//			System.out.println("\nPhone number not in Phone Book\n--------");
+		}
+
+		return tmp;
+	}
+
+	/**
+	 * Returns a sorted collection of records which include the given state.
+	 * @param state
+	 * @return Sorted Iterable collection of matching Records
+	 */
+	@TimeComplexity("O(d lg d)")
+	public Iterable<Record> searchByState(StateAbbr state) {
+		//TCJ:Because the number of objects we are sorting is d, and in this case n lg n (sort time) 
+		//is the highest order big "O" notation (as compared to d)
+//		System.out.println("Searching by state for:" +state);		
+		LinkedSequence<Record> tmp = new LinkedSequence<Record>();
+		LinkedSequence<Record> temp = this.state.get(state);
+		if (temp != null)
+		{
+			for(Record r : temp)
+			{
+
+				tmp.addLast(r);
+
+			}		
+			tmp = sort(tmp);		
+		}
+		else{
+//			System.out.println("\nState not in Phone Book\n--------");
+		}
+
+		return tmp;
+
+	}
+
+	/**
+	 * Returns a sorted collection of records which include the given zipcode.
+	 * @param zip
+	 * @return Sorted Iterable collection of matching Records
+	 */
+	@TimeComplexity("O(d lg d)")
+	public Iterable<Record> searchByZip(ZipCode  zipper) 
+	{
+		//TCJ:Because the number of objects we are sorting is d, and in this case n lg n (sort time) 
+		//is the highest order big "O" notation (as compared to d)
+		LinkedSequence<Record> tmp = new LinkedSequence<Record>();
+		LinkedSequence<Record> temp = zip.get(zipper);
+		if (temp != null)
+		{
+			for(Record r : temp)
+			{
+				tmp.addLast(r);
+			}	
+			tmp = sort(tmp);			
+		}
+		else{
+			//		System.out.println("\nZip Code not in Phone Book\n--------");
+		}
+
+		return tmp;
+	}
+
+	/**
+	 * Returns a sorted collection of records which include all records with zipcodes in the given range (inclusive).
+	 * @param startZip
+	 * @param stopZip
+	 * @return Sorted Iterable collection of matching Records
+	 */
+	@TimeComplexity("O(n lg n)")
+	public Iterable<Record> searchByZipRange(ZipCode  startZip, ZipCode stopZip) {
+		//TCJ: Because the sort will take nLgn, the sort is the highest order part of the time analysis
+		//the rest of the equation (the logn binary search and n iterations through the list) is overiden
+		//by the properties of big "O" notation
+
+
+
+		LinkedSequence<Record> ranG = new LinkedSequence<Record>();
+		Iterable<Entry<ZipCode, ZipCode>> temp = range.getRange(startZip, stopZip);
+
+		if ( temp != null){
+
+			for(Entry<ZipCode, ZipCode> e : temp){
+				for(Record r:  zip.get(e.getKey()))
+					ranG.addLast(r);
+			}
+			ranG = sort(ranG);
+		}
+
+		return ranG;
+	}
+
+	/**
+	 * Create an empty library
+	 */
+	public BeigeChartreuseLibrary() {
+		initForSize(367);
+
+	}
+
+	/**
+	 * Create a new record using an appropriately ordered set of fields and add it to the data base
+	 */
+	@TimeComplexity("O(n)")
+	@TimeComplexityExpected("O(1)")
+	private void addRecordFromFields(String[] fields) {
+		//TCJ: all actions in this method have constant cost, but addRecord() is called
+		//and it has the possibility of costing n in the case of a collision.
+
+		//				System.out.println("Adding: " 
+		//				+fields[0]+" "
+		//				+fields[1]+" "
+		//				+fields[2]+" "
+		//				+fields[3]+" "
+		//				+fields[4]+" "
+		//						+fields[5]+" ");
+		//				+fields[6]+" "); 
+		//read record attributes in, one at a time
+		Record thisRecord = new Record();
+		thisRecord.setFirstName(fields[0]);
+		thisRecord.setLastName(fields[1]);
+		thisRecord.setAddress(fields[2]);
+		thisRecord.setCity(fields[3]);
+		thisRecord.setState(new StateAbbr(fields[4]));
+		thisRecord.setZipCode(new ZipCode(fields[5]));
+		thisRecord.setPhoneNo(new PhoneNumber(fields[6]));
+
+		//add this record 
+		addRecord(thisRecord);		
+	}
+
+	/**
+	 * Destroy the current data base and load new data from a file
+	 * 
+	 * @param filename the file to use as a source
+	 * @throws IOException Either file not found or IO error
+	 */
+	@TimeComplexity("O(n)")
+	public void initDBFromFile(String filename) throws IOException {
+		//TCJ: reads in all of the times into the database, reading every object - The cost
+		//will grow linearly with the size of the file being read
+
+		//open and read the file
+		try {
+			BufferedReader filein = new BufferedReader(new FileReader(new File(filename)));
+			int size = Integer.parseInt(filein.readLine());
+
+			// Create and initialize data structures
+			initForSize(size);
+
+			// Read record file, parse lines, and add records to data base
+			int j = 0;
+			for(String line = filein.readLine(); line != null; line = filein.readLine()){
+				String[] fields = line.split(",");
+				if(j == 105808)
+					j = 105808;
+				j++;
+				addRecordFromFields(fields);
+			}
+			filein.close();
+		} catch (Exception e){
+			throw new IOException();
+		}
+	}
+
+
+	/**
+	 * Test driver - loads the default library and allows interaction 
+	 * via typing queries into the console window pane.
+	 * 
+	 * @param args
+	 * @throws IOException 
+	 */
+	public static void main(String[] args) {
+		// Create the main library object
+		BeigeChartreuseLibrary bcr = new BeigeChartreuseLibrary();
+
+		// Try to read the default library
+		try {
+			bcr.initDBFromFile("PhoneBookSortedByZip.csv");
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("File IO Error");
+			System.exit(1);
+		}
+
+
+		//  Queries can be simulated by typing into the console in Eclipse, and using Ctrl-d (Ctrl-z in Windows) when finished.
+		Scanner queries = new Scanner(System.in);
+		Iterable<Record> result = null;
+		System.out.print("Enter query: ");
+		while(queries.hasNext()) {
+			String query = queries.nextLine();
+			String[] fields = query.split(",");
+
+			if(fields[0].equals("searchLastName")) {
+				result = bcr.searchByLastName(fields[1]);
+			} else
+				if(fields[0].equals("searchFullName")) {
+					result = bcr.searchByFullName(fields[1],fields[2]);
+				} else
+					if(fields[0].equals("searchName")) {
+						result = bcr.searchByName(fields[1]);
+					} else
+						if(fields[0].equals("searchPhone")) {
+							result = bcr.searchByPhoneNumber(new PhoneNumber(fields[1]));
+						} else
+							if(fields[0].equals("searchCity")) {
+								result = bcr.searchByCity(fields[1]);
+							} else
+								if(fields[0].equals("searchCityState")) {
+									result = bcr.searchByCityState(fields[1],new StateAbbr(fields[2]));
+								} else
+									if(fields[0].equals("searchState")) {
+										result = bcr.searchByState(new StateAbbr(fields[1]));
+									} else
+										if(fields[0].equals("searchZip")) {
+											result = bcr.searchByZip(new ZipCode(fields[1]));
+										} else
+											if(fields[0].equals("searchZipRange")) {
+												result = bcr.searchByZipRange(new ZipCode(fields[1]),new ZipCode(fields[2]));
+											} else 
+												if(fields[0].equals("add")) {
+													String[] newFields = new String[fields.length-1];
+													System.arraycopy(fields, 1, newFields, 0, fields.length-1);
+													bcr.addRecordFromFields(newFields);
+												} else
+													if(fields[0].equals("remove")) {
+														if(result == null) 
+															System.out.println("No data to remove");
+														else {
+															int idx = Integer.parseInt(fields[1]);
+															for(Record r:result) {
+																idx--;
+																if(idx==0) {
+																	bcr.removeRecord(r);
+																	result = null;
+																	break;
+																}
+															}
+															if(result!=null) {
+																System.out.println("Invalid record index");
+																result = null;
+															}
+														}
+													} else {
+														System.out.println("Invalid query");
+														result = null;
+													}
+			// Print results
+			if(result != null){
+				System.out.println("Results:\n--------");
+				int found=0;
+				for(Record record: result){
+					System.out.println(record);
+					found++;
+				}
+				System.out.println("--------");
+				System.out.println(found + " matching records found");
+			} 
+			System.out.print("Enter query: ");
+		}	
+	}
+}

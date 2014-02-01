@@ -1,0 +1,14 @@
+Analysis & Synthesis Status : Successful - Sat Feb 19 11:15:07 2011
+Quartus II Version : 7.1 Build 178 06/25/2007 SP 1 SJ Full Version
+Revision Name : part4
+Top-level Entity Name : part4
+Family : Cyclone II
+Total logic elements : 33
+    Total combinational functions : 33
+    Dedicated logic registers : 0
+Total registers : 0
+Total pins : 100
+Total virtual pins : 0
+Total memory bits : 0
+Embedded Multiplier 9-bit elements : 0
+Total PLLs : 0

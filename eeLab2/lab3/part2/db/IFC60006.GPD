@@ -1,0 +1,18 @@
+*GPDSpecVersion: "1.0"
+*%
+*%    Created:  2007/10/15
+*%    Modified: 
+*%
+*%    Copyright (c) 1999 - 2007 Ricoh Co., Ltd.
+*%    All rights reserved.
+*%
+*GPDFileName: "IFC60006.GPD"
+*Include: "STDNAMES.GPD"
+*ModelName: "infotec MP C6000 PCL6"
+*PrintRatePPM: 55
+*PrintRate: 55
+*PrintRateUnit: PPM
+*Ifdef: WINNT_51
+*Define: RI_PCLXL
+*Endif:
+*Include: "RIAVEC2.GPD"

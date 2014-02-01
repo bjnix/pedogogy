@@ -1,0 +1,106 @@
+package cs2321;
+
+import java.io.FileOutputStream;
+import java.io.*;
+
+
+public class Assignment2 {
+	static public void main( String [] args )
+	{
+		ArraySequence<Integer> arrList = new ArraySequence<Integer>();
+		LinkedSequence<Integer> lnkList = new LinkedSequence<Integer>();
+		long sTime = 0;
+		long sampleT = 0;
+		int n = 0; 
+		FileOutputStream out; // declare a file output object
+		PrintStream p; // declare a print stream object
+		//////////////////////////////////////////////////add last
+				try
+				{
+					// Create a new file output stream
+					// connected to "myfile.txt"
+					out = new FileOutputStream("addLastresultLnk.csv");
+		
+					// Connect print stream to the output stream
+					p = new PrintStream( out );
+									
+					for( int i = 0 ; i < 5000 ; i ++ )
+					{
+						sTime = System.nanoTime();
+						lnkList.addLast(n);
+						sampleT = System.nanoTime();
+						p.println ((sampleT - sTime) + ", " + n);
+						n = n + 1;//increment n
+					}
+					p.close();
+				}
+				catch (Exception e)
+				{
+					System.err.println ("Error writing to file");
+				}
+				////////////////////////////////////////////add first
+				try
+				{
+					n = 0;
+					// Create a new file output stream
+					// connected to "myfile.txt"
+					out = new FileOutputStream("addFirstresultLnk.csv");
+		
+					// Connect print stream to the output stream
+					p = new PrintStream( out );
+					
+					for( int i = 0 ; i < 5000 ; i ++ )
+					{
+						sTime = System.nanoTime();
+						lnkList.addFirst(n);
+						sampleT = System.nanoTime();
+						p.println ((sampleT - sTime) + ", " + n);
+						n = n + 1;//increment n
+					}
+					p.close();
+				}
+				catch (Exception e)
+				{
+					System.err.println ("Error writing to file");
+				}
+		/////////-------------------addfirst test
+//		try
+//		{
+//			n = 0;
+//			// Create a new file output stream
+//			// connected to "myfile.txt"
+//			out = new FileOutputStream("addFirstresultlnk.csv");
+//
+//			// Connect print stream to the output stream
+//			p = new PrintStream( out );
+//			for( int j = 1 ; j < 201 ; j ++ )
+//			{
+//				for( int i = 0 ; i < 5000 ; i ++ )
+//				{
+//					sTime = System.nanoTime();
+//					arrList = new ArraySequence<Integer>();
+//
+//					for(int k = 0 ; k < j ; k++)
+//					{
+//						arrList.addFirst(k);
+//					}
+//					sampleT = System.nanoTime();
+//					
+//				}
+//				lnkList.addFirst(n);
+//				sampleT = System.nanoTime();
+//				p.println ((sampleT - sTime) + ", " + n);
+//				n = n + 1;//increment n
+//			}
+//			p.close();
+//		}
+//		catch (Exception e)
+//		{
+//			System.err.println ("Error writing to file");
+//		}
+	}
+}
+
+
+
+

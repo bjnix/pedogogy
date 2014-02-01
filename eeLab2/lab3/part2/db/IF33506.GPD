@@ -1,0 +1,18 @@
+*GPDSpecVersion: "1.0"
+*%
+*%    Created:  2008/01/28
+*%    Modified: 
+*%
+*%    Copyright (c) 1999 - 2008 Ricoh Co., Ltd.
+*%    All rights reserved.
+*%
+*GPDFileName: "IF33506.GPD"
+*Include: "STDNAMES.GPD"
+*ModelName: "infotec MP 3350 PCL6"
+*PrintRatePPM: 33
+*PrintRate: 33
+*PrintRateUnit: PPM
+*Ifdef: WINNT_51
+*Define: RI_PCLXL
+*Endif:
+*Include: "RIARUC5.GPD"

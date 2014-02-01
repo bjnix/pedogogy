@@ -1,0 +1,96 @@
+CS 1141 HW 1
+Brent Nix
+
+1) The 'script' command runs a program which makes a typscript of everything 
+	printed to the terminal. EVERYTHING. Even backspaces.
+
+2)
+Script started on Mon 17 Jan 2011 08:03:07 PM UTC
+]0;brent@Dan:~/Documents[?1034h[brent@Dan Documents]$ sl[K[Ksleep200[K[K[K 200 &
+[1] 2004
+]0;brent@Dan:~/Documents[brent@Dan Documents]$ ps -O User[K[K[K[Kuser
+  PID USER     S TTY          TIME COMMAND
+ 2003 brent    S pts/4    00:00:00 bash -i
+ 2004 brent    S pts/4    00:00:00 sleep 200
+ 2005 brent    R pts/4    00:00:00 ps -O user
+]0;brent@Dan:~/Documents[brent@Dan Documents]$ kill s[K2004
+]0;brent@Dan:~/Documents[1]+  Terminated              sleep 200
+[brent@Dan Documents]$ ps
+  PID TTY          TIME CMD
+ 2003 pts/4    00:00:00 bash
+ 2006 pts/4    00:00:00 ps
+]0;brent@Dan:~/Documents[brent@Dan Documents]$ exit
+exit
+
+Script done on Mon 17 Jan 2011 08:04:23 PM UTC
+
+3)
+chmod - a program that allows the user to change permissions on a file 
+
+file - a program that allows the user to (through a series of tests) determine 
+	the type of the specified file.
+
+less - a text reader program that a user can pipe oversized output into in order
+	to scroll through the results. since it does not have to read the entire
+	file before displaying them, it runs faster on larger files than a text
+	editor (like VI) would.
+
+ls - used to the files contained in the directory that we run the program in
+
+pwd - allows the user to print out the working directory for the current object
+	in memory
+
+touch - allows for the user to change the time stamp on a file (updating them, 
+	not necessarily change them but update them. 
+
+4)
+
+Script started on Tue 18 Jan 2011 03:04:24 PM UTC
+]0;brent@Dan:~/Documents[?1034h[brent@Dan Documents]$ exit[K[K[K[Kls -l aFile
+-rwxrwxr-- 1 brent users 0 Jan 18 14:54 [0m[01;32maFile[0m
+]0;brent@Dan:~/Documents[brent@Dan Documents]$ ls[K[Kchmod 766 afile[K[K[K[KFile;ls -p[Kl aFile
+-rwxrw-rw- 1 brent users 0 Jan 18 14:54 [0m[01;32maFile[0m
+]0;brent@Dan:~/Documents[brent@Dan Documents]$ exit
+exit
+
+Script done on Tue 18 Jan 2011 03:05:20 PM UTC
+
+-the file starts out with read, write, and executable permissions for the owner
+	and the group with only read permissions given to the user. after the 
+	change, the user gains write access and the group loses execute access. 
+
+5) 
+Script started on Tue 18 Jan 2011 02:24:54 PM EST
+]0;bjnix@wopr:/major[bjnix@wopr /major]$ ls -l |grep bjnix
+drwx--x--x  47 bjnix    student        7168 Jan 18 14:24 bjnix
+]0;bjnix@wopr:/major[bjnix@wopr /major]$ exit
+exit
+
+Script done on Tue 18 Jan 2011 02:26:45 PM EST
+
+I have the right to read, write or execute any of the files I create, but for 
+objects made by my group or other users I only have executable permissions.
+
+6)
+The 'principle of least privilege' is a concept which says that at every level
+a no user should have more access or permission than they absolutely need.
+The classic example of why this is important for the security of a computer is
+restricting a user from having root access because in the very best situation,
+a user can cause damage unintentionally and in the worst case, a knowledgeable
+user has the ability to do whatever it is that their malicious hearts desire.
+
+7)
+Username	| Group	| File			|Access 		|Y/N|
+-----------------------------------------------------------------------------
+buser		|student| /home/auser/		| List directory cont.	| Y |
+auser		|student| /home/auser/subdir/	| Create a file named f | N |
+cuser		|staff	| /home/auser/topfile	| Read			| Y |
+buser		|student| /home/auser/topfile	| Read			| Y |
+buser		|student| /home/auser/subdir/fi	| Read			| N |
+buser		|student| /home/auser/subdir/   | List directory cont.	| Y |
+cuser		|staff	| /home/auser/subdir/fi | Read			| Y |
+
+8)
+drwxr----- joeUser student /home/joeUser/
+-rwxr----- joeUser student /home/joeUser/someFile
+

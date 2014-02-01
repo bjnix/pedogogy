@@ -1,0 +1,109 @@
+Brent Nix
+CS1141 HW5
+1.
+	(a) mm=pp; 			//ERROR => mm and pp are different types(X & Y)
+	(b) strcpy(nn.cc, "Test"); 	//All good!
+	(c) X.aa = 5; 			//ERROR => X is a struct, essentially an object
+					type,
+	so you can't call it as though it were an instantiation of a struct.
+	(d)Y.ee = 37.2; 		//ERROR => same as (c)
+	(e)mm = nn; 			//All good!
+
+2.
+		
+	#include <string.h>
+	#include <stdio.h>
+	/* tstCopy.c
+	 */
+
+	struct name 
+	{
+		char first[10];
+		char second[10];
+		char last[10];
+	};
+	struct little
+	{
+		struct name empName;
+		unsigned 	dept;
+		char		*manager;
+	};
+	struct big {
+		struct name empName;
+		unsigned	dept;
+		char		*manager;
+		unsigned 	yearsWithCompany;
+	};
+
+	void littleToBig(struct little *lData, struct big *bData, int years);
+
+	int main(int argc, char * argv[])
+	{
+		int yrs = 5 ;
+		struct little l;
+		struct big b;
+		
+		char f[10] = "Thomas";
+		char s[10] = "A.";
+		char t[10] = "Anderson";
+		
+		strncpy(l.empName.first, f, 10);
+		strncpy(l.empName.second, s, 10);
+		strncpy(l.empName.last, t, 10);
+		l.dept = 3;
+		l.manager = "Agt.Smith";
+
+		littleToBig(&l, &b, yrs);
+		printf("Name: %s %s %s\nDept: %u\nManager: %s\nYears With MetaCortex: %u\n",b.empName.first, b.empName.second, b.empName.last,b.dept,b.manager,b.yearsWithCompany);
+		return (0);
+		
+	}
+
+	void littleToBig(struct little *lData, struct big *bData, int years)
+	{
+		bData->empName = lData->empName;
+		bData->dept = lData->dept;
+		bData->manager = lData->manager;
+		bData->yearsWithCompany = years;
+	}
+
+3.
+	12 bytes
+
+4.
+	(a) s.id.desc="Circle";			//ERROR! => use strncpy
+	(b) s.u.centrx=0			//ERROR! => centerxis in s, not u
+	(b) s.u.circle.radius=5			//just fine
+	(c) s.rectangle.height=10 		//ERROR! => 
+	(d) strcpy(s.id.usertag,"Pie chart")	//ERROR! => usertag is in
+	id,not s
+5.
+	int *create_array(int n, int iValue)
+	{
+		int i;
+		int * ip;
+		ip = (int *)malloc(n); 
+		for(i = 0; i < n; i++)
+			*(ip+i) = iValue;
+		
+		return ip;
+	}
+
+	
+6.
+	(a): 	In line 13, malloc is never type-casted to a (struct node *). Also, 
+		the allocated memory is never freed and malloc is never checked.
+
+	(b):	all is well, Except for the fact that memory is never freed and
+		malloc is never checked.
+
+	(c):	aPtr should be initialized as a char* because it will always be
+		a char, which means that malloc should be initialized as a char. 
+		Thats not the real problem though.
+		The real problem is that the memory is freed twice.
+	
+	(d):	well, the white space is never purged, but I don't think thats
+		what you are looking for.
+		malloc is never checked and the allocated memory is never
+		freed. Also, realloc should probably be used in stead of
+		malloc.

@@ -1,0 +1,414 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/DTD/strict.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/bitmaps/favicon.png">
+	<link rel="icon" href="/bitmaps/favicon.png" type="image/png">
+	<link href="./faq.css" rel="Stylesheet" type="text/css">
+
+	<title>Winsock Programmer&rsquo;s FAQ: Introduction</title>
+
+	<style type="text/css">
+		#next-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(./bitmaps/navbar-icons.png);
+			background-position: -38px 0;
+		}
+		#prev-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(./bitmaps/navbar-icons.png);
+			background-position: 0 0;
+		}
+		#stop-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(./bitmaps/navbar-icons.png);
+			background-position: -76px 0;
+		}
+		.navbar {
+			border: 8px solid #d0d0a0;
+			border-spacing: 0;
+			border-radius: 10px;
+			-moz-border-radius: 10px;
+			-webkit-border-radius: 10px;
+			height: 140px;
+			margin: auto;   /* center on page */
+			margin-top: 10px;
+			text-align: center;
+			width: 95%;
+		}
+		.navbar td {
+			background-color: #006000;
+			border: 10px solid #e0e0c0;
+			color: #ffffee;
+			font-size: 182%;
+			font-family:
+				"verdana",
+				"luxi sans",
+				"helvetica narrow",
+				"arial condensed",
+				"arial",
+				"univers",
+				sans-serif;
+			font-weight: bold;
+			text-align: center;
+		}
+		.navbarcap {
+			background-color: #e0e0c0 !important;
+			cursor: pointer;
+			padding-left: 10px;
+			width: 50px;
+		}
+	</style>
+</head>
+
+<body>
+
+
+
+
+
+
+
+
+	
+
+
+
+
+	
+
+	<!--  **** Navigation Bar ****  -->
+	<table class="navbar">
+		<tr>
+			<td class="navbarcap" onclick="location.href='./'">
+				<a id="prev-link" href="./"></a>
+			</td>
+
+			<td>
+				Winsock Programmer&rsquo;s FAQ<br>
+
+				
+
+				
+					Section 0: Introduction<br>
+				
+				
+				
+			</td>
+
+			<td class="navbarcap" onclick="location.href='./general.html'">
+				<a id="next-link" href="./general.html"></a>
+			</td>
+		</tr>
+	</table>
+
+	<!--  **** Body Container ****  -->
+	<div id="body" style="padding-left: 30px" >
+
+
+
+
+
+
+
+<a name="ointro"></a>
+<h5>0.1 - The Original Introduction</h5>
+
+<p>This FAQ was derived from the Winsock FAQ by Mark Towfiq. That
+FAQ&rsquo;s introduction:</p>
+
+<p class=inset><i>This FAQ has been put together by Mark Towfiq,
+with much-appreciated assistance from Jay Allard, Bruce Backman,
+Paul Brooks, Martin Hall, Simon Hewison, Mike Morse, Bob Quinn,
+Ed Schwalenberg, Bill Tang, Dave Treadwell, and Fred Whiteside.</i></p>
+
+<a name="aboutme"></a>
+<h5>0.2 - About the Maintainer</h5>
+
+<p>This FAQ&rsquo;s current maintainer is <a href="/email/">Warren
+Young</a>, who has been maintaining and extending this FAQ
+<a href="./history.html">since 1997</a>. He wrote his first networked
+program on DOS in 1993, and currently writes mostly for Linux and
+OS X.</p>
+
+<a name="legal"></a>
+<h5>0.3 - Legal Stuff</h5>
+
+<p>These pages are copyrighted. You may copy these pages to your local
+hard disk to read them off-line. All other rights are reserved by
+the author.</p>
+
+<p>THERE IS NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, FOR THE
+INFORMATION ON THIS SITE, INCLUDING WARRANTIES OF ACCURACY, SUITABILITY
+OR FITNESS FOR A PARTICULAR PURPOSE. USING THIS INFORMATION IMPLIES YOUR
+ACCEPTANCE OF THESE TERMS.</P>
+
+<a name="mirrors"></a>
+<h5>0.4 - Mirrors</h5>
+
+<p>There are no official mirrors of this site. For the latest,
+official FAQ, go to <a href="http://tangentsoft.net/wskfaq/">http://tangentsoft.net/wskfaq/</a>.</p>
+
+
+<a name="askingquestions"></a>
+<h5>0.5 - Where can I ask questions not already in the FAQ?</h5>
+
+<p>These days, the best place I know of to ask Winsock questions is
+<a href="http://stackoverflow.com/">Stack Overflow</a>. I monitor the
+<tt>winsock</tt> tag with my RSS feed reader, so I may even answer
+your question. If not, you will likely get a good, rapid answer from
+someone else.</p>
+
+<p>The <a href="http://msdn.microsoft.com/">MSDN</a> <a
+href="http://msdn.microsoft.com/library/">Library</a> contains
+reference documentation, tutorials, and even entire books covering
+all of Microsoft&rsquo;s APIs, including Winsock. In recent years,
+they&rsquo;ve made it public and web-searchable, so there&rsquo;s
+no excuse not to take advantage of it. It&rsquo;s a huge library of
+good stuff.</p>
+
+<p>In the old days, the best place to ask was on mailing lists and
+Usenet newsgroups that are now dead. Much of what we discussed back
+then is still useful. You may be able to dig up information from such
+sources via <a href="http://groups.google.com/">Google Groups</a>. If
+that doesn&rsquo;t turn up anything useful, try your web search
+engine of choice. You might find something in a web archive of one
+of the old mail lists. Search engines also turn up newer information
+on sites like Stack Overflow.</p>
+
+<p>I ignore most questions sent to me via email, because it goes
+totally against the idea of a FAQ. If I reply with the answer,
+only one person benefits. If I put the same amount of effort into
+adding that info to the FAQ, everyone who reads the FAQ benefits. If
+I haven&rsquo;t yet decided to answer your question in the FAQ,
+it&rsquo;s probably a rare enough or complex enough question that
+asking me to answer it amounts to asking for free, private consulting
+services. My generosity does not extend that far.</p>
+
+
+<a name="mailing-list"></a>
+<h5>0.6 - Is there a mailing list for FAQ updates?</h5>
+
+<p>No, not at this time.</p>
+
+<a name="versions"></a>
+<h5>0.7 - What Windows and Winsock versions does the FAQ cover?</h5>
+
+<p>This FAQ was started back in the days of Windows 3.1 and Winsock
+1.1. It thus used to have a lot of legacy baggage that was just noise
+to most programmers today.</p>
+
+<p>In late 2009, I decided it was high time that I refocused the
+FAQ on modern Windows, which I&rsquo;ve defined as Windows NT 4.0
+SP4 and its direct discendants: Windows 2000, Windows XP, Windows
+Server 200<i>x</i>, Windows Vista, and Windows 7. Any time I refer
+to &ldquo;modern&rdquo; Windows in the FAQ, these are the operating
+systems I mean.</p>
+
+<p>Why target NT 4.0 SP4 specifically? This
+was the first version of Windows that was both not <a
+href="http://oreilly.com/centers/windows/brochure/isnot.html">DOS-based</a>
+and that included the current version of Winsock, v2.2.2. (Most people
+just say &ldquo;Winsock 2.&rdquo;)</p>
+
+<p>Winsock 2 also came with Windows 98, and was available as an <a
+href="http://support.microsoft.com/kb/182108">add-on</a> for Windows
+95, though both of these do have some differences and limitations
+compared to NT 4 SP4. Legacy information for these and older systems is
+now in a <a href="./articles/history.html">separate history article</a>, which
+also answers the question of why the current version of the Winsock
+spec is over 12 years old. It includes much of historical interest.</p>
+
+<p>Most of the FAQ still applies to Winsock 1.1 and BSD
+Sockets, simply because these are largely backwards-compatible
+APIs. I advise on how to choose among these alternatives in <a
+href="newbie.html#targetapi">this FAQ item</a>. In addition, the
+FAQ has one article covering <a href="./articles/othersys.html">Winsock
+alternatives</a> for other operating systems.</p>
+
+<p>The FAQ doesn&rsquo;t cover Windows CE (or Pocket PC, or Windows
+Mobile, or Windows Phone, or whatever they&rsquo;re calling the
+damn thing this year) in any depth. The last time I looked into
+it, when WinCE 4 was current, its Winsock implementation was rather
+crippled. The FAQ does therefore include some workarounds for missing
+features. I don&rsquo;t know if newer versions of the OS are closer
+to their desktop cousins in this regard.</p>
+
+<p>This FAQ assumes you are using development tools that
+are new enough to include Winsock support. It hasn&rsquo;t
+been necessary to download a separate Winsock SDK for many
+years. If you truly are using tools so old they don&rsquo;t
+have things like <tt>winsock.h</tt>, you can try installing the <a
+href="http://www.microsoft.com/msdownload/platformsdk/sdkupdate/psdk-full.htm">Windows
+Platform SDK</a>. It includes Microsoft&rsquo;s Winsock SDK,
+and thus works best with Visual C++. If possible, you should
+simply upgrade your development tools. Microsoft has been
+giving away perfectly usable versions of their Visual Studio
+components for years now. For Winsock programming, you want <a
+href="http://www.microsoft.com/Express/VC/">Visual C++ Express</a>.
+Microsoft has said they&rsquo;re going to keep offering this,
+so don&rsquo;t worry that it might go away some day. It might,
+but I don&rsquo;t think it will go away any sooner than its direct
+competition, things like <a href="http://mingw.org">MinGW</a> and
+<a href="http://cygwin.com/">Cygwin</a>.</p>
+
+<p>Speaking of, the FAQ&rsquo;s code is supposed to build
+with the MinGW and Cygwin versions of GCC. It&rsquo;s tested
+primarily with modern versions of Visual C++, but we do try for
+compatibility. You&rsquo;ll have to work out the build commands on
+your own, though.</p>
+
+<a name="langbias"></a>
+<h5>0.8 - Programming Language Bias</h5>
+
+<p>This FAQ is biased towards C, with some C++ as well. There are a
+number of other reasons I don&rsquo;t use some other language:</p>
+
+<ol>
+  <li><p>C is the <i>lingua franca</i> of Windows programming. Other
+  languages may be more popular for writing Windows programs, but at
+  bottom, Windows is based on C.</p></li>
+
+  <li><p>The Winsock API derives from the C-centric Unix world&rsquo;s
+  BSD Sockets API.</p></li>
+
+  <li><p>Every other language I&rsquo;m aware of that&rsquo;s
+  commonly used on Windows already has some language-specific way to
+  do network programming. You no longer have to write to the Winsock
+  API in these languages, as you did in the bad old days.</p></li>
+</ol>
+
+<p>Problems that only affect, say, Visual Basic, are not covered
+in the FAQ. The FAQ&rsquo;s <a href="./resources/index.html">Resources</a>
+section and the FAQ item <a href="./newbie.html#langcompat">Can I use
+Winsock with { My Favorite Language }?</a> may be of some use.</p>
+
+
+<a name="protbias"></a>
+<h5>0.9 - Protocol Bias</h5>
+
+<p>This FAQ only covers the TCP/IP transport protocol suite at
+this time, simply because I&rsquo;ve never programmed for any other
+transport. Winsock supports <a href="./general.html#transport">many other
+transports</a>, but I can&rsquo;t even help you to find info about
+them, other than pointing you to <a href="#askingquestions">places
+to ask questions</a>.</p>
+
+<a name="acknowledgements"></a>
+<h5>0.10 - Acknowledgements</h5>
+
+<p>A FAQ is never an isolated thing. It takes many people, from patient
+gurus willing to share their knowledge, down to the masses of ignorant
+newbies posting the same damn questions yet again. Without gurus,
+there can be no accuracy. Without newbies, there&rsquo;s no grist for
+the mill. And without everyone from newbies on up, there&rsquo;s no
+point in having a FAQ.</p>
+
+<p>My first contribution, as mentioned above, is Mark Towfiq&rsquo;s
+original FAQ. Although not much remains of the original material, it
+did provide this FAQ&rsquo;s initial core. I might not have decided to
+create a FAQ in the first place &mdash; it probably took an existing,
+langushing FAQ to prod me.</p>
+
+<p>Bob Quinn (of <a href="reviews/wsnp.html">Windows Sockets Network
+Programming</a> fame) keeps me accurate and has provided inspiration
+for a number of the FAQ&rsquo;s current questions.</p>
+
+<p>Philippe Jounin has provided invaluable input by way of a different
+perspective. That added perspective has corrected several bits of
+tunnel vision in this FAQ.</p>
+
+<p>Alun Jones has repeatedly pointed out my various
+failings. (I&rsquo;m grateful for this, really I am.) In one way or
+another, those corrections improve the quality of the information in
+this FAQ.</p>
+
+<p>As of Spring of 2000, the FAQ began including articles, code and
+FAQ items from various Winsockers around the globe. I thank these
+people for letting me kipe their good works. (These items are marked
+with the original author&rsquo;s name.)</p>
+
+<p>And of course, there are dozens of others who have sent me email
+with snippets, corrections, suggestions, pointers and atta-boys. Thanks
+to you all.</p>
+
+
+
+
+
+		</div> <!-- end body div -->
+
+<hr class="noshade">
+
+
+<!--  Navigation footer  -->
+<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer nav"> 
+	<tr>
+		<td align="left" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="./">&lt;&lt;&nbsp;Winsock Programmer's FAQ</a><br>
+			</span>
+		
+		</td>
+
+		<td align="right" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="./general.html">General Winsock Information&nbsp;&gt;&gt;</a>
+			</span>
+		
+		</td>
+	</tr>
+</table>
+
+
+
+
+
+
+	<!--  Document Footer -->
+
+	<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer info"> 
+		<tr>
+			
+				<td align="left" class="thirdwidth">
+					
+					<span class="annotation">Updated Sun Oct 25 2009 09:40 MDT</span>
+				</td>
+				<td align="center" class="thirdwidth">
+				
+			
+
+			
+				&nbsp;
+			
+			</td>
+
+			<td align="right" class="thirdwidth">
+				<a href="/">Go to my home page</a>
+			</td>
+		</tr>	
+	</table>
+
+
+	<script type="text/javascript" src="/js/awstats_misc_tracker.js"></script>
+</body>
+</html>
+

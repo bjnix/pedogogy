@@ -1,0 +1,26 @@
+what,kind,bundleId,bundleVersion,description,time
+executed,command,org.eclipse.ui,3.5.0.I20090604-2000,"org.eclipse.ui.file.save",1269825884137
+executed,command,org.eclipse.ui,3.5.0.I20090604-2000,"org.eclipse.ui.file.save",1269826024448
+started,bundle,org.eclipse.jdt.junit,3.5.0.v20090526-2000,"org.eclipse.jdt.junit",1269826125031
+deactivated,workbench,org.eclipse.ui.workbench,3.5.0.I20090603-2000,"",1269826330091
+activated,workbench,org.eclipse.ui.workbench,3.5.0.I20090603-2000,"",1269826351171
+executed,command,org.eclipse.ui,3.5.0.I20090604-2000,"org.eclipse.ui.edit.paste",1269826361119
+executed,command,org.eclipse.ui,3.5.0.I20090604-2000,"org.eclipse.ui.file.save",1269826374435
+activated,view,org.eclipse.ui.console,3.4.0.v20090513,"org.eclipse.ui.console.ConsoleView",1269826379879
+deactivated,workbench,org.eclipse.ui.workbench,3.5.0.I20090603-2000,"",1269826390077
+executed,command,org.eclipse.ui,3.5.0.I20090604-2000,"org.eclipse.ui.edit.findReplace",1269826390126
+no handler,command,org.eclipse.ui,3.5.0.I20090604-2000,"org.eclipse.ui.edit.text.contentAssist.proposals",1269826401021
+no handler,command,org.eclipse.ui,3.5.0.I20090604-2000,"org.eclipse.ui.edit.text.contentAssist.proposals",1269826403464
+activated,workbench,org.eclipse.ui.workbench,3.5.0.I20090603-2000,"",1269826415312
+activated,editor,org.eclipse.jdt.ui,3.5.0.v20090604,"org.eclipse.jdt.ui.CompilationUnitEditor",1269826416467
+opened,view,org.eclipse.ui.ide,3.5.0.I20090525-2000,"org.eclipse.ui.views.ProblemView",1269826421237
+activated,view,org.eclipse.ui.views,3.4.0.I20090525-2000,"org.eclipse.ui.views.ContentOutline",1269826453307
+activated,editor,org.eclipse.jdt.ui,3.5.0.v20090604,"org.eclipse.jdt.ui.CompilationUnitEditor",1269826463932
+executed,command,org.eclipse.ui,3.5.0.I20090604-2000,"org.eclipse.ui.file.save",1269826481231
+deactivated,workbench,org.eclipse.ui.workbench,3.5.0.I20090603-2000,"",1269826485611
+deactivated,workbench,org.eclipse.ui.workbench,3.5.0.I20090603-2000,"",1269887912090
+activated,workbench,org.eclipse.ui.workbench,3.5.0.I20090603-2000,"",1269894816228
+deactivated,workbench,org.eclipse.ui.workbench,3.5.0.I20090603-2000,"",1269894821178
+activated,workbench,org.eclipse.ui.workbench,3.5.0.I20090603-2000,"",1269894823279
+opened,editor,org.eclipse.jdt.ui,3.5.0.v20090604,"org.eclipse.jdt.ui.CompilationUnitEditor",1269894825631
+activated,editor,org.eclipse.jdt.ui,3.5.0.v20090604,"org.eclipse.jdt.ui.CompilationUnitEditor",1269894826848

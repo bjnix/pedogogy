@@ -1,0 +1,542 @@
+/**
+ * \file include/control_external.h
+ * \brief External control plugin SDK
+ * \author Takashi Iwai <tiwai@suse.de>
+ * \date 2005
+ *
+ * External control plugin SDK.
+ */
+
+/*
+ *   This library is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU Lesser General Public License as
+ *   published by the Free Software Foundation; either version 2.1 of
+ *   the License, or (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU Lesser General Public License for more details.
+ *
+ *   You should have received a copy of the GNU Lesser General Public
+ *   License along with this library; if not, write to the Free Software
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+ *
+ */
+#ifndef __ALSA_CONTROL_EXTERNAL_H
+#define __ALSA_CONTROL_EXTERNAL_H
+
+#include "control.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/**
+ *  \defgroup CtlPlugin_SDK External Control Plugin SDK
+ *  \{
+ */
+
+/**
+ * Define the object entry for external control plugins
+ */
+#define SND_CTL_PLUGIN_ENTRY(name) _snd_ctl_##name##_open
+
+/**
+ * Define the symbols of the given control plugin with versions
+ */
+#define SND_CTL_PLUGIN_SYMBOL(name) SND_DLSYM_BUILD_VERSION(SND_CTL_PLUGIN_ENTRY(name), SND_CONTROL_DLSYM_VERSION);
+
+/**
+ * Define the control plugin
+ */
+#define SND_CTL_PLUGIN_DEFINE_FUNC(plugin) \
+int SND_CTL_PLUGIN_ENTRY(plugin) (snd_ctl_t **handlep, const char *name,\
+				  snd_config_t *root, snd_config_t *conf, int mode)
+
+/** External control plugin handle */
+typedef struct snd_ctl_ext snd_ctl_ext_t;
+/** Callback table of control ext */
+typedef struct snd_ctl_ext_callback snd_ctl_ext_callback_t;
+/** Key to access a control pointer */
+typedef unsigned long snd_ctl_ext_key_t;
+
+/*
+ * Protocol version
+ */
+#define SND_CTL_EXT_VERSION_MAJOR	1	/**< Protocol major version */
+#define SND_CTL_EXT_VERSION_MINOR	0	/**< Protocol minor version */
+#define SND_CTL_EXT_VERSION_TINY	0	/**< Protocol tiny version */
+/**
+ * external plugin protocol version
+ */
+#define SND_CTL_EXT_VERSION		((SND_CTL_EXT_VERSION_MAJOR<<16) |\
+					 (SND_CTL_EXT_VERSION_MINOR<<8) |\
+					 (SND_CTL_EXT_VERSION_TINY))
+
+/** Handle of control ext */
+struct snd_ctl_ext {
+	/**
+	 * protocol version; #SND_CTL_EXT_VERSION must be filled here
+	 * before calling #snd_ctl_ext_create()
+	 */
+	unsigned int version;
+	/**
+	 * Index of this card; must be filled before calling #snd_ctl_ext_create()
+	 */
+	int card_idx;
+	/**
+	 * ID string of this card; must be filled before calling #snd_ctl_ext_create()
+	 */
+	char id[16];
+	/**
+	 * Driver name of this card; must be filled before calling #snd_ctl_ext_create()
+	 */
+	char driver[16];
+	/**
+	 * short name of this card; must be filled before calling #snd_ctl_ext_create()
+	 */
+	char name[32];
+	/**
+	 * Long name of this card; must be filled before calling #snd_ctl_ext_create()
+	 */
+	char longname[80];
+	/**
+	 * Mixer name of this card; must be filled before calling #snd_ctl_ext_create()
+	 */
+	char mixername[80];
+	/**
+	 * poll descriptor
+	 */
+	int poll_fd;
+
+	/**
+	 * callbacks of this plugin; must be filled before calling #snd_pcm_ioplug_create()
+	 */
+	const snd_ctl_ext_callback_t *callback;
+	/**
+	 * private data, which can be used freely in the driver callbacks
+	 */
+	void *private_data;
+	/**
+	 * control handle filled by #snd_ctl_ext_create()
+	 */
+	snd_ctl_t *handle;
+
+	int nonblock;			/**< non-block mode; read-only */
+	int subscribed;			/**< events subscribed; read-only */
+};
+
+/** Callback table of ext */
+struct snd_ctl_ext_callback {
+	/**
+	 * close the control handle; optional
+	 */
+	void (*close)(snd_ctl_ext_t *ext);
+	/**
+	 * return the total number of elements; required
+	 */
+	int (*elem_count)(snd_ctl_ext_t *ext);
+	/**
+	 * return the element id of the given offset (array index); required
+	 */
+	int (*elem_list)(snd_ctl_ext_t *ext, unsigned int offset, snd_ctl_elem_id_t *id);
+	/**
+	 * convert the element id to a search key; required
+	 */
+	snd_ctl_ext_key_t (*find_elem)(snd_ctl_ext_t *ext, const snd_ctl_elem_id_t *id);
+	/**
+	 * the destructor of the key; optional
+	 */
+	void (*free_key)(snd_ctl_ext_t *ext, snd_ctl_ext_key_t key);
+	/**
+	 * get the attribute of the element; required
+	 */
+	int (*get_attribute)(snd_ctl_ext_t *ext, snd_ctl_ext_key_t key,
+			     int *type, unsigned int *acc, unsigned int *count);
+	/**
+	 * get the element information of integer type
+	 */
+	int (*get_integer_info)(snd_ctl_ext_t *ext, snd_ctl_ext_key_t key,
+				long *imin, long *imax, long *istep);
+	/**
+	 * get the element information of integer64 type
+	 */
+	int (*get_integer64_info)(snd_ctl_ext_t *ext, snd_ctl_ext_key_t key,
+				  int64_t *imin, int64_t *imax, int64_t *istep);
+	/**
+	 * get the element information of enumerated type
+	 */
+	int (*get_enumerated_info)(snd_ctl_ext_t *ext, snd_ctl_ext_key_t key, unsigned int *items);
+	/**
+	 * get the name of the enumerated item
+	 */
+	int (*get_enumerated_name)(snd_ctl_ext_t *ext, snd_ctl_ext_key_t key, unsigned int item,
+				   char *name, size_t name_max_len);
+	/**
+	 * read the current values of integer type
+	 */
+	int (*read_integer)(snd_ctl_ext_t *ext, snd_ctl_ext_key_t key, long *value);
+	/**
+	 * read the current values of integer64 type
+	 */
+	int (*read_integer64)(snd_ctl_ext_t *ext, snd_ctl_ext_key_t key, int64_t *value);
+	/**
+	 * read the current values of enumerated type
+	 */
+	int (*read_enumerated)(snd_ctl_ext_t *ext, snd_ctl_ext_key_t key, unsigned int *items);
+	/**
+	 * read the current values of bytes type
+	 */
+	int (*read_bytes)(snd_ctl_ext_t *ext, snd_ctl_ext_key_t key, unsigned char *data,
+			  size_t max_bytes);
+	/**
+	 * read the current values of iec958 type
+	 */
+	int (*read_iec958)(snd_ctl_ext_t *ext, snd_ctl_ext_key_t key, snd_aes_iec958_t *iec958);
+	/**
+	 * update the current values of integer type with the given values
+	 */
+	int (*write_integer)(snd_ctl_ext_t *ext, snd_ctl_ext_key_t key, long *value);
+	/**
+	 * update the current values of integer64 type with the given values
+	 */
+	int (*write_integer64)(snd_ctl_ext_t *ext, snd_ctl_ext_key_t key, int64_t *value);
+	/**
+	 * update the current values of enumerated type with the given values
+	 */
+	int (*write_enumerated)(snd_ctl_ext_t *ext, snd_ctl_ext_key_t key, unsigned int *items);
+	/**
+	 * update the current values of bytes type with the given values
+	 */
+	int (*write_bytes)(snd_ctl_ext_t *ext, snd_ctl_ext_key_t key, unsigned char *data,
+			   size_t max_bytes);
+	/**
+	 * update the current values of iec958 type with the given values
+	 */
+	int (*write_iec958)(snd_ctl_ext_t *ext, snd_ctl_ext_key_t key, snd_aes_iec958_t *iec958);
+	/**
+	 * subscribe/unsubscribe the event notification; optional
+	 */
+	void (*subscribe_events)(snd_ctl_ext_t *ext, int subscribe);
+	/**
+	 * read a pending notification event; optional
+	 */
+	int (*read_event)(snd_ctl_ext_t *ext, snd_ctl_elem_id_t *id, unsigned int *event_mask);
+	/**
+	 * return the number of poll descriptors; optional
+	 */
+	int (*poll_descriptors_count)(snd_ctl_ext_t *ext);
+	/**
+	 * fill the poll descriptors; optional
+	 */
+	int (*poll_descriptors)(snd_ctl_ext_t *ext, struct pollfd *pfds, unsigned int space);
+	/**
+	 * mangle the revents of poll descriptors
+	 */
+	int (*poll_revents)(snd_ctl_ext_t *ext, struct pollfd *pfds, unsigned int nfds, unsigned short *revents);
+};
+
+/**
+ * The access type bits stored in get_attribute callback
+ */
+typedef enum snd_ctl_ext_access {
+	SND_CTL_EXT_ACCESS_READ = (1<<0),
+	SND_CTL_EXT_ACCESS_WRITE = (1<<1),
+	SND_CTL_EXT_ACCESS_READWRITE = (3<<0),
+	SND_CTL_EXT_ACCESS_VOLATILE = (1<<2),
+	SND_CTL_EXT_ACCESS_INACTIVE = (1<<8),
+} snd_ctl_ext_access_t;
+
+/**
+ * find_elem callback returns this if no matching control element is found
+ */
+#define SND_CTL_EXT_KEY_NOT_FOUND	(snd_ctl_ext_key_t)(-1)
+
+int snd_ctl_ext_create(snd_ctl_ext_t *ext, const char *name, int mode);
+int snd_ctl_ext_delete(snd_ctl_ext_t *ext);
+
+/** \} */
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __ALSA_CONTROL_EXTERNAL_H */
+                                                                                                                  /**
+ * \file include/global.h
+ * \brief Application interface library for the ALSA driver
+ * \author Jaroslav Kysela <perex@perex.cz>
+ * \author Abramo Bagnara <abramo@alsa-project.org>
+ * \author Takashi Iwai <tiwai@suse.de>
+ * \date 1998-2001
+ *
+ * Application interface library for the ALSA driver
+ */
+/*
+ *   This library is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU Lesser General Public License as
+ *   published by the Free Software Foundation; either version 2.1 of
+ *   the License, or (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU Lesser General Public License for more details.
+ *
+ *   You should have received a copy of the GNU Lesser General Public
+ *   License along with this library; if not, write to the Free Software
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+ *
+ */
+
+#ifndef __ALSA_GLOBAL_H_
+#define __ALSA_GLOBAL_H_
+
+/* for timeval and timespec */
+#include <time.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/**
+ *  \defgroup Global Global defines and functions
+ *  Global defines and functions.
+ *  \par
+ *  The ALSA library implementation uses these macros and functions.
+ *  Most applications probably do not need them.
+ *  \{
+ */
+
+const char *snd_asoundlib_version(void);
+
+#ifndef ATTRIBUTE_UNUSED
+/** do not print warning (gcc) when function parameter is not used */
+#define ATTRIBUTE_UNUSED __attribute__ ((__unused__))
+#endif
+
+#ifdef PIC /* dynamic build */
+
+/** \hideinitializer \brief Helper macro for #SND_DLSYM_BUILD_VERSION. */
+#define __SND_DLSYM_VERSION(name, version) _ ## name ## version
+/**
+ * \hideinitializer
+ * \brief Appends the build version to the name of a versioned dynamic symbol.
+ */
+#define SND_DLSYM_BUILD_VERSION(name, version) char __SND_DLSYM_VERSION(name, version);
+
+#else /* static build */
+
+struct snd_dlsym_link {
+	struct snd_dlsym_link *next;
+	const char *dlsym_name;
+	const void *dlsym_ptr;
+};
+
+extern struct snd_dlsym_link *snd_dlsym_start;
+
+/** \hideinitializer \brief Helper macro for #SND_DLSYM_BUILD_VERSION. */
+#define __SND_DLSYM_VERSION(prefix, name, version) _ ## prefix ## name ## version
+/**
+ * \hideinitializer
+ * \brief Appends the build version to the name of a versioned dynamic symbol.
+ */
+#define SND_DLSYM_BUILD_VERSION(name, version) \
+  static struct snd_dlsym_link __SND_DLSYM_VERSION(snd_dlsym_, name, version); \
+  void __SND_DLSYM_VERSION(snd_dlsym_constructor_, name, version) (void) __attribute__ ((constructor)); \
+  void __SND_DLSYM_VERSION(snd_dlsym_constructor_, name, version) (void) { \
+    __SND_DLSYM_VERSION(snd_dlsym_, name, version).next = snd_dlsym_start; \
+    __SND_DLSYM_VERSION(snd_dlsym_, name, version).dlsym_name = # name; \
+    __SND_DLSYM_VERSION(snd_dlsym_, name, version).dlsym_ptr = (void *)&name; \
+    snd_dlsym_start = &__SND_DLSYM_VERSION(snd_dlsym_, name, version); \
+  }
+
+#endif
+
+#ifndef __STRING
+/** \brief Return 'x' argument as string */
+#define __STRING(x)     #x
+#endif
+
+/** \brief Returns the version of a dynamic symbol as a string. */
+#define SND_DLSYM_VERSION(version) __STRING(version)
+
+void *snd_dlopen(const char *file, int mode);
+void *snd_dlsym(void *handle, const char *name, const char *version);
+int snd_dlclose(void *handle);
+
+
+/** \brief alloca helper macro. */
+#define __snd_alloca(ptr,type) do { *ptr = (type##_t *) alloca(type##_sizeof()); memset(*ptr, 0, type##_sizeof()); } while (0)
+
+/**
+ * \brief Internal structure for an async notification client handler.
+ *
+ * The ALSA library uses a pointer to this structure as a handle to an async
+ * notification object. Applications don't access its contents directly.
+ */
+typedef struct _snd_async_handler snd_async_handler_t;
+
+/**
+ * \brief Async notification callback.
+ *
+ * See the #snd_async_add_handler function for details.
+ */
+typedef void (*snd_async_callback_t)(snd_async_handler_t *handler);
+
+int snd_async_add_handler(snd_async_handler_t **handler, int fd, 
+			  snd_async_callback_t callback, void *private_data);
+int snd_async_del_handler(snd_async_handler_t *handler);
+int snd_async_handler_get_fd(snd_async_handler_t *handler);
+int snd_async_handler_get_signo(snd_async_handler_t *handler);
+void *snd_async_handler_get_callback_private(snd_async_handler_t *handler);
+
+struct snd_shm_area *snd_shm_area_create(int shmid, void *ptr);
+struct snd_shm_area *snd_shm_area_share(struct snd_shm_area *area);
+int snd_shm_area_destroy(struct snd_shm_area *area);
+
+int snd_user_file(const char *file, char **result);
+
+#if !defined(_POSIX_C_SOURCE) && !defined(_POSIX_SOURCE)
+struct timeval {
+	time_t		tv_sec;		/* seconds */
+	long		tv_usec;	/* microseconds */
+};
+
+struct timespec {
+	time_t		tv_sec;		/* seconds */
+	long		tv_nsec;	/* nanoseconds */
+};
+#endif
+
+/** Timestamp */
+typedef struct timeval snd_timestamp_t;
+/** Hi-res timestamp */
+typedef struct timespec snd_htimestamp_t;
+
+/** \} */
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __ALSA_GLOBAL_H */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            /**
+ * \file include/hwdep.h
+ * \brief Application interface library for the ALSA driver
+ * \author Jaroslav Kysela <perex@perex.cz>
+ * \author Abramo Bagnara <abramo@alsa-project.org>
+ * \author Takashi Iwai <tiwai@suse.de>
+ * \date 1998-2001
+ *
+ * Application interface library for the ALSA driver
+ */
+/*
+ *   This library is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU Lesser General Public License as
+ *   published by the Free Software Foundation; either version 2.1 of
+ *   the License, or (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU Lesser General Public License for more details.
+ *
+ *   You should have received a copy of the GNU Lesser General Public
+ *   License along with this library; if not, write to the Free Software
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+ *
+ */
+
+#ifndef __ALSA_HWDEP_H
+#define __ALSA_HWDEP_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/**
+ *  \defgroup HwDep Hardware Dependant Interface
+ *  The Hardware Dependant Interface.
+ *  \{
+ */
+
+/** dlsym version for interface entry callback */
+#define SND_HWDEP_DLSYM_VERSION		_dlsym_hwdep_001
+
+/** HwDep information container */
+typedef struct _snd_hwdep_info snd_hwdep_info_t;
+
+/** HwDep DSP status container */
+typedef struct _snd_hwdep_dsp_status snd_hwdep_dsp_status_t;
+
+/** HwDep DSP image container */
+typedef struct _snd_hwdep_dsp_image snd_hwdep_dsp_image_t;
+
+/** HwDep interface */
+typedef enum _snd_hwdep_iface {
+	SND_HWDEP_IFACE_OPL2 = 0,	/**< OPL2 raw driver */
+	SND_HWDEP_IFACE_OPL3,		/**< OPL3 raw driver */
+	SND_HWDEP_IFACE_OPL4,		/**< OPL4 raw driver */
+	SND_HWDEP_IFACE_SB16CSP,	/**< SB16CSP driver */
+	SND_HWDEP_IFACE_EMU10K1,	/**< EMU10K1 driver */
+	SND_HWDEP_IFACE_YSS225,		/**< YSS225 driver */
+	SND_HWDEP_IFACE_ICS2115,	/**< ICS2115 driver */
+	SND_HWDEP_IFACE_SSCAPE,		/**< Ensoniq SoundScape ISA card (MC68EC000) */
+	SND_HWDEP_IFACE_VX,		/**< Digigram VX cards */
+	SND_HWDEP_IFACE_MIXART,		/**< Digigram miXart cards */
+	SND_HWDEP_IFACE_USX2Y,		/**< Tascam US122, US224 & US428 usb */
+	SND_HWDEP_IFACE_EMUX_WAVETABLE,	/**< EmuX wavetable */
+	SND_HWDEP_IFACE_BLUETOOTH,	/**< Bluetooth audio */
+	SND_HWDEP_IFACE_USX2Y_PCM,	/**< Tascam US122, US224 & US428 raw USB PCM */
+	SND_HWDEP_IFACE_PCXHR,		/**< Digigram PCXHR */
+	SND_HWDEP_IFACE_SB_RC,		/**< SB Extigy/Audigy2NX remote control */
+                
+	SND_HWDEP_IFACE_LAST = SND_HWDEP_IFACE_SB_RC  /**< last known hwdep interface */
+} snd_hwdep_iface_t;
+
+/** open for reading */
+#define SND_HWDEP_OPEN_READ		(O_RDONLY)
+/** open for writing */
+#define SND_HWDEP_OPEN_WRITE		(O_WRONLY)
+/** open for reading and writing */
+#define SND_HWDEP_OPEN_DUPLEX		(O_RDWR)
+/** open mode flag: open in nonblock mode */
+#define SND_HWDEP_OPEN_NONBLOCK		(O_NONBLOCK)
+
+/** HwDep handle type */
+typedef enum _snd_hwdep_type {
+	/** Kernel level HwDep */
+	SND_HWDEP_TYPE_HW,
+	/** Shared memory client HwDep (not yet implemented) */
+	SND_HWDEP_TYPE_SHM,
+	/** INET client HwDep (not yet implemented) */
+	SND_HWDEP_TYPE_INET
+} snd_hwdep_type_t;
+
+/** HwDep handle */
+typedef struct _snd_hwdep snd_hwdep_t;
+
+int snd_hwdep_open(snd_hwdep_t **hwdep, const char *name, int mode);
+int snd_hwdep_close(snd_hwdep_t *hwdep);
+int snd_hwdep_poll_descriptors(snd_hwdep_t *hwdep, struct pollfd *pfds, unsigned int space);
+int snd_hwdep_poll_descriptors_revents(snd_hwdep_t *hwdep, struct pollfd *pfds, unsigned int nfds, unsigned short *revents);
+int snd_hwdep_nonblock(snd_hwdep_t *hwdep, int nonblock);
+int snd_hwdep_info(snd_hwdep_t *hwdep, snd_hwdep_info_t * info);
+int snd_hwdep_dsp_status(snd_hwdep_t *hwdep, snd_hwdep_dsp_status_t *status);
+int snd_hwdep_dsp_load(snd_hwdep_t *hwdep, snd_hwdep_dsp_image_t *block);
+int snd_hwdep_ioctl(snd_hwdep_t *hwdep, unsigned int request, void * arg);
+ssize_t snd_hwdep_write(snd_hwdep_t *hwdep, const void *buffer, size_t size);
+ssize_t snd_hwdep_read(snd_hwdep_t *hwdep, void *buffer, size_t size);
+
+size_t snd_hwdep_info_sizeof(void);
+/** allocate #snd_hwdep_info_t container on stack */
+#define snd_hwdep_info_alloca(ptr) __snd_alloca(ptr, snd_hwdep_info)
+int snd_hwdep_info_malloc(snd_hwdep_info_t **ptr);
+void snd_hwdep_info_free(snd_hwdep_info_t *obj);
+void snd_hwdep_info_copy(snd_hwdep_info_t *dst, const snd_hwdep_info_t *src);
+
+unsigned int snd_hwdep_info_get_device(const snd_hwdep_info_t *obj);
+int snd_hwdep_info_get_card(const snd_hwdep_info_t *obj);
+const char *snd_hwdep_info_get_id(

@@ -1,0 +1,79 @@
+or POST (default: GET)")
+        group5.add_option("--checkatdata", action="store", dest="ald", help="check responses from target(s) using an alternative payload (default: same than first injection)") 
+        group5.add_option("--reverse-check", action="store_true", dest="reversecheck", help="establish a reverse connection from target(s) to XSSer to certificate that is 100% vulnerable")
+        #group5.add_option("--jump", action="store", dest="jumper", type="int", help="set limit of errors allowed before to jump to the next target/payload. default: no limits!")
+        self.add_option_group(group5)
+
+        group6 = optparse.OptionGroup(self, "*Select Vector(s)*",
+        "These options can be used to specify a XSS vector source code to inject in each payload. Important, if you don't want to try to inject a common XSS vector, used by default. Choose only one option:")
+        group6.add_option("--payload", action="store", dest="script", help="OWN  - Insert your XSS construction -manually-")
+        group6.add_option("--auto", action="store_true", dest="fuzz", help="AUTO - Insert XSSer 'reported' vectors from file (HTML5 vectors included!)")
+        self.add_option_group(group6)
+       
+        group7 = optparse.OptionGroup(self, "*Select Bypasser(s)*",
+        "These options can be used to encode selected vector(s) to try to bypass possible anti-XSS filters on target(s) code and possible IPS rules, if the target use it. Also, can be combined with other techniques to provide encoding:")
+        group7.add_option("--Str", action="store_true", dest="Str", help="Use method String.FromCharCode()")
+        group7.add_option("--Une", action="store_true", dest="Une", help="Use Unescape() function")
+        group7.add_option("--Mix", action="store_true", dest="Mix", help="Mix String.FromCharCode() and Unescape()")
+        group7.add_option("--Dec", action="store_true", dest="Dec", help="Use Decimal encoding")
+        group7.add_option("--Hex", action="store_true", dest="Hex", help="Use Hexadecimal encoding")
+        group7.add_option("--Hes", action="store_true", dest="Hes", help="Use Hexadecimal encoding, with semicolons")
+        group7.add_option("--Dwo", action="store_true", dest="Dwo", help="Encode vectors IP addresses in DWORD")
+        group7.add_option("--Doo", action="store_true", dest="Doo", help="Encode vectors IP addresses in Octal")
+        group7.add_option("--Cem", action="store", dest="Cem", help="Try -manually- different Character Encoding Mutations (reverse obfuscation: good) -> (ex: 'Mix,Une,Str,Hex')")
+        self.add_option_group(group7)
+
+        group8 = optparse.OptionGroup(self, "*Special Technique(s)*",
+        "These options can be used to try to inject code using different type of XSS techniques. You can choose multiple:")
+        group8.add_option("--Coo", action="store_true", dest="coo", help="COO - Cross Site Scripting Cookie injection")
+        group8.add_option("--Xsa", action="store_true", dest="xsa", help="XSA - Cross Site Agent Scripting")
+        group8.add_option("--Xsr", action="store_true", dest="xsr", help="XSR - Cross Site Referer Scripting")
+        group8.add_option("--Dcp", action="store_true", dest="dcp", help="DCP - Data Control Protocol injections")
+        group8.add_option("--Dom", action="store_true", dest="dom", help="DOM - Document Object Model injections")
+        group8.add_option("--Ind", action="store_true", dest="inducedcode", help="IND - HTTP Response Splitting Induced code")
+        group8.add_option("--Anchor", action="store_true", dest="anchor", help="ANC - Use Anchor Stealth payloader (DOM shadows!)")
+        group8.add_option("--Phpids", action="store_true", dest="phpids", help="PHP - Exploit PHPIDS bug (0.6.5) to bypass filters")
+        self.add_option_group(group8)
+
+        group9 = optparse.OptionGroup(self, "*Select Final injection(s)*",
+        "These options can be used to specify the final code to inject in vulnerable target(s). Important, if you want to exploit on-the-wild your discovered vulnerabilities. Choose only one option:")
+        group9.add_option("--Fp", action="store", dest="finalpayload", help="OWN    - Insert your final code to inject -manually-")
+        group9.add_option("--Fr", action="store", dest="finalremote", help="REMOTE - Insert your final code to inject -remotelly-")
+        group9.add_option("--Doss", action="store_true", dest="doss", help="DOSs   - XSS Denial of service (server) injection")
+        group9.add_option("--Dos", action="store_true", dest="dos", help="DOS    - XSS Denial of service (client) injection")
+        group9.add_option("--B64", action="store_true", dest="b64", help="B64    - Base64 code encoding in META tag (rfc2397)")
+        self.add_option_group(group9)
+        
+        group10 = optparse.OptionGroup(self, "*Special Final injection(s)*",
+        "These options can be used to execute some 'special' injection(s) in vulnerable target(s). You can select multiple and combine with your final code (except with DCP code):")
+        group10.add_option("--Onm", action="store_true", dest="onm", help="ONM - Use onMouseMove() event to inject code")
+        group10.add_option("--Ifr", action="store_true", dest="ifr", help="IFR - Use <iframe> source tag to inject code")
+        #group10.add_option("--CSRF", action="store", dest="csrf", help="CSRF- Cross Site Requesting Forgery techniques")
+        self.add_option_group(group10)
+
+        group11 = optparse.OptionGroup(self, "*Miscellaneous*")
+        group11.add_option("--silent", action="store_true", dest="silent", help="inhibit console output results")
+        group11.add_option("--update", action="store_true", dest="update", help="check for XSSer latest stable version")
+        group11.add_option("--save", action="store_true", dest="fileoutput", help="output all results directly to template (XSSlist.dat)")
+        group11.add_option("--xml", action="store", dest="filexml", help="output 'positives' to aXML file (--xml filename.xml)")
+        group11.add_option("--short", action="store", dest="shorturls", help="display -final code- shortered (tinyurl, is.gd) ")
+        group11.add_option("--launch", action="store_true", dest="launch_browser", help="launch a browser at the end with each XSS discovered")
+        group11.add_option("--tweet", action="store_true", dest="tweet", help="publish each XSS discovered into the 'Grey Swarm!'")
+        group11.add_option("--tweet-tags", action="store", dest="tt", help="add more tags to your XSS discovered publications (default: #xss) - (ex: #xsser #vulnerability)")
+        self.add_option_group(group11)
+
+    def get_options(self, user_args=None):
+        (options, args) = self.parse_args(user_args)
+        if (not options.url and not options.readfile and not options.dork and not options.imx and not options.flash and not options.update and not options.xsser_gtk):
+            print '='*75
+            print  self.version
+            print  self.description, "\n"
+            print '='*75
+            print "                                       \\ \\                           %"
+            print "Project site:", "                          \\ \\     LulZzzz!        %  "
+            print "http://xsser.sf.net                      \\_\\                      %   "
+            print "                                      \ ( @.@)         Bbzzzzz!      %  "
+            print "IRC:                                   \== < ==                  %      "
+            print "irc.freenode.net -> #xsser","            / \_         ==       %        "
+            print "                                       | _         ====  %    %         "
+            print "Mailing 

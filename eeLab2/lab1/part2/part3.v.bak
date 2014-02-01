@@ -1,0 +1,24 @@
+module part3 (SW,LEDR,LEDG);
+	input[17:0]SW;			//toggle switches
+	output[17:0]LEDR;		//red LED's
+	output[7:0]LEDG;			//green LED's
+	reg[7:0]OUT;
+	
+	assign LEDR = SW;
+	
+	always@(SW)
+		case(SW[17:15])
+			3'b000 : OUT [2:0] = SW[2:0];
+			3'b001 : OUT [2:0] = SW[3:5];
+			3'b010 : OUT [2:0] = SW[6:8];
+			3'b011 : OUT [2:0] = SW[9:11];
+			3'b100 : OUT [2:0] = SW[12:14];
+			3'b101 : OUT [2:0] = SW[12:14];
+			3'b110 : OUT [2:0] = SW[12:14];
+			3'b111 : OUT [2:0] = SW[12:14];
+	endcase	
+	assign LEDG = OUT;
+	
+	
+	endmodule
+	

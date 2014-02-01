@@ -1,0 +1,441 @@
+unded + self.heuris_une_backslash_founded + self.heuris_dec_backslash_founded
+                self.report('\\ ',  "       ", self.heuris_backslash_founded, "            ", heuris_backslash_total_founded, "               ",
+                            self.heuris_backslash_notfounded, "            ",
+                            self.heuris_une_backslash_founded, "           ",
+                            self.heuris_dec_backslash_founded)
+                # slash results
+                heuris_slash_total_founded = self.heuris_slash_notfounded + self.heuris_une_slash_founded + self.heuris_dec_slash_founded
+                self.report("/ ",   "       ", self.heuris_slash_founded, "            ",
+                            heuris_slash_total_founded, "               ",
+                            self.heuris_slash_notfounded, "            ",
+                            self.heuris_une_slash_founded, "           ",
+                            self.heuris_dec_slash_founded)
+                # minor results
+                heuris_minor_total_founded = self.heuris_minor_notfounded + self.heuris_une_minor_founded + self.heuris_dec_minor_founded
+                self.report("< ",   "       ", self.heuris_minor_founded, "            ",
+                            heuris_minor_total_founded, "               ",
+                            self.heuris_minor_notfounded, "            ",
+                            self.heuris_une_minor_founded, "           ",
+                            self.heuris_dec_minor_founded)
+                # mayor results
+                heuris_mayor_total_founded = self.heuris_mayor_notfounded + self.heuris_une_mayor_founded + self.heuris_dec_mayor_founded
+                self.report("> ",   "       ", self.heuris_mayor_founded, "            ",
+                            heuris_mayor_total_founded, "               ",
+                            self.heuris_mayor_notfounded, "            ",
+                            self.heuris_une_mayor_founded, "           ",
+                            self.heuris_dec_mayor_founded)
+                # doublecolon results
+                heuris_doublecolon_total_founded = self.heuris_doublecolon_notfounded + self.heuris_une_doublecolon_founded + self.heuris_dec_doublecolon_founded
+                self.report('" ',   "       ", self.heuris_doublecolon_founded, "            ", heuris_doublecolon_total_founded, "               ",
+                            self.heuris_doublecolon_notfounded, "            ",
+                            self.heuris_une_doublecolon_founded, "           ",
+                            self.heuris_dec_doublecolon_founded)
+                # colon results
+                heuris_colon_total_founded = self.heuris_colon_notfounded + self.heuris_une_colon_founded + self.heuris_dec_colon_founded
+                self.report("' ",   "       ", self.heuris_colon_founded, "            ",
+                            heuris_colon_total_founded, "               ",
+                            self.heuris_colon_notfounded, "            ",
+                            self.heuris_une_colon_founded, "           ",
+                            self.heuris_dec_colon_founded)
+                # equal results
+                heuris_equal_total_founded = self.heuris_equal_notfounded + self.heuris_une_equal_founded + self.heuris_dec_equal_founded
+                self.report("= ",   "       ", self.heuris_equal_founded, "            ",
+                            heuris_equal_total_founded, "               ",
+                            self.heuris_equal_notfounded, "            ",
+                            self.heuris_une_equal_founded, "           ",
+                            self.heuris_dec_equal_founded)
+                self.report('-'*70)
+                total_heuris_founded = heuris_semicolon_total_founded + heuris_backslash_total_founded + heuris_slash_total_founded + heuris_minor_total_founded + heuris_mayor_total_founded + heuris_doublecolon_total_founded + heuris_colon_total_founded + heuris_equal_total_founded
+                
+                total_heuris_params = total_heuris_founded + self.heuris_semicolon_founded + self.heuris_backslash_founded + self.heuris_slash_founded + self.heuris_minor_founded + self.heuris_mayor_founded + self.heuris_doublecolon_founded + self.heuris_colon_founded + self.heuris_equal_founded
+                try:
+                    _accur = total_heuris_founded * 100 / total_heuris_params
+                except ZeroDivisionError:
+                    _accur = 0
+                self.report('Target(s) Filtering Accur: %s %%' % _accur)
+                self.report('-'*70)
+            # statistics block
+            if len(self.hash_found) + len(self.hash_notfound) == 0:
+                pass
+            else:
+                self.report('='*75)
+                self.report("[*] Statistic:")
+                self.report('='*75)
+                test_time = datetime.datetime.now() - self.time
+                self.report('-'*50)
+                self.report("Test Time Duration: ", test_time)
+                self.report('-'*50  )
+                total_connections = self.success_connection + self.not_connection + self.forwarded_connection + self.other_connection
+                self.report("Total Connections:", total_connections)
+                self.report('-'*25)
+                self.report("200-OK:" , self.success_connection , "|",  "404:" ,
+                            self.not_connection , "|" , "503:" ,
+                            self.forwarded_connection , "|" , "Others:",
+                            self.other_connection)
+                try:
+                    _accur = self.success_connection * 100 / total_connections
+                except ZeroDivisionError:
+                    _accur = 0
+                self.report("Connec: %s %%" % _accur)
+                self.report('-'*50)
+                total_payloads = self.check_positives + self.manual_injection + self.auto_injection + self.dcp_injection + self.dom_injection + self.xsa_injection + self.xsr_injection + self.coo_injection 
+                self.report("Total Payloads:", total_payloads)
+                self.report('-'*25)
+                self.report("Checker:", self.check_positives,  "|", "Manual:",
+                            self.manual_injection, "|" , "Auto:" ,
+                            self.auto_injection ,"|", "DCP:",
+                            self.dcp_injection, "|", "DOM:", self.dom_injection,
+                            "|", "Induced:", self.httpsr_injection, "|" , "XSR:",
+                            self.xsr_injection, "|", "XSA:",
+                            self.xsa_injection , "|", "COO:",
+                            self.coo_injection)
+                self.report('-'*50)
+                self.report("Total Injections:" , 
+                            len(self.hash_notfound) + len(self.hash_found))
+                self.report('-'*25)
+                self.report("Failed:" , len(self.hash_notfound), "|",
+                            "Sucessfull:" , len(self.hash_found))
+                try:
+                    _accur = len(self.hash_found) * 100 / total_injections
+                except ZeroDivisionError:
+                    _accur = 0
+                self.report("Accur : %s %%" % _accur)
+                self.report('-'*25)
+                total_discovered = self.false_positives + self.manual_founded + self.auto_founded + self.dcp_founded + self.dom_founded + self.xsr_founded + self.xsa_founded + self.coo_founded
+                self.report("Total Discovered:", total_discovered)
+                self.report('-'*25)
+                self.report("Checker:", self.false_positives, "|",
+                            "Manual:",self.manual_founded, "|", "Auto:",
+                            self.auto_founded, "|", "DCP:", self.dcp_founded,
+                            "|", "DOM:", self.dom_founded, "|", "Induced:",
+                            self.httpsr_founded, "|" , "XSR:", self.xsr_founded,
+                            "|", "XSA:", self.xsa_founded, "|", "COO:",
+                            self.coo_founded)
+                self.report('-'*50)
+                self.report("False positives:", self.false_positives, "|",
+                            "Vulnerables:",
+                            total_discovered - self.false_positives)
+                self.report('-'*25)
+	        # efficiency ranking:
+	        # algor= vulnerables + false positives - failed * extras
+	        # extras: 
+	        ## 1 vuln -> identi.ca: +10000
+	        ## >3 vuln -> 1 test: +4500
+	        ## 1 vuln -> 1 test: +500 
+	        ## >100 payloads: +150
+	        ## proxy and heuristic: +100
+	        ## final payload injected: +100
+	        ## --Cem and --Doo: +75
+	        ## manual payload injected and --Dcp: +25
+	        ## checker: +10
+                mana = 0
+                if self.hash_found and self.options.tweet:
+                    mana = mana + 10000
+                if self.hash_found > 3:
+                    mana = mana + 4500
+                if self.hash_found == 1:
+                    mana = mana + 500
+                if total_payloads > 100:
+                    mana = mana + 150
+                if self.options.proxy:
+                    mana = mana + 100
+                if self.options.heuristic:
+                    mana = mana + 100
+                if self.options.finalpayload or self.options.finalremote:
+                    mana = mana + 100
+                if self.options.Cem or self.options.Doo:
+                    mana = mana + 75
+                if self.options.heuristic:
+                    mana = mana + 50
+                if self.options.script and not self.options.fuzz:
+                    mana = mana + 25
+                if self.options.followred and self.options.fli:
+                    mana = mana + 25
+                if self.options.dcp:
+                    mana = mana + 25
+                if self.options.hash:
+                    mana = mana + 10
+                mana = (len(self.hash_found) * mana) + mana -4500
+                # enjoy it :)
+                self.report("Mana:", mana)
+                self.report("-"*50)
+                #self.report('='*75 + '\n')
+                # end statistics block
+
+        c = Curl()
+        if not len(self.hash_found) and self.hash_notfound:
+            if self.options.hash:
+                self.report("[!] Checker: looks like your target(s) does not repeat all received code.\n")
+                if self.options.fuzz or self.options.dcp or self.options.script:
+                    self.report("[I] Could not find any vulnerability!. Try another combination or hack it -manually- :)\n")
+            else:
+                self.report("[I] Could not find any vulnerability!. Try another combination or hack it -manually- :)\n")
+            self.report('='*75 + '\n')
+            if self.options.fileoutput:
+                fout = open("XSSlist.dat", "a")
+                fout.write("\n" + "XSSer Security Report: " + str(datetime.datetime.now()) + "\n")
+                fout.write("---------------------" + "\n")
+                fout.write("[!] Not reported 'positive' results for: \n" + "[-] " + str('\n[-] '.join([u[0] for u in self.hash_notfound])) + "\n")
+                fout.write("="*75 + "\n")
+                fout.close()
+        else:
+            # some exits and info for some bad situations:
+            if len(self.hash_found) + len(self.hash_notfound) == 0 and not Exception:
+                self.report("\nXSSer cannot send data :( ... maybe is -something- blocking our connections!?\n")
+            if len(self.hash_found) + len(self.hash_notfound) == 0 and self.options.crawling:
+                self.report("\nCrawlering system cannot recieve feedback from 'mosquitoes' on target host... try again :(\n")
+            #if len(self.hash_found) + len(self.hash_notfound) == 0 and c.info()["http-code"] != "200":
+            #    self.report("\nTarget responses with different HTTP code to: 200 [" + c.info()["http-code"] + "] ... cannot inject! :(\n")
+            #self.report('='*75 + '\n')
+
+        # print results to xml file
+        if self.options.filexml:
+            xml_report_results = xml_reporting(self)
+            xml_report_results.print_xml_results(self.options.filexml)
+
+        # publish discovered vulnerabilities
+        if self.options.tweet and self.hash_found:
+            try:
+                shortener = ShortURLReservations('is.gd')
+                shorturl_host = shortener.process_url(str(line[0]))
+                    
+                for line in self.hash_found:
+                    sns_publish_results = publisher(self)
+                    tags = '#xss '
+                    if not self.options.tt:
+                        msg = tags + 'vulnerable target: ' + shorturl_host
+                    else:
+                        tags = tags + self.options.tt
+                        msg = tags + ' vulnerable target: ' + shorturl_host 
+                    username = self.sn_username
+                    password = self.sn_password
+                    url = self.sn_url
+                    sns_publish_results.send_to_identica(msg, username, password, url)
+            except:
+                self.report("\n[I] Error publishing some discovered XSS injections\n")
+                pass
+
+if __name__ == "__main__":
+    app = xsser()
+    options = app.create_options()
+    if options:
+        app.set_options(options)
+        app.run()
+    app.land(True)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 #!/usr/bin/python
+# -*- coding: iso-8859-15 -*-
+"""
+$Id$
+
+This file is part of the xsser project, http://xsser.sourceforge.net.
+
+Copyright (c) 2011/2012 psy <root@lordepsylon.net> - <epsylon@riseup.net>
+
+xsser is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation version 3 of the License.
+
+xsser is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with xsser; if not, write to the Free Software Foundation, Inc., 51
+Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+"""
+"""
+ Base class for objects wanting to receive report information from XSSer.
+ It implements all callbacks so you will be safe ;)
+"""
+
+class XSSerReporter(object):
+    def start_attack(self):
+        pass
+    def end_attack(self):
+        pass
+    def mosquito_crashed(self, dest_url, reason="unknown"):
+        pass
+    def report_state(self, state):
+        pass
+    def add_link(self, orig_url, dest_url):
+        pass
+    def report_error(self, error_msg):
+        pass
+    def start_token_check(self, dest_url):
+        pass
+    def start_crawl(self, dest_url):
+        pass
+    def post(self, msg):
+        pass
+    def token_arrived(self, token):
+        pass
+    def add_checked(self, dest_url):
+        pass
+    def add_success(self, dest_url):
+        pass
+    def add_failure(self, dest_url):
+        pass
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              #!/usr/bin/python
+# -*- coding: iso-8859-15 -*-
+"""
+$Id$
+
+This file is part of the xsser project, http://xsser.sourceforge.net.
+
+Copyright (c) 2011/2012 psy <root@lordepsylon.net> - <epsylon@riseup.net>
+
+xsser is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation version 3 of the License.
+
+xsser is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with xsser; if not, write to the Free Software Foundation, Inc., 51
+Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+"""
+from threading import Thread
+import socket
+import time
+
+class ReceiverThread(Thread):
+    def __init__(self, client, addr, parent):
+        Thread.__init__(self)
+        self.daemon = True
+        self.client = client
+        self.parent = parent
+    def run(self):
+        data = self.client.recv(1024)
+        if data:
+            self.parent.data_arrived(data)
+            self.client.send('thanks for coming!')
+            self.client.close()
+        self.parent.client_finished(self)
+
+class HubThread(Thread):
+    def __init__(self, parent):
+        Thread.__init__(self)
+        self.daemon = True
+        self._clients = []
+        self._armed = True
+        self.ready = False
+        self.running =False
+        self.parent = parent
+    def url_request(self, url):
+        split_url = url.split("/")
+        if len(split_url) > 2:
+            if split_url[1] == 'success':
+                self.parent.token_arrived(split_url[2])
+    def data_arrived(self, data):
+        data.split("\n")[0]
+        if data.startswith("GET"):
+            split_data = data.split()
+            if len(split_data) > 1:
+                self.url_request(split_data[1])
+    def client_finished(self, _thread):
+        self._clients.remove(_thread)
+    def shutdown(self):
+        if self.ready:
+            self.socket.shutdown(socket.SHUT_RDWR)
+            self.socket.close()
+        self.running = False
+        self._armed = False
+        self.ready = False
+    def run(self):
+        while not self.running and self._armed:
+            try:
+                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                s.bind(('localhost', 19084))
+                self.running = True
+            except socket.error as e:
+                print("socket busy, retry opening")
+                if e.errno == 98: # its in use wait a bit and retry
+                    time.sleep(3)
+        if not self._armed:
+            return
+        self.socket = s
+        self.ready = True
+        s.listen(1)
+        while self.running and self._armed:
+            try:
+                conn, addr = s.accept()
+            except socket.timeout:
+                pass
+            except socket.error, e:
+                if self.ready == False:
+                    return
+                else:
+                    break
+            else:
+                t = ReceiverThread(conn, addr, self)
+                t.start()
+                self._clients.append(t)
+        if self.ready:
+            s.close()
+            self.ready = False
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             #!/usr/bin/python
+# -*- coding: iso-8859-15 -*-
+"""
+$Id$
+
+This file is part of the xsser project, http://xsser.sourceforge.net.
+
+Copyright (c) 2011/2012 psy <root@lordepsylon.net> - <epsylon@riseup.net>
+
+xsser is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation version 3 of the License.
+
+xsser is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with xsser; if not, write to the Free Software Foundation, Inc., 51
+Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+"""
+import optparse
+
+class XSSerOptions(optparse.OptionParser):
+    def __init__(self, *args):
+        optparse.OptionParser.__init__(self, 
+                           description='Cross Site "Scripter" is an automatic -framework- to detect, exploit and\nreport XSS vulnerabilities in web-based applications.',
+                           prog='XSSer.py',
+			   version='\nXSSer v1.6 (beta): "Grey Swarm!" - 2011/2012 - (GPLv3.0) -> by psy\n',
+                           usage= '\n\nxsser [OPTIONS] [-u <url> |-i <file> |-d <dork>] [-g <get> |-p <post> |-c <crawl>] [Request(s)] [Vector(s)] [Bypasser(s)] [Technique(s)] [Final Injection(s)]')
+
+        self.set_defaults(verbose=False, threads=5, retries=1, delay=0, timeout=30,
+                          silent=False)
+        self.disable_interspersed_args()
+
+        self.add_option("-s", "--statistics",  action="store_true", dest="statistics", help="show advanced statistics output results")
+        self.add_option("-v", "--verbose", action="store_true", dest="verbose", help="active verbose mode output results")
+        self.add_option("--gtk", action="store_true", dest="xsser_gtk", help="launch XSSer GTK Interface (Wizard included!)")
+        #self.add_option("--swarm", action="store_true", dest="xsser_web", help="launch XSSer Swarm daemon(s) + Web-Shell")
+
+        group1 = optparse.OptionGroup(self, "*Special Features*",
+        "You can choose Vector(s) and Bypasser(s) to inject code with this extra special features:")
+        group1.add_option("--imx", action="store", dest="imx", help="create a false image with XSS code embedded")
+        group1.add_option("--fla", action="store", dest="flash", help="create a false .swf file with XSS code embedded")
+        self.add_option_group(group1)
+
+        group2 = optparse.OptionGroup(self, "*Select Target(s)*",
+        "At least one of these options has to be specified to set the source to get target(s) urls from. You need to choose to run XSSer:")
+        group2.add_option("-u", "--url", action="store", dest="url", help="Enter target(s) to audit") 
+        group2.add_option("-i", action="store", dest="readfile", help="Read target urls from a file")
+        group2.add_option("-d", action="store", dest="dork", help="Process search engine dork results as target urls")
+        group2.add_option("--De", action="store", dest="dork_engine", help="Search engine to use for dorking (bing, altavista, yahoo, baidu, yandex, youdao, webcrawler, google, etc. See dork.py file to check for available engines)")
+        self.add_option_group(group2)
+
+        group3 = optparse.OptionGroup(self, "*Select type of HTTP/HTTPS Connection(s)*",
+        "These options can be used to specify which parameter(s) we want to use like payload to inject code.")
+        group3.add_option("-g", action="store", dest="getdata", help="Enter payload to audit using GET (ex: '/menu.php?q=')")
+        group3.add_option("-p", action="store", dest="postdata", help="Enter payload to audit using POST (ex: 'foo=1&bar=')")
+        group3.add_option("-c", action="store", dest="crawling", help="Number of urls to crawl on target(s): 1-99999")
+        group3.add_option("--Cw", action="store", dest="crawler_width", help="Deeping level of crawler: 1-5")
+        group3.add_option("--Cl", action

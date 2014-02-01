@@ -1,0 +1,2 @@
+Info (10281): Verilog HDL Declaration information at part1.v(3): object "R" differs only in case from object "r" in the same scope
+Info (10281): Verilog HDL Declaration information at part1.v(3): object "S" differs only in case from object "s" in the same scope

@@ -1,0 +1,18 @@
+# compute the sum of the integers from count down to limit
+           addi   $1, $0, 0      # sum = 0
+loop:      
+           add    $1, count      # sum += count
+           call   decCount       # call the decCount routine
+           cmp    $2, limit      
+           bge    loop           # if count <= limit: loop
+           sw     $1, sum        # store result
+           halt
+decCount:  
+           lw     $2, count
+           addi   $2, $2, -1     # count -= 1
+           sw     $2, count
+           jr     $3
+
+count:     word   10
+limit:     word   1
+sum:       word   0              # end value: 55 (0x37)

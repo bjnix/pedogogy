@@ -1,0 +1,155 @@
+//EE2304 Lab7 - State Machines - Part 2
+module part6(CLOCK_50,SW,LEDR,LEDG,HEX0,HEX1,HEX2,HEX3,HEX4,HEX5,HEX6,HEX7);
+  input CLOCK_50;
+  input  [17:0] SW;
+  output [17:0] LEDR;
+  output [8:0]  LEDG;
+  output [0:6]  HEX0,HEX1,HEX2,HEX3;
+  output [0:6]  HEX4,HEX5,HEX6,HEX7;
+  wire   [2:0]  y_Q;
+  reg    [2:0]  Y_D;  //Y_D represents next state
+  reg 	 [24:0] count;
+  reg    z;
+  wire   Clock, reset;
+  wire	 [1:0] w;
+  assign w = SW[2:1];
+  assign reset = SW[0];
+  always@(posedge CLOCK_50)begin
+		count = count + 1;
+		end
+  assign Clock = count[24];
+  parameter A = 3'b000, 
+			B = 3'b001, 
+			C = 3'b010, 
+			D = 3'b011, 
+			E = 3'b100, 
+			F = 3'b101, 
+			G = 3'b110, 
+			H = 3'b111; 
+			
+parameter 	st = 0,
+			p1 = 1,
+			p2 = 2,
+			m1 = 3;
+			
+ 
+  
+  initial Y_D = 3'b000;
+  State s0(Y_D,y_Q,Clock);  
+  assign LEDG[0] = z;
+  assign LEDG[1] = Clock;
+  assign LEDR = SW;
+  
+  
+  //Next state machine
+  always @(w,y_Q,reset) begin
+  if( ~reset )
+    case (y_Q)
+	A: case(w) 
+			st: Y_D = A; //stay
+			p1: Y_D = B; //add 1
+			p2: Y_D = C; //add 2
+			m1: Y_D = H; //minus 1
+	endcase
+	B: case(w) 
+			st: Y_D = B; //stay
+			p1: Y_D = C; //add 1
+			p2: Y_D = D; //add 2
+			m1: Y_D = A; //minus 1
+	endcase
+	C: case(w) 
+			st: Y_D = C; //stay
+			p1: Y_D = D; //add 1
+			p2: Y_D = E; //add 2
+			m1: Y_D = B; //minus 1
+	endcase
+	D: case(w) 
+			st: Y_D = D; //stay
+			p1: Y_D = E; //add 1
+			p2: Y_D = F; //add 2
+			m1: Y_D = C; //minus 1
+	endcase
+	E: case(w) 
+			st: Y_D = E; //stay
+			p1: Y_D = F; //add 1
+			p2: Y_D = G; //add 2
+			m1: Y_D = D; //minus 1
+	endcase
+	F: case(w) 
+			st: Y_D = F; //stay
+			p1: Y_D = G; //add 1
+			p2: Y_D = H; //add 2
+			m1: Y_D = E; //minus 1
+	endcase
+	G:case(w) 
+			st: Y_D = G; //stay
+			p1: Y_D = H; //add 1
+			p2: Y_D = A; //add 2
+			m1: Y_D = F; //minus 1
+	endcase
+	H:case(w) 
+			st: Y_D = H; //stay
+			p1: Y_D = A; //add 1
+			p2: Y_D = B; //add 2
+			m1: Y_D = G; //minus 1
+	endcase
+	
+	default: Y_D = A;
+    
+    endcase      
+    else
+		Y_D = A;
+  end
+
+  //Output State Machine for Z
+  always @(*)
+    begin
+        if((y_Q==H))
+			z = 1;
+		else
+			z = 0;
+    end
+
+  
+  char_7seg h0(Y_D+0,HEX0);
+  char_7seg h1(Y_D+1,HEX1);
+  char_7seg h2(Y_D+2,HEX2);
+  char_7seg h3(Y_D+3,HEX3);
+  char_7seg h4(Y_D+4,HEX4);
+  char_7seg h5(Y_D+5,HEX5);
+  char_7seg h6(Y_D+6,HEX6);
+  char_7seg h7(Y_D+7,HEX7);
+endmodule
+
+//7 segment decoders  
+module char_7seg (C, Display);
+  input 	 [3:0] C; // input code
+  output reg [0:6] Display; // output 7-seg code
+  
+  always @ (*) begin
+	case (C)
+
+			
+			3'b000 : Display =7'b0000001; //0
+			3'b001 : Display =7'b1110001; //L
+			3'b010 : Display =7'b1110001; //L
+			3'b011 : Display =7'b0110000; //E
+			3'b100 : Display =7'b1001000; //H
+			
+			default : Display =7'b1111111; //BLANK
+	endcase
+  end
+endmodule
+
+//State machine - stores the current state
+module State(D,Q,Clock);
+  input      Clock;
+  input      [2:0] D;//new state
+  output reg [2:0] Q;//output
+  initial Q = 3'b000;
+  
+  //fill in this
+  always @(negedge Clock) begin
+	Q = D;
+  end
+endmodule

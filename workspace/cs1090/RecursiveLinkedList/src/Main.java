@@ -1,0 +1,90 @@
+
+public class Main {
+	
+	public static void main(String [] args){
+		
+		RecursiveLinkedList list = new RecursiveLinkedList();
+		
+		//Test clearList
+		list.add(1);
+		list.add(2);
+		list.add(0);
+		list.add(-2);
+		list.add(3);
+		list.add(1);
+		System.out.println("b4 evenPart " + list);
+		list.evenPart();
+		System.out.println("4ft3r evenPart " + list);
+		list.clear();
+		
+		list.add(4);
+		list.add(1);
+		list.add(2);
+		list.add(4);
+		list.add(5);
+		list.add(7);
+		list.add(1);
+		list.add(4);
+		System.out.println("b4 insertBefore " + list);
+		list.insertBefore(3, 4);
+		System.out.println("4ft3r insertBefore" + list);
+		list.clear();
+		
+		list.add(1);
+		list.add(4);
+		list.add(2);
+		list.add(4);
+		list.add(5);
+		
+		System.out.println("b4 insertAfter " + list);
+		list.insertAfter(3, 4);
+		System.out.println("4ft3r insertAfter " + list);
+		list.clear();
+		
+		list.add(1);
+		list.add(2);
+		list.add(3);
+		list.add(3);
+		list.add(3);
+		list.add(3);
+		list.add(3);
+		list.add(3);
+		
+		RecursiveLinkedList list2 = new RecursiveLinkedList();
+
+		list2.add(7);
+		list2.add(13);
+		list2.add(1);
+		list.add(5);
+		list.add(5);
+		list.add(5);
+		
+		System.out.println("b4 shuffleMerge list " + list);
+		System.out.println("b4 shuffleMerge list2 " + list2);
+		list.shuffleMerge(list2);
+		System.out.println(list);
+		System.out.println("4ft3r shuffleMerge " + list);
+		list.clear();
+		list2.clear();
+	
+		list.add(1);
+		list.add(5);
+		list.add(3);
+		list.add(7);
+		list.add(2);
+		list.add(3);
+		list.add(1);
+		System.out.println("b4 sortList list " + list);
+		list.sortList();
+		System.out.println("4ft3r sortList list " + list);
+		list.clear();
+		
+		list.add(1);
+		list.add(3);
+		list.add(5);
+		System.out.println("b4 " + list);
+		list.reverse();
+		System.out.println("4ft3r" + list);
+		list.clear();
+	}	
+}

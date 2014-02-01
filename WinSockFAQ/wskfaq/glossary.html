@@ -1,0 +1,663 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/DTD/strict.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="/bitmaps/favicon.png">
+	<link rel="icon" href="/bitmaps/favicon.png" type="image/png">
+	<link href="./faq.css" rel="Stylesheet" type="text/css">
+
+	<title>Winsock Programmer&rsquo;s FAQ: Glossary</title>
+
+	<style type="text/css">
+		#next-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(./bitmaps/navbar-icons.png);
+			background-position: -38px 0;
+		}
+		#prev-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(./bitmaps/navbar-icons.png);
+			background-position: 0 0;
+		}
+		#stop-link {
+			width: 38px;
+			height: 32px;
+			text-decoration: none;
+			display: block;
+			background-image: url(./bitmaps/navbar-icons.png);
+			background-position: -76px 0;
+		}
+		.navbar {
+			border: 8px solid #d0d0a0;
+			border-spacing: 0;
+			border-radius: 10px;
+			-moz-border-radius: 10px;
+			-webkit-border-radius: 10px;
+			height: 140px;
+			margin: auto;   /* center on page */
+			margin-top: 10px;
+			text-align: center;
+			width: 95%;
+		}
+		.navbar td {
+			background-color: #006000;
+			border: 10px solid #e0e0c0;
+			color: #ffffee;
+			font-size: 182%;
+			font-family:
+				"verdana",
+				"luxi sans",
+				"helvetica narrow",
+				"arial condensed",
+				"arial",
+				"univers",
+				sans-serif;
+			font-weight: bold;
+			text-align: center;
+		}
+		.navbarcap {
+			background-color: #e0e0c0 !important;
+			cursor: pointer;
+			padding-left: 10px;
+			width: 50px;
+		}
+	</style>
+</head>
+
+<body>
+
+
+
+
+
+
+
+	
+
+
+
+
+	
+		
+	
+
+	<!--  **** Navigation Bar ****  -->
+	<table class="navbar">
+		<tr>
+			<td class="navbarcap" onclick="location.href='./reviews/unpv1.html'">
+				<a id="prev-link" href="./reviews/unpv1.html"></a>
+			</td>
+
+			<td>
+				Winsock Programmer&rsquo;s FAQ<br>
+
+				
+
+				
+					Section 9: Glossary<br>
+				
+				
+				
+			</td>
+
+			<td class="navbarcap" onclick="location.href='#'">
+				<a id="stop-link" href="#"></a>
+			</td>
+		</tr>
+	</table>
+
+	<!--  **** Body Container ****  -->
+	<div id="body" style="padding-left: 30px" >
+
+
+
+
+
+<p>There&rsquo;s not much to say about this section, except that I
+frequently refer you to corresponding and related entries in <a
+href="http://www.catb.org/~esr/jargon/"><i>The Jargon File</i></a>,
+an excellent resource for understanding some of the culture and jargon
+of the original Internet. I link you there when I think that the Jargon
+File reference clarifies or enhances the more straightforward definition
+I provide.</p>
+
+	<a name="addressing"><p><b>addressing</b>&nbsp;-&nbsp; Networks have to have some way of uniquely
+identifying the <a href="#host">hosts</a> on the network. Like the
+telephone system, network addressing is usually done with numbers;
+TCP/IP, for example, uses <a href="#IP-address">IP addresses</a>.</p>
+
+	<a name="asynchronous"><p><b>asynchronous</b>&nbsp;-&nbsp; Asynchronous sockets are a refinement
+of <a href="#non-blocking">non-blocking</a> sockets, enabled
+with the <code>WSAAsyncSelect()</code> call. Whenever a call returns
+<a href="./newbie.html#wouldblock">WSAEWOULDBLOCK</a>, Winsock
+promises to send your program a window message when it&rsquo;s safe to
+try the call again, or when it has completed the request. This
+allows your program to go about its business until Winsock manages
+to complete the requested function. Asynchronous calls allow you
+to decouple the rest of your program from the network portions, so
+that a network fault or delay does not unduly impact your program&rsquo;s
+performance. Compare <a href="#blocking">blocking</a>. See also <a
+href="examples/basics/AsyncClient/index.html">this example program</a> to see how to
+use asynchronous sockets.</p>
+
+	<a name="blocking"><p><b>blocking</b>&nbsp;-&nbsp; A function is said to "block" when it waits
+until it completes the requested operation or fails trying before
+returning. (Sockets are blocking by default under Winsock.) The main use
+for blocking calls in a Winsock program are when your program&rsquo;s only job
+in life is to communicate with the network, because while a call blocks,
+your program can do nothing else. This mode of operation is also called
+"synchronous." Compare <a href="#asynchronous">asynchronous</a>
+and <a href="#non-blocking">non-blocking</a>. See also <a
+href="examples/basics/basic-client.html">this example program</a> to see how to
+use blocking sockets.</p>
+
+	<a name="bridge"><p><b>bridge</b>&nbsp;-&nbsp; A bridge is a <a
+href="#multi-homed">multi-homed</a> <a href="#host">host</a> that
+operates at layer 2 of the <a href="#osi-model">OSI model</a>. Bridges
+connect two networks, usually of the same type. A bridge is somewhat
+smarter than a simple repeater, in that it can make decisions about
+moving data from one network to the other. Some bridges even reach up
+into layers 3 and 4 (traditional <a href="#router">router</a> and <a
+href="#gateway">gateway</a> territory) to add even more intelligence;
+these smarter devices are sometimes called "brouters."</p>
+
+	<a name="BSD"><p><b>BSD Unix</b>&nbsp;-&nbsp; The Berkeley Software Distribution of Unix
+took an early lead over originator AT&T&rsquo;s offerings by providing extra
+features and functionality that didn&rsquo;t appear in AT&T Unix (also called
+System V) until later. One of these features was the "sockets" system
+for communicating over TCP/IP networks. Between that and its adoption
+by Sun Microsystems, Digital Equipment Corporation and others, BSD
+Unix was the most popular choice for Internet <a href="#host">hosts</a>
+from the mid 80&rsquo;s through the early 90&rsquo;s. The early 90&rsquo;s saw AT&T sue
+the Computer Software Research Group, the University of California
+at Berkeley organization that created BSD. The early 90&rsquo;s also saw
+System V adopt many traditional BSD features (including sockets). For
+those reasons, virtually all commercial Unixes eventually switched
+to System V. BSD is still available in several lineal descendants:
+<a href="http://www.freebsd.org">FreeBSD</a>, <a href="http://www.netbsd.org">NetBSD</a>
+and <a href="http://www.openbsd.org">OpenBSD</a>. See also the <a href="http://www.catb.org/~esr/jargon/html/B/BSD.html">BSD</a>
+and <a href="http://www.catb.org/~esr/jargon/html/U/Unix.html">Unix</a> entries in the Jargon File.</p>
+
+	<a name="client"><p><b>client</b>&nbsp;-&nbsp; A program that initiates a network connection. By
+extension, a client program usually has some kind of user interface,
+often a GUI. In a typical client/server protocol, the client
+is the active participant, in that it makes requests and the <a
+href="#server">server</a> responds.</p>
+
+	<a name="datagram"><p><b>datagram protocol</b>&nbsp;-&nbsp; A datagram protocol, such as
+IP or <a href="intermediate.html#udp">UDP</a>, delivers data in <a
+href="#packet">packets</a> the same size as those that were sent. For
+example, if one <a href="#host">host</a> sends another two 50-byte
+datagrams, that host will receive two discrete 50-byte datagrams. Compare
+<a href="#stream">stream protocol</a>.</p>
+
+	<a name="delayed-ack"><p><b>delayed ACK algorithm</b>&nbsp;-&nbsp; An optimization to TCP to
+improve throughput. There&rsquo;s a <a href="./intermediate.html#delayed-ack">FAQ
+item</a> that goes into detail on what the algorithm does and why it
+helps.</p>
+
+	<a name="DNS"><p><b>DNS</b>&nbsp;-&nbsp; The Domain Name Service is one of the core Internet
+protocols and mechanisms. DNS is what translates human-readable names
+(e.g. "www.microsoft.com") into the binary IP addresses that are
+actually used to move data <a href="#packet">packets</a> around on the
+Internet. Winsock uses DNS when you call the <code>gethostbyname()</code> and
+<code>gethostbyaddr()</code> functions.</p>
+
+	<a name="domain-name"><p><b>domain name</b>&nbsp;-&nbsp; Domain names are
+the human-readable addresses used on the Internet (e.g.,
+"www.microsoft.com"). The <a href="#DNS">Domain Name Service</a>
+translates these names into <a href="#IP-address">IP addresses</a> which
+TCP/IP programs use directly. Compare <a href="#dotted-quad">dotted
+quad</a>.</p>
+
+	<a name="dotted-quad"><p><b>dotted quad</b>&nbsp;-&nbsp; An string representation of
+an <a href="#IPv4">IPv4</a> address, in the form "172.16.3.52" &mdash;
+that is, four decimal numbers separated by dots. Note that the future
+<a href="#IPv6">IPv6</a> addresses are commonly written as a series of
+8 colon-separated 16-bit values in hexadecimal notation, with zeroes
+suppressed: "AC01:987C:::A39D::FF52:CC4C". Contrast this with the <a
+href="#IP-address">IP address</a> and <a href="#domain-name">domain
+name</a> entries.</p>
+
+	<a name="frame"><p><b>frame</b>&nbsp;-&nbsp; A frame is a type of <a href="#packet">packet</a>.
+In common use, the term refers only to the lowest-level type of packet,
+the hardware packet. For example, an Ethernet frame or a PPP frame.</p>
+
+<p>Within a single network, a frame is indivisible: it is never
+chopped up into smaller frames, and is never coalesced with other
+frames to make larger frames. However, when a frame is translated from
+one type of network to another by a <a href="#gateway">gateway</a>
+or a <a href="#router">router</a> (e.g. Ethernet to frame relay), a
+frame can be fragmented if the destination network type has a smaller <a
+href="#MTU">MTU</a>. There&rsquo;s an optimization called "Path MTU Discovery"
+that network stacks employ to avoid this fragmentation.</p>
+
+<p>Most networks have fixed-size frames. (See the entry for <a
+href="#MTU">MTU</a> for more on frame sizes.) Even on networks with
+negotiated frame sizes, the size is usually only negotiated once, when
+the <a href="#host">host</a> joins the network. PPP works that way:
+the frame size is negotiated after the modem connects to the Internet
+provider, but before any user data is sent.</p>
+
+	<a name="gateway"><p><b>gateway</b>&nbsp;-&nbsp; A <a href="#multi-homed">multi-homed</a>
+network <a href="#host">host</a> that operates at layer 4 of the <a
+href="#osi-model">OSI model</a>. A gateway understands the transport layer
+protocols at the least (TCP, UDP, etc.) and sometimes understands elements
+from layer 5 (e.g. the FTP protocol). A gateway uses this information to
+filter data &mdash; for example, it can reject disallowed operations, for
+example; and to translate items in the data stream &mdash; for example,
+it can translate the network addresses from an internal format to an
+external format. Related terms include "packet filter" and "firewall:"
+a packet filter can be part of a gateway, and a gateway is one component
+of a firewall.</p>
+
+<p>Also note that looser definitions exist, such as for a mail gateway,
+which lets people using one email system to send mail to people using
+another system.</p>
+
+	<a name="host"><p><b>host</b>&nbsp;-&nbsp; A computer connected to a network. The term was
+coined by analogy with a restaurant host: the host offers "services" like
+seating your party and recommending items on the menu he thinks you will
+like. Back in the 70&rsquo;s when the term was coined, all networked computers
+offered services to multiple users &mdash; they were too expensive to let
+just one person use them. (Today we call such machines servers.) When
+PCs began to be networked, the analogy weakened, but the term was then
+at least a decade old, so it&rsquo;s still in use today to mean any computer
+connected to a network, excepting special-purpose devices like <a
+href="#router">routers</a> that have a more specific name. Compare <a
+href="#peer">peer</a>.</p>
+
+	<a name="IP-address"><p><b>IP address</b>&nbsp;-&nbsp; A binary value
+used by the IP protocol to determine how to deliver <a
+href="#packet">packets</a> to their destination hosts. See the entry
+<a href="#dotted-quad">dotted-quad</a> for a common representation of
+these addresses.</p>
+
+	<a name="IPv4"><p><b>IPv4</b>&nbsp;-&nbsp; The Internet Protocol version 4. This is the
+current version. IPv4 addresses are 32 bits wide. Its headers are
+20 bytes at minimum, and grow in chunks of 4 bytes. Compare <a
+href="#IPv6">IPv6</a>.</p>
+
+	<a name="IPv6"><p><b>IPv6</b>&nbsp;-&nbsp; The Internet Protocol version 6. This
+still-experimental version of IP is destined to replace version 4. "When"
+is still up in the air; my personal theory is "about 2 years after
+Microsoft ships a consumer operating system with IPv6 support". (As of
+this writing (2000.06.14) this still has not happened.) IPv6 improves on
+version 4 in two main areas: much larger addresses (128 bits, allowing
+for exponentially more hosts on the Internet) and extensibility. The
+base IPv6 header is 40 bytes.</p>
+
+<p>Unlike the IPv4 header, the IPv6 header does not "grow" when
+optional services are used. Instead, the base IPv6 header just points
+to the "next" extension header, each of which also has a "next"
+pointer. (The last extension simply points to the TCP header, meaning
+"no more extensions".) This allows extensions to be added by chaining
+extension headers like a linked list, and it allows new extensions
+to be defined later without requring changes to intermediate hosts on
+the Internet. Extension headers are all at least 8 bytes. Compare <a
+href="#IPv4">IPv4</a>.</p>
+
+	<a name="LOC"><p><b>lines of code</b>&nbsp;-&nbsp; When I talk about lines of code
+in the <a href="examples/basics/index.html">basic examples</a> section, I mean
+non-comment non-blank unique lines of code. Unique meaning code that&rsquo;s
+not shared with other example programs.</p>
+
+	<a name="MTU"><p><b>MTU</b>&nbsp;-&nbsp; The Maximum Transmission Unit is the largest <a
+href="#packet">packet</a> that a given network medium can carry. Ethernet,
+for example, has a fixed MTU of 1500 bytes, ATM has a fixed MTU of 48
+bytes, and PPP has a negotiated MTU that is usually between 500 and 2000
+bytes. (Note that ATM&rsquo;s 48-byte "cells" are at the extreme low level.
+Network stacks usually don&rsquo;t use the cells directly; instead, they run
+over a higher-level framing standard called AAL5, which has a 65536
+byte MTU.)</p>
+
+	<a name="multi-homed"><p><b>multi-homed</b>&nbsp;-&nbsp; A host with more than one network
+adapter. Sometimes a host is multi-homed to link two networks (as with
+a <a href="#router">router</a>). More commonly, a multi-homed host is
+simply connected to two networks, such as a machine on a LAN which also
+has a modem for connecting to an ISP.</p>
+
+	<a name="Nagle"><p><b>Nagle algorithm</b>&nbsp;-&nbsp; The Nagle algorithm is a
+TCP optimization that improves network efficiency. There&rsquo;s a
+<a href="./intermediate.html#nagle-desc">FAQ item</a> that describes how
+the Nagle algorithm works.</p>
+
+	<a name="non-blocking"><p><b>non-blocking</b>&nbsp;-&nbsp; A non-blocking call is
+one that either completes immediately, or returns
+a <a href="./newbie.html#wouldblock">WSAEWOULDBLOCK</a> error,
+meaning that you should try the call again later. (You make a
+socket non-blocking by calling the <code>ioctlsocket()</code> function
+with the <code>FIONBIO</code> option.) A pure non-blocking socket is
+not very useful, because you have to spin in an infinite loop trying
+the call over and over until it succeeds. The only sane way to use a
+non-blocking socket is with one of the "select" functions: <code>select()</code>,
+<code>WSAAsyncSelect()</code>, and <code>WSAEventSelect()</code>. These let you ask
+Winsock to tell you when a socket operation will succeed. Compare <a
+href="#blocking">blocking</a>. See also <a href="./examples/basics/select-server.html">this
+example program</a> to see how to use <code>select()</code> to handle multiple
+non-blocking sockets in a single thread.</p>
+
+	<a name="osi-model"><p><b>OSI network model</b>&nbsp;-&nbsp; Of all the reams of paper the
+ISO put out describing their overengineered Open Systems Interconnect,
+only one page ever spread much beyond the research lab: the one with
+their abstract view of a network stack on it. :) The OSI diagram is a
+model for thinking about network stacks, split into seven layers. It is
+presented below, with rough analogues from TCP/IP and Winsock.</p>
+
+<ul>
+<table border=1 cellspacing=0 cellpadding=5>
+    <tr bgcolor="#FBFDB0">
+        <td align=right><b>Application&nbsp;(7)</b></td>
+        <td align=center>the user-level protocol; e.g. FTP, HTTP,
+        SMTP, etc.</td>
+    </tr>
+
+    <tr bgcolor="#F4D7AA">
+        <td align=right><b>Presentation&nbsp;(6)</b></td>
+        <td align=center>optional data formatting layer; e.g. XDR or ASN.1</td>
+    </tr>
+
+    <tr bgcolor="#FBFDB0">
+        <td align=right><b>Session&nbsp;(5)</b></td>
+        <td align=center>maintains any logical conversation(s); e.g. SSL, RTP</td>
+    </tr>
+
+    <tr bgcolor="#F4D7AA">
+        <td align=right><b>Transport&nbsp;(4)</b></td>
+        <td align=center>determines which the program on the host will receive
+        the packet; may also handle congestion control, reliability, etc.; e.g.
+        TCP or UDP</td>
+    </tr>
+
+    <tr bgcolor="#FBFDB0">
+        <td align=right><b>Network&nbsp;(3)</b></td>
+        <td align=center>host addressing, determines destination computer of 
+        the packet; e.g. IP</td>
+    </tr>
+
+    <tr bgcolor="#F4D7AA">
+        <td align=right><b>Data&nbsp;Link&nbsp;(2)</b></td>
+        <td align=center>hardware addressing; e.g. the Ethernet frame</td>
+    </tr>
+
+    <tr bgcolor="#FBFDB0">
+        <td align=right><b>Physical&nbsp;(1)</b></td>
+        <td align=center>the network interface, cabling, etc.; e.g. Ethernet</td>
+    </tr>
+</table>
+</ul>
+
+<p>Layers 1 and 2 are the network hardware.</p>
+
+<p>Layers 3 and 4 are the operating system&rsquo;s network <a
+href="#stack">stack</a>.</p>
+
+<p>TCP/IP doesn&rsquo;t map onto layer 5 very well. The simplest interpretation
+is that it&rsquo;s for protocols like RTP that add a logical conversation
+over the transport (layer 4). It can also mean things like SSL, which
+maintains a "session" in which several related conversations happen over
+a single TCP connection.</p>
+
+<p>Layer 6 is often part of the application, since data representation
+can&rsquo;t usually be separated from the high-level protocol. The presentation
+layer, if it&rsquo;s present at all, is usually a cross-platform data
+representation like XDR or ASN.1. It could also be an encryption or data
+compression layer, though both of those could be lower in the model as
+well. (Secure IP (IPsec) is at layer 3, just like regular IP, for
+example.)</p>
+
+<p>Layer 7 is the high-level application protocol.</p>
+
+<p>The Winsock API does not correspond to any of the OSI layers. Roughly
+speaking, it&rsquo;s between layers 4 and 5.</p>
+
+	<a name="packet"><p><b>packet</b>&nbsp;-&nbsp; A packet is a particular block of data sent
+over a network. Packets are typically only discussed when talking
+about <a href="#datagram">datagram protocols</a> or hardware <a
+href="#frame">frames</a>.</p>
+
+<p>In <a href="#stream">stream protocols</a>, packets are only
+useful concepts when working with the lowest levels of the network.
+From the application level, packets in stream protocols are mysterious,
+hard-to-predict things, so it&rsquo;s best simply to ignore the fact that
+packets do exist to avoid mismatches between expectation and reality.</p>
+
+	<a name="packetization"><p><b>packetization</b>&nbsp;-&nbsp; Packetization is a process by which the
+network <a href="#stack">stack</a> decides how to break up data sent by
+programs into network <a href="#frame">frames</a>.</p>
+
+<p>With a <a href="#datagram">datagram protocol</a>, packetization
+is straightforward: the stack sends each datagram as a single frame
+if possible, or fragments it into several frames if necessary. With a
+<a href="#stream">stream protocol</a>, the network stack must decide
+how to break the data stream up into network frames. For TCP, the
+<a href="#Nagle">Nagle</a> algorithm is the main influence on this
+process.</p>
+
+<p>After the stack decides how much data to put in a frame, it wraps
+that data in network protocol headers before sending it to the hardware
+layer for sending on the network. In the case of TCP/IP, that&rsquo;s a TCP
+or UDP header on the inside, wrapped with an IP header.</p>
+
+	<a name="peer"><p><b>peer</b>&nbsp;-&nbsp; When two programs are sending data to each other
+over a network, they are peers. This term is usually seen in the phrase
+"remote peer", meaning "the <a href="#host">host</a> that you are
+exchanging data with".</p>
+
+	<a name="poll"><p><b>poll</b>&nbsp;-&nbsp; Repeatedly trying a call on a <a
+href="#non-blocking">non-blocking</a> socket until it
+succeeds. Example:</p>
+
+<pre>
+                int bytes;
+                do {
+                    if ((bytes = send(sd, buffer, buf_len, 0)) != SOCKET_ERROR) {
+                        break;
+                    }
+                }
+                while (WSAGetLastError() == WSAEWOULDBLOCK);
+</pre>
+
+	<a name="RFC"><p><b>RFC</b>&nbsp;-&nbsp; Request for Comments. RFCs are the Internet&rsquo;s standards
+mechanism: they document most of the protocols, mechanisms,
+procedures and best practices in use on the Internet. On my <a
+href="/rfcs/">Important RFCs</a> site I have several categorized lists
+of RFCs most important to application programmers. See also the entry
+in <a href="http://www.catb.org/~esr/jargon/html/R/RFC.html">the Jargon File</a>.</p>
+
+	<a name="routing"><p><b>routing</b>&nbsp;-&nbsp; The process of deciding how to move packets from
+one network to another. See also <a href="#router">router</a>.</p>
+
+	<a name="router"><p><b>router</b>&nbsp;-&nbsp; A router is a <a href="#multi-homed">multi-homed</a>
+<a href="#host">host</a> that moves <a href="#packet">packets</a>
+between two or more networks, based on configurable rules. The router
+looks at the contents of <a href="#osi-model">OSI layer</a> 3 (e.g. the
+IP addresses in a packet), and then consults its rule set which tells
+it where the packet should go.</p>
+
+<p>Most modern network hosts have at least some rudimentary routing
+capability. Consider a PC on a LAN that also has a modem for connecting to
+the Internet. It might have a "LAN route" so that all traffic destined
+for the LAN goes out the LAN adapter, and a "default route" so that
+all other traffic goes out the modem. Try the "route" and "netstat -r"
+commands on a Windows 95 or Windows NT machine.</p>
+
+	<a name="server"><p><b>server</b>&nbsp;-&nbsp; A program that passively waits for network
+connections on a well-known port. A typical server program has no user
+interface, and it usually can handle multiple network connections
+at once. In a traditional client/server protocol, the server is
+completely passive: it only sends data as a result of data sent by the
+<a href="#client">client</a>. That sort of design is not mandatory,
+however.</p>
+
+	<a name="silly"><p><b>silly window syndrome</b>&nbsp;-&nbsp; Poorly-coded network
+programs in certain situations can cause the <a href="#window">TCP
+window</a> to grow and shrink rapidly by very small amounts. The
+<a href="#delayed-ack">delayed ACK algorithm</a> minimizes
+the network degradations caused by such programs. There&rsquo;s a
+<a href="./intermediate.html#silly-window">FAQ item</a> that goes into
+details of how the silly window syndrome occurs and why the delayed ACK
+algorithm fixes the problem.</p>
+
+	<a name="window"><p><b>sliding window</b>&nbsp;-&nbsp; A feature of TCP that allows a
+sender to have more than one unacknowledged <a href="#packet">packet</a>
+"in flight" at a time, which improves network throughput. The TCP window
+only allows a sender to have as much unacknowledged data as the receiver
+has buffer space. Without this limit, a sender could send more data
+than a slow receiver can buffer, forcing the receiver to drop all the
+data it can&rsquo;t buffer. The sender would not see an acknowledgement for
+the dropped packets, so it would blindly retransmit the packets until
+space opened up in the receiver&rsquo;s buffer.</p>
+
+<p>There&rsquo;s a <a href="./intermediate.html#tcp-window">FAQ item</a> that
+goes into more detail on this topic.</p>
+
+	<a name="stack"><p><b>stack</b>&nbsp;-&nbsp; In network parlance, a stack is
+a set of layered programs, each of which talks to the ones above and
+below it. Below is an illustration of the most common kind of network
+stack, showing how an application program talks through the stack to
+the low-level network:</p>
+
+<ul>
+<table border=1 cellspacing=0 cellpadding=5>
+<tr bgcolor="#FBFDB0"><td align=center><b>Winsock application</b></td></tr>
+<tr bgcolor="#F4D7AA"><td align=center>Winsock API</td></tr>
+<tr bgcolor="#FBFDB0"><td align=center>Specific implementation of Winsock</td></tr>
+<tr bgcolor="#F4D7AA"><td align=center>Protocol stack API</td></tr>
+<tr bgcolor="#FBFDB0"><td align=center>Protocol stack (TCP/IP, IPX/SPX, DECnet, etc.)</td></tr>
+<tr bgcolor="#F4D7AA"><td align=center>Hardware driver API (packet driver, NDIS, ODI, etc.)</td></tr>
+<tr bgcolor="#FBFDB0"><td align=center>Hardware driver</td></tr>
+<tr bgcolor="#F4D7AA"><td align=center>Networking hardware (Ethernet NIC, WiFi card, modem, etc.)</td></tr>
+<tr bgcolor="#FBFDB0"><td align=center><b>Communication medium (Ethernet cable, radio waves, the telephone system, etc.)</b></td></tr>
+</table>
+</ul>
+
+<p>There is a stack within the stack: the protocol stack. Just like
+the network stack, the protocol stack is a layered architecture,
+where higher-level components talk to lower-level components, and
+vice versa. (The model used when talking about protocol stacks is the
+<a href="#osi-model">OSI network model</a>.)</p>
+
+<p>Here&rsquo;s a simplified example of how a stack works, using FTP as an
+example:</p>
+
+<ol>
+	<li>The FTP client sends some data to Winsock; for example,
+	a command asking to download a particular file.
+
+	<li>Winsock prepends a TCP and IP header onto the data packet.
+
+	<li>The TCP/IP packet is sent to the hardware which wraps the
+	packet in a <a href="#frame">frame</a> and sends it across
+	the network.
+
+	<li>The network technology between the hosts routes the packet
+	to the recieving host.
+
+	<li>The receiving host&rsquo;s network hardware recognizes a packet
+	destined for itself on the network medium, and passes it up into
+	its own stack.
+
+	<li>The receiver&rsquo;s network stack processes and removes the IP
+	and TCP headers. This tells the network stack which program to
+	deliver the data to.
+
+	<li>Winsock delivers the file download request to the FTP
+	server program.
+</ol>
+
+<p>This example ignores <a href="#packetization">packetization</a>,
+corrupted/duplicated/missing network frames, flow control, and efficiency
+optimizations like the <a href="#Nagle">Nagle algorithm</a>.</p>
+
+	<a name="stream"><p><b>stream protocol</b>&nbsp;-&nbsp; A stream protocol, such as TCP,
+delivers data in variable-length <a href="#packet">packets</a> whose
+size have no necessary relationship with the size of the packets that
+were sent. For example, if one host sends two 50-byte packets to the
+other host, that host may receive them as 100 single-byte packets, as
+a single 100-byte packet, or as a handful of smaller packets. Further,
+those 100 bytes might be sandwiched between data from previous and
+successive sends. Compare <a href="#datagram">datagram protocol</a>.</p>
+
+<!--  ---- Vertical padding to ensure that link targets can always be
+           placed at the top of the browser window. ----  -->
+
+<img src="/bitmaps/dot-clear.gif" alt="" width=1 height=200>
+
+<p align=center><font size=-1>This space intentionally left
+blank. <tt><b>:)</b></tt></font></p>
+
+<img src="/bitmaps/dot-clear.gif" alt="" width=1 height=100>
+
+
+
+
+
+		</div> <!-- end body div -->
+
+<hr class="noshade">
+
+
+<!--  Navigation footer  -->
+<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer nav"> 
+	<tr>
+		<td align="left" class="halfwidth">
+		
+			
+			
+			
+			<span class="large">
+				<a href="./reviews/unpv1.html">&lt;&lt;&nbsp;Unix Network Programming 2/e</a><br>
+			</span>
+		
+		</td>
+
+		<td align="right" class="halfwidth">
+		
+			&nbsp;
+		
+		</td>
+	</tr>
+</table>
+
+
+
+
+
+
+	<!--  Document Footer -->
+
+	<table class="fullwidth" cellpadding="5" cellspacing="0" summary="footer info"> 
+		<tr>
+			
+				<td align="left" class="thirdwidth">
+					
+					<span class="annotation">Updated Sun Oct 25 2009 01:54 MDT</span>
+				</td>
+				<td align="center" class="thirdwidth">
+				
+			
+
+			
+				&nbsp;
+			
+			</td>
+
+			<td align="right" class="thirdwidth">
+				<a href="/">Go to my home page</a>
+			</td>
+		</tr>	
+	</table>
+
+
+	<script type="text/javascript" src="/js/awstats_misc_tracker.js"></script>
+</body>
+</html>
+

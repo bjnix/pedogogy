@@ -1,0 +1,394 @@
+/*
+ *  A class that implement a linked list.
+ *    
+ */
+
+public class RecursiveLinkedList {
+
+	private class Node {
+
+		// properties
+		private Integer element;
+		private Node next;
+
+		/**
+		 * Create a new node.
+		 *
+		 * @param v The value referred to by this node.
+		 * @param n The next node in the list (or null if the end).
+		 */
+		public Node(Integer v, Node n) {
+			element = v;
+			next = n;
+		} // end of constructor		
+
+		/**
+		 * Make a new node be the next node in the list.
+		 *
+		 * @param A reference to the next node.
+		 */
+		public void setNext(Node where) {
+			next = where;
+		} // end of setNext method
+
+		/**
+		 * Get the integer value referred to by this node.
+		 *
+		 * @return The value.
+		 */
+		public Integer getValue() {
+			return element;
+		} // end of getValue method
+
+		/**
+		 * Get the next node in the list.
+		 *
+		 * @return A reference to the next node (or null if this is the last
+		 *         node in the list).
+		 */
+		public Node getNext() {
+			return next;
+		} // end of getNext method
+
+
+	} // end of Node class
+
+	// properties
+
+	// reference to first node in the list
+	// (or null if the list is empty)
+	private Node first;
+
+	/**
+	 * Create a new, empty collection.
+	 */
+	public RecursiveLinkedList() {
+
+		first = null;
+	} // end of constructor
+
+
+	public Node getFirst(){
+		return first;
+	}
+
+
+	/**
+	 * Add an Integer to the collection.
+	 *
+	 * @param newValue The string to add.
+	 */
+	public void add(int newValue) {
+		// create a new node and put it at the beginning of the list
+		first = new Node(newValue,first);
+	} // end of add method
+
+	public void clear() {
+		first = null;
+	}
+
+	/**
+	 * Return a string representation of this collection, in the form
+	 * ["Int1","Int2",...].
+	 * 
+	 * @return the string representation.
+	 */
+	public String toString() {
+
+		// initialize result
+		String result = "[";
+
+		// if nothing in the list, return "[]"
+		if (first == null) {
+			return result+"]";
+		}
+
+		// put the first string in the result
+		result = result + first.getValue();
+
+		// go down the list...
+		Node temp = first.getNext();
+		while (temp != null) {
+
+			// append a comma and the next string to the result
+			result = result + "," + temp.getValue();
+
+			// advance to the next element in the list
+			temp = temp.getNext();
+		}
+
+		// return the result
+		return result + "]";
+	} // end of toString method
+
+
+
+	/**
+	 * Removes all nodes containing odd Integers from the list.
+	 * The list [1,2,3] would then contain [2] if the toString method is called
+	 */
+
+	public void evenPart()
+	{		
+		RecursiveLinkedList temp = new RecursiveLinkedList();
+		evens(temp);
+
+	}
+
+	private void evens(RecursiveLinkedList temp)
+	{
+		if(first == null)
+		{
+			this.first = temp.first;
+			return;			
+		}
+		int yN = first.getValue() % 2;
+		if(yN == 0)
+		{
+			temp.add(first.getValue());
+		}
+
+		first=first.getNext();
+		evens(temp);
+	}
+	/**
+	 *  Modifies the list by inserting the item newInt before EVERY occurrence of the 
+	 *  item oldInt in the list
+	 *  So the list [1,4,2,4,5] becomes [1,3,4,2,3,4,5] after insertBefore is called
+	 *  as insertBefore(3,4);
+	 *  
+	 *  @param newInt the integer to insert before oldInt
+	 *  @param oldInt the integer before which newInt is inserted
+	 */
+	public void insertBefore(int newInt, int oldInt)
+	{
+		RecursiveLinkedList temp = new RecursiveLinkedList();
+		ins3rtb4(temp, newInt, oldInt);
+		this.reverse();
+	}
+
+	private void ins3rtb4(RecursiveLinkedList temp, int what, int where)
+	{
+		if(first == null)
+		{
+
+			this.first = temp.first;
+			return;	
+		}
+		if(first.getValue() == where)
+		{
+			temp.add(what);
+		}
+		temp.add(first.getValue());
+
+
+		first = first.next;
+		ins3rtb4(temp,what,where);
+
+	}
+
+
+	/**
+	 *  Modifies the list by inserting the item newInt after EVERY occurrence of the 
+	 *  item oldInt in the list
+	 *  So the list [1,4,2,4,5] becomes [1,4,3,2,4,3,5] after insertAfter is called
+	 *  as insertAfter(3,4);
+	 *  
+	 *  @param newInt the integer to insert after oldInt
+	 *  @param oldInt the integer after which newInt is inserted
+	 */
+	public void insertAfter(int newInt, int oldInt)
+	{
+		RecursiveLinkedList temp = new RecursiveLinkedList();
+		ins3rt4ft3r(temp, newInt, oldInt);
+		this.reverse();
+	}
+	private void ins3rt4ft3r(RecursiveLinkedList temp, int what, int where)
+	{
+		if(first == null)
+		{
+			this.first = temp.first;
+			return;	
+		}
+		temp.add(first.getValue());
+
+		if(first.getValue() == where)
+		{
+			temp.add(what);
+		}
+
+
+		first = first.next;
+		ins3rt4ft3r(temp,what,where);
+	}
+	/**
+	 * Merge two linked list together to the current linked list, that is, the header is "first".
+	 * merge their nodes together to make one list, taking nodes alternately between the two lists. 
+	 * So shuffleMerge() with current list [1, 2, 3] and the argument [7, 13, 1] should yield 
+	 * the current list containing [7, 1, 13, 2, 1, 3]. If either list runs out, all the nodes should 
+	 * be taken from the other list.
+	 * @param two another linked list
+	 */
+	public void shuffleMerge(RecursiveLinkedList two)
+	{		
+		RecursiveLinkedList temp = new RecursiveLinkedList();
+		shuffMrg(temp, two);
+		this.reverse();
+	}
+	private void shuffMrg(RecursiveLinkedList temp, RecursiveLinkedList two)
+	{
+		if(this.first == null && two.first == null)
+		{
+			this.first = temp.getFirst();
+			return;
+		}
+		if(two.first != null)
+		{
+			temp.add(two.getFirst().getValue());
+			two.first=two.first.getNext();
+		}
+		if(this.first != null)
+		{
+			temp.add(this.getFirst().getValue());
+			this.first=this.first.next;
+		}
+		shuffMrg(temp, two);
+
+	}
+
+
+	/**
+	 * Sort the current linked list in decreasing order. 
+	 * The list [1, 5, 3] will be [5, 3, 1] after the sort
+	 */	
+	public void sortList()
+	{
+		Node head = first;
+		sortList(head);
+		reverse();
+
+	}
+	public void sortList(Node head)
+	{
+		if(head == null)
+		{
+			return;
+		}
+		else
+		{
+			head = head.next;
+			sortList(head);
+		}
+		swap(head);
+		return ;
+	}
+	private void swap( Node head)
+	{
+		if(head==null)
+			return;
+
+		if(head.next == null)
+		{
+			System.out.println(this);			
+			return;
+		}
+		Node nxt = head.next;
+		if(head.next.getValue() < head.getValue())
+		{
+
+			Integer temp = head.next.element;
+			head.next.element = head.element;
+			head.element = temp;
+			
+		}
+		
+		System.out.println(this);
+		head = head.next;
+
+		swap(head);
+	}
+
+	//	public void sortList()
+	//	{
+	//		RecursiveLinkedList temp = new RecursiveLinkedList();
+	//		Node grabber = first;
+	//		sortList(temp,grabber);
+	//		this.reverse();
+	//
+	//	}
+	//	private void s0rtL1st(RecursiveLinkedList temp, Node grabber)
+	//	{
+	//		if(first == null)
+	//		{
+	//			this.first = temp.getFirst();
+	//			return;
+	//		}
+	//		int bigNum = Integer.MIN_VALUE;
+	//		Node hammer = grabber;
+	//		grab(temp, bigNum, grabber,hammer);
+	//		
+	//		first = first.next;
+	//		s0rtL1st(temp, grabber);
+	//	}
+	//	private void grab(RecursiveLinkedList temp, int bigNum, Node grabber, Node hammer)
+	//	{
+	//		
+	//		if(grabber == null)
+	//		{
+	//			temp.add(bigNum);
+	//			remove(bigNum,hammer);
+	//			return;
+	//		}
+	//		
+	//		if(grabber.getValue()>bigNum)
+	//		{
+	//			bigNum = first.getValue();
+	//		}
+	//		grabber = grabber.getNext();
+	//		grab(temp,bigNum,grabber, hammer);
+	//	}
+	//	private void remove(int bigNum, Node hammer)
+	//	{
+	//		
+	//		if(hammer == null)
+	//		{
+	//			return;
+	//		}
+	//		if(hammer.next == null && hammer.getValue() == bigNum)
+	//		{
+	//			hammer.setNext(hammer.next.next);
+	//			return;
+	//		}
+	//		if(hammer.next == null)
+	//		{
+	//			return;
+	//		}
+	//		if(hammer.getNext().getValue() == bigNum)
+	//		{
+	//			hammer.next = hammer.next.next;
+	//		}
+	//		hammer=hammer.next;
+	//		remove(bigNum,hammer);
+	//	}
+	/**
+	 * Reverses the order of the elements on the list.
+	 * The list [1, 3, 5] will be [5, 3, 1] after reversing it.
+	 */
+	public void reverse() {
+		RecursiveLinkedList temp = new RecursiveLinkedList();
+		rev(temp);
+	}
+	private void rev(RecursiveLinkedList temp)
+	{
+		if(first == null)
+		{
+			this.first = temp.getFirst();
+			return;
+		}
+		temp.add(first.getValue());
+		first = first.getNext();
+		rev(temp);
+
+
+	}
+} // end of LinkedStringCollection class

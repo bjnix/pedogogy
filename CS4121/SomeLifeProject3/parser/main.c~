@@ -1,0 +1,119 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <malloc.h>
+#include <strings.h>
+#include <string.h>
+#include <util/general.h>
+#include <util/symtab.h>
+#include <util/symtab_stack.h>
+#include <util/dlink.h>
+#include <util/string_utils.h>
+#include <codegen/symfields.h>
+#include "SomeLifeParserHeader.h"
+#include "SomeLifeParser.h"
+
+void* slParser;
+SymTable symtab;
+SymtabStack symtabStack;
+DList instList;
+DList dataList;
+int offsetDirection = 1;
+int globalOffset = 0;
+char *fileName;
+
+void SomeLife_error(char *s)
+{
+    fprintf(stderr,"%s: line %d: %s\n",fileName,SomeLife_lineno,s);
+}
+
+int SomeLife_wrap() {
+    return 1;
+}
+
+void initSymTable() {
+        
+    /**
+     * Create symbol table to put into stack and put it there
+     */
+    symtab = beginScope();
+
+    SymInitField(symtab,SYMTAB_TYPE_INDEX_FIELD,(Generic)-1,NULL);
+    SymInitField(symtab,SYMTAB_SIZE_FIELD,(Generic)-1,NULL);
+    SymInitField(symtab,SYMTAB_OFFSET_FIELD,(Generic)-1,NULL);
+    SymInitField(symtab,SYMTAB_REGISTER_INDEX_FIELD,(Generic)-1,NULL);
+    
+    int intIndex = SymIndex(symtab,SYMTAB_INTEGER_TYPE_STRING);
+
+    SymPutFieldByIndex(symtab,intIndex,SYMTAB_SIZE_FIELD,(Generic)INTEGER_SIZE);
+    
+}
+
+void deleteSymTable() {
+    do{
+    symtab = endScope(symtabStack);
+    SymKillField(symtab,SYMTAB_TYPE_INDEX_FIELD);
+    SymKillField(symtab,SYMTAB_SIZE_FIELD);
+    SymKillField(symtab,SYMTAB_OFFSET_FIELD);
+    SymKillField(symtab,SYMTAB_REGISTER_INDEX_FIELD);
+    SymKill(symtab);
+    }while(stackSize(symtabStack));
+
+}
+
+static void initialize(char* inputFileName) {
+
+    stdin = freopen(inputFileName,"r",stdin);
+    if (stdin == NULL) {
+	fprintf(stderr,"Error: Could not open file %s\n",inputFileName);
+	exit(-1);
+    }
+
+    char* dotChar = rindex(inputFileName,'.');
+    int endIndex = strlen(inputFileName) - strlen(dotChar);
+    char *outputFileName = nssave(2,substr(inputFileName,0,endIndex),".s");
+    stdout = freopen(outputFileName,"w",stdout);
+    if (stdout == NULL) {
+	fprintf(stderr,"Error: Could not open file %s\n",outputFileName);
+	exit(-1);
+    }
+
+    initRegisters();
+
+    instList = dlinkListAlloc(NULL);
+    dataList = dlinkListAlloc(NULL);
+
+    slParser = SomeLife_ParseAlloc( malloc );
+
+    /**
+     * Initialize an empty stack of symbol tables
+     */
+    symtabStack = symtabStackInit();
+    initSymTable();
+}
+
+static void finalize() {
+    deleteSymTable();
+    fclose(stdin);
+    fclose(stdout);    
+}
+
+int main(int argc, char** argv)
+
+{
+    int id;
+
+    fileName = argv[1];
+    initialize(fileName);
+
+    while ((id=SomeLife_lex()) != 0)
+    {
+	SomeLife_Parse(slParser, id, tokenAttr );
+    }
+
+    SomeLife_Parse(slParser, 0, (TokenAttributePtr)NULL);
+
+    finalize();
+
+    return 0;
+}
+/******************END OF C ROUTINES**********************/

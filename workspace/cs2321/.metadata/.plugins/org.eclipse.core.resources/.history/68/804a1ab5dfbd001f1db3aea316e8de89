@@ -1,0 +1,57 @@
+package cs2321;
+
+public class Assignment2 {
+	static public void main( String [] args )
+	{
+		ArraySequence<String> lLS = new ArraySequence<String>();
+
+		if ( lLS.isEmpty() == false )
+		{
+			System.out.println( "FAILED: isEmpty did not return empty" );
+		}
+		else
+		{
+			System.out.println( "PASSED: isEmpty returned empty" );
+		}
+		System.out.println(lLS.first());
+		lLS.add(0,"0");
+		lLS.add(1,"1");
+		lLS.add(2,"2");
+		lLS.add(3,"3");
+		lLS.add(4,"4");
+		lLS.add(5,"5");
+		lLS.add(6,"6");
+		lLS.add(7,"7");
+		lLS.add(8,"8");
+		lLS.add(9,"9");
+		lLS.add(10,"10");
+		lLS.set( lLS.last(), "6" );
+		lLS.get(lLS.size()-1).equals("6");
+		lLS.addBefore(lLS.last(), "5b");
+		lLS.remove(3);
+
+
+
+		System.out.println("next" + lLS.next(lLS.atIndex(1)).element());
+		System.out.println("prev" + lLS.prev(lLS.atIndex(3)).element());
+		lLS.set(5, "1000");
+		System.out.println("current size from size()" + lLS.size());
+		for(int i = 0 ; i < lLS.size() ; i++)
+		{
+			System.out.println(lLS.get(i));
+		}
+		if ( lLS.isEmpty() == false )
+		{
+			System.out.println( "PASSED: isEmpty did not return empty" );
+		}
+		else
+		{
+			System.out.println( "FAILED: isEmpty returned empty" );
+		}
+
+
+	}
+
+}
+
+

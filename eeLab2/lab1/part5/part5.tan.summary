@@ -1,0 +1,56 @@
+--------------------------------------------------------------------------------------
+Timing Analyzer Summary
+--------------------------------------------------------------------------------------
+
+Type           : Worst-case tsu
+Slack          : N/A
+Required Time  : None
+Actual Time    : 9.498 ns
+From           : SW[17]
+To             : mux_3bit_5to1:M_3_5|OUT[14]
+From Clock     : --
+To Clock       : SW[15]
+Failed Paths   : 0
+
+Type           : Worst-case tco
+Slack          : N/A
+Required Time  : None
+Actual Time    : 10.847 ns
+From           : mux_3bit_5to1:M_3_5|OUT[2]
+To             : HEX0[2]
+From Clock     : SW[17]
+To Clock       : --
+Failed Paths   : 0
+
+Type           : Worst-case tpd
+Slack          : N/A
+Required Time  : None
+Actual Time    : 10.242 ns
+From           : SW[13]
+To             : LEDR[13]
+From Clock     : --
+To Clock       : --
+Failed Paths   : 0
+
+Type           : Worst-case th
+Slack          : N/A
+Required Time  : None
+Actual Time    : 2.857 ns
+From           : SW[4]
+To             : mux_3bit_5to1:M_3_5|OUT[1]
+From Clock     : --
+To Clock       : SW[17]
+Failed Paths   : 0
+
+Type           : Total number of failed paths
+Slack          : 
+Required Time  : 
+Actual Time    : 
+From           : 
+To             : 
+From Clock     : 
+To Clock       : 
+Failed Paths   : 0
+
+--------------------------------------------------------------------------------------
+

@@ -1,0 +1,165 @@
+#!/usr/bin/perl -w
+#udp IAX protocol fuzzer
+#Created: Blake Cornell
+# Exploits found with this code can be
+#  found at
+#	http://www.securityscraper.com/
+#Released under the VoIPER project
+#
+# Do not hesitate to show enthusiasm and support
+#       and help develop this further.
+
+use strict;
+use IO::Socket;
+use Getopt::Long;
+use Net::Subnets;
+use Pod::Usage;
+
+my @target_port = (4569);
+my @targets = ('127.0.0.1');
+my $result = GetOptions('port|p=i' => \(my $port = ''),
+                        'host|h=s' => \(my $host = ''),
+                        'dos' => \(my $dos = ''),
+                        'bruteforce' => \(my $bruteforce = ''),
+                        'timeout|t=i' => \(my $timeout = ''),
+                        'dust=i' => \(my $dust = ''),
+                        'listen' => \(my $listen = ''),
+                        'verbose|v' => \(my $verbose = ''),
+                        'help|?' => \(my $help = '')) or pod2usage(2);
+
+if($help) { printUsage(); }
+if($host) { @targets=@{retHosts($host)}; }
+if($port) { $target_port[0] = $port; }
+if($listen&&$dos) { print("DoS mode is in Listening Mode\n"); }
+
+for(my $i=0; $i<=$#targets;$i++) {
+	if($verbose) { print($targets[$i]."\n"); }
+        fuzzIAX($targets[$i],4569,$timeout);
+}
+exit;
+
+sub fuzzIAX {
+        my($target,$port,$timeout,@args)=@_;
+
+        if($verbose) { print("Trying $target:$port\n"); }
+
+        socket(PING, PF_INET, SOCK_DGRAM, getprotobyname("udp"));
+
+        my %iaxFrameTypes=(
+			'Nan' => "00",
+                        'DTMF' => "01",
+                        'VOICE' => "02",
+                        'VIDEO' => "03",
+                        'CONTROL' => "04",
+                        'Null' => "05",
+                        'IAXCONTROL' => "06",
+                        'TEXT' => "07",
+                        'IMAGE' => "08",
+                        'HTML' => "09",
+                        'COMFORTNOISE' => "0a",
+                        'Unknown' => "0b",
+                        'Unknown' => "0c",
+                        'Unknown' => "0d",
+                        'Unknown' => "0e",
+                        'Unknown' => "0f");
+
+        my %iaxControls=(
+			'Nan' => "00",
+                        'HANGUP' => "01",
+                        'Reserved' => "02",
+                        'RINGING' => "03",
+                        'ANSWER' => "04",
+                        'BUSY' => "05",
+                        'Reserved' => "06",
+                        'Reserved' => "07",
+                        'CONGESTION' => "08",
+                        'FLASH_HOOK' => "09",
+                        'Reserved' => "0a",
+                        'OPTION' => "0b",
+                        'KEY_RADIO' => "0c",
+                        'UNKEY_RADIO' => "0d",
+                        'CALL_PROGRESS' => "0e",
+                        'CALL_PROCEEDING' => "0f",
+                        'HOLD' => "10",
+                        'UNHOLD' => "11");
+
+        my %iaxControlFrames=(
+			'Nan' => "00",
+                        'NEW' => "01",
+                        'PING' => "02",
+                        'PONG' => "03",
+                        'ACK' => "04",
+                        'HANGUP' => "05",
+                        'REJECT' => "06",
+                        'ACCEPT' => "07",
+                        'AUTHREQ' => "08",
+                        'AUTHREP' => "09",
+                        'INVAL' => "0a",
+                        'LAGRQ' => "0b",
+                        'LAGRP' => "0c",
+                        'REGREQ' => "0d",
+                        'REGAUTH' => "0e",
+                        'REGACK' => "0f",
+                        'REGREJ' => "10",
+                        'REGREL' => "11",
+                        'VNACK' => "12",
+                        'DPREQ' => "13",
+                        'DPREP' => "14",
+                        'DIAL' => "15",
+                        'TXREQ' => "16",
+                        'TXCNT' => "17",
+                        'TXACC' => "18",
+                        'TXREADY' => "19",
+                        'TXREL' => "1a",
+                        'TXREJ' => "1b",
+                        'QUELCH' => "1c",
+                        'UNQUELCH' => "1d",
+                        'POKE' => "1e",
+                        'Reserved' => "1f",
+                        'MWI' => "20",
+                        'UNSUPPORT' => "21",
+                        'TRANSFER' => "22",
+                        'Reserved' => "23",
+                        'Reserved' => "24",
+                        'Reserved' => "25");
+
+        my %iaxHTML = (
+                        'SEND_URL' => 1,
+                        'DATA_FRAME' => 2,
+                        'BEGINNING_FRAME' => 4,
+                        'END_FRAME' => 8,
+                        'LOAD_COMPLETE' => 16,
+                        'PEER_NO_HTML' => 17,
+                        'LINK_URL' => 18,
+                        'UNLINK_URL' => 19,
+                        'REJECT_LINK_URL' => 20);
+
+        my %iaxIE = (
+                        'CALLED_NUMBER' => "01",
+                        'CALLING_NUMBER' => "02",
+                        'CALLING_ANI' => "03",
+                        'CALLING_NAME' => "04",
+                        'CALLED_CONTEXT' => "05",
+                        'USERNAME' => "06",
+                        'PASSWORD' => "07",
+                        'CAPABILITY' => "08",
+                        'FORMAT' => "09",
+                        'LANGUAGE' => "0a",
+                        'VERSION' => "0b",
+                        'ADSPICE' => "0c",
+                        'DNID' => "0d",
+                        'AUTHMETHODS' => "0e",
+                        'CHALLENGE' => "0f",
+                        'MD5_RESULT' => "10",
+                        'RSA_RESULT' => "11",
+                        'APPARENT_ADDR' => "12",
+                        'REFRESH' => "13",
+                        'DPSTATUS' => "14",
+                        'CALLNO' => "15",
+                        'CAUSE' => "16",
+                        'IAX_UNKNOWN' => "17",
+                        'MSGCOUNT' => "18",
+                        'AUTOANSWER' => "19",
+                        'MUSICONHOLD' => "1a",
+                        'TRANSFERID' => "1b",
+                        'RDNIS' => "1c",

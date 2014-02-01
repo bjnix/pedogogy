@@ -1,0 +1,26 @@
+what,kind,bundleId,bundleVersion,description,time
+java.vendor,sysinfo,,,"Sun Microsystems Inc.",1266369009257
+java.version,sysinfo,,,"1.6.0_17",1266369009257
+java.vm.info,sysinfo,,,"mixed mode, sharing",1266369009257
+java.vm.name,sysinfo,,,"Java HotSpot(TM) Client VM",1266369009261
+java.vm.specification.name,sysinfo,,,"Java Virtual Machine Specification",1266369009261
+java.vm.specification.vendor,sysinfo,,,"Sun Microsystems Inc.",1266369009261
+java.vm.specification.version,sysinfo,,,"1.0",1266369009261
+java.vm.vendor,sysinfo,,,"Sun Microsystems Inc.",1266369009261
+java.vm.version,sysinfo,,,"14.3-b01",1266369009261
+started,bundle,org.eclipse.jsch.core,1.1.100.I20090430-0408,"org.eclipse.jsch.core",1266369009876
+started,bundle,org.eclipse.team.cvs.core,3.3.200.I20090430-0408,"org.eclipse.team.cvs.core",1266369009906
+started,bundle,org.eclipse.team.ui,3.5.0.I20090430-0408,"org.eclipse.team.ui",1266369010018
+started,bundle,org.eclipse.ui.console,3.4.0.v20090513,"org.eclipse.ui.console",1266369010094
+started,bundle,org.eclipse.team.cvs.ui,3.3.200.I20090521-1750,"org.eclipse.team.cvs.ui",1266369010270
+deactivated,workbench,org.eclipse.ui.workbench,3.5.0.I20090603-2000,"",1266369019234
+activated,workbench,org.eclipse.ui.workbench,3.5.0.I20090603-2000,"",1266369025891
+deactivated,workbench,org.eclipse.ui.workbench,3.5.0.I20090603-2000,"",1266369026032
+activated,workbench,org.eclipse.ui.workbench,3.5.0.I20090603-2000,"",1266369253927
+deactivated,workbench,org.eclipse.ui.workbench,3.5.0.I20090603-2000,"",1266369258473
+started,bundle,org.eclipse.core.filesystem,1.2.0.v20090507,"org.eclipse.core.filesystem",1266369281459
+started,bundle,org.eclipse.debug.core,3.5.0.v20090526-1600,"org.eclipse.debug.core",1266369281844
+started,bundle,org.eclipse.jdt.launching,3.5.0.v20090527,"org.eclipse.jdt.launching",1266369281964
+started,bundle,org.eclipse.jdt.apt.core,3.3.200.v20090528-1135,"org.eclipse.jdt.apt.core",1266369284862
+activated,workbench,org.eclipse.ui.workbench,3.5.0.I20090603-2000,"",1266369284894
+started,bundle,org.eclipse.jdt.apt.pluggable.core,1.0.200.v20090526-2130,"org.eclipse.jdt.apt.pluggable.core",1266369284925

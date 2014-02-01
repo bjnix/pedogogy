@@ -1,0 +1,224 @@
+package cs2321;
+
+import java.util.Iterator;
+import net.datastructures.*;
+import cs2321.*;
+
+/**
+ * A sequence that is implemented as an array.
+ * If the capacity is exceeded the capacity will be doubled. 
+ * 
+ * YOUR COMPLEXITY INFO HERE
+ * 
+ * Course: CS2321 Section YOUR SECTION HERE
+ * Assignment: #1
+ * @author YOUR NAME HERE
+ */ 
+/* Do not alter the definition of the class.
+ * ie. Do not extend LinkedSequence.
+ */
+public class ArraySequence<E> implements Sequence<E>
+{
+	 private int mCurrentSize;
+	    private int mMaxSize;
+	    private ArrSeqPos<E>[] mArray;
+	    
+	    
+	    public ArraySequence()
+	    {
+	        mCurrentSize = 0;
+	        mMaxSize = 10;
+	        mArray = (ArrSeqPos<E>[])new ArrSeqPos[mMaxSize];
+	    }
+
+
+	
+    /*# Complete the implementation of all required methods.
+     *  Be sure to update this file to include:
+     *      
+     *      Annotations (@TimeComplexity, @SpaceComplexity, @TimeComplexityAmmortized, @TimeComplexityExpected)
+     *      that indicate the time and space complexities.
+     *      
+     *      Appropriate comments justifying time and space claims (TCJ and SCJ) 
+     */
+
+    @Override
+    public Position<E> atIndex( int aIndex ) throws BoundaryViolationException
+    {
+    	Position<E> Pos = (Position<E>) aIndex;
+        
+        return null;
+    }
+
+    @Override
+    public int indexOf( Position<E> aPosition ) throws InvalidPositionException
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public boolean isEmpty()
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public int size()
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public void add( int aIndex, E aElement ) throws IndexOutOfBoundsException
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public E get( int aIndex ) throws IndexOutOfBoundsException
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public E remove( int aIndex ) throws IndexOutOfBoundsException
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public E set( int aIndex, E aElement ) throws IndexOutOfBoundsException
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void addAfter( Position<E> aPosition, E aElementToAdd )
+            throws InvalidPositionException
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void addBefore( Position<E> aPosition, E aElementToAdd )
+            throws InvalidPositionException
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public Position<E> first()throws EmptyListException
+    {
+    	 // TCJ: The time complexity does not vary with input size,
+        // thus the running time is constant.
+        if ( isEmpty() )
+            throw new EmptyListException( "List is empty" );
+        return ArrSeqPos.class.);
+    }
+
+    @Override
+    public Position<E> last()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Position<E> next( Position<E> aPosition )
+            throws InvalidPositionException, BoundaryViolationException
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Position<E> prev( Position<E> aPosition )
+            throws InvalidPositionException, BoundaryViolationException
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public E remove( Position<E> aPosition ) throws InvalidPositionException
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public E set( Position<E> aPosition, E aElement )
+            throws InvalidPositionException
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Iterator<E> iterator()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    @Override
+    public void addFirst( E aElementToAdd )
+    {
+        /* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+        /* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+        /* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+    }
+
+    @Override
+    public void addLast( E aElementToAdd )
+    {
+        /* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+        /* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+        /* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+    }
+
+    @Override
+    public E getFirst() throws EmptyDequeException
+    {
+        /* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+        /* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+        /* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+        return null;
+    }
+
+    @Override
+    public E getLast() throws EmptyDequeException
+    {
+        /* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+        /* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+        /* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+        return null;
+    }
+
+    @Override
+    public E removeFirst() throws EmptyDequeException
+    {
+        /* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+        /* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+        /* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+        return null;
+    }
+
+    @Override
+    public E removeLast() throws EmptyDequeException
+    {
+        /* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+        /* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+        /* YOU DO NOT HAVE TO IMPLEMENT THIS FUNCTION */
+        return null;
+    }
+}

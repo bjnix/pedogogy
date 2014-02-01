@@ -1,0 +1,3 @@
+Warning (10236): Verilog HDL Implicit Net warning at part6.v(57): created implicit net for "S0"
+Warning (10236): Verilog HDL Implicit Net warning at part6.v(58): created implicit net for "S1"
+Warning (10236): Verilog HDL Implicit Net warning at part6.v(59): created implicit net for "S2"

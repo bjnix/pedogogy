@@ -1,0 +1,232 @@
+State 0:
+          prog ::= * calc
+          calc ::= * calc SEMICOLON expr
+          calc ::= * expr
+          expr ::= * expr PLUS term
+          expr ::= * expr MINUS term
+          expr ::= * term
+          term ::= * term MUL factor
+          term ::= * term DIV factor
+          term ::= * factor
+          factor ::= * INT
+          factor ::= * LPAREN expr RPAREN
+          factor ::= * MINUS factor
+
+                         MINUS shift  7
+                           INT shift  16
+                        LPAREN shift  2
+                          prog accept
+                          calc shift  9
+                          expr shift  14
+                          term shift  13
+                        factor shift  19
+
+State 1:
+          calc ::= calc SEMICOLON * expr
+          expr ::= * expr PLUS term
+          expr ::= * expr MINUS term
+          expr ::= * term
+          term ::= * term MUL factor
+          term ::= * term DIV factor
+          term ::= * factor
+          factor ::= * INT
+          factor ::= * LPAREN expr RPAREN
+          factor ::= * MINUS factor
+
+                         MINUS shift  7
+                           INT shift  16
+                        LPAREN shift  2
+                          expr shift  10
+                          term shift  13
+                        factor shift  19
+
+State 2:
+          expr ::= * expr PLUS term
+          expr ::= * expr MINUS term
+          expr ::= * term
+          term ::= * term MUL factor
+          term ::= * term DIV factor
+          term ::= * factor
+          factor ::= * INT
+          factor ::= * LPAREN expr RPAREN
+          factor ::= LPAREN * expr RPAREN
+          factor ::= * MINUS factor
+
+                         MINUS shift  7
+                           INT shift  16
+                        LPAREN shift  2
+                          expr shift  8
+                          term shift  13
+                        factor shift  19
+
+State 3:
+          expr ::= expr PLUS * term
+          term ::= * term MUL factor
+          term ::= * term DIV factor
+          term ::= * factor
+          factor ::= * INT
+          factor ::= * LPAREN expr RPAREN
+          factor ::= * MINUS factor
+
+                         MINUS shift  7
+                           INT shift  16
+                        LPAREN shift  2
+                          term shift  11
+                        factor shift  19
+
+State 4:
+          expr ::= expr MINUS * term
+          term ::= * term MUL factor
+          term ::= * term DIV factor
+          term ::= * factor
+          factor ::= * INT
+          factor ::= * LPAREN expr RPAREN
+          factor ::= * MINUS factor
+
+                         MINUS shift  7
+                           INT shift  16
+                        LPAREN shift  2
+                          term shift  12
+                        factor shift  19
+
+State 5:
+          term ::= term MUL * factor
+          factor ::= * INT
+          factor ::= * LPAREN expr RPAREN
+          factor ::= * MINUS factor
+
+                         MINUS shift  7
+                           INT shift  16
+                        LPAREN shift  2
+                        factor shift  15
+
+State 6:
+          term ::= term DIV * factor
+          factor ::= * INT
+          factor ::= * LPAREN expr RPAREN
+          factor ::= * MINUS factor
+
+                         MINUS shift  7
+                           INT shift  16
+                        LPAREN shift  2
+                        factor shift  17
+
+State 7:
+          factor ::= * INT
+          factor ::= * LPAREN expr RPAREN
+          factor ::= * MINUS factor
+          factor ::= MINUS * factor
+
+                         MINUS shift  7
+                           INT shift  16
+                        LPAREN shift  2
+                        factor shift  18
+
+State 8:
+          expr ::= expr * PLUS term
+          expr ::= expr * MINUS term
+          factor ::= LPAREN expr * RPAREN
+
+                          PLUS shift  3
+                         MINUS shift  4
+                        RPAREN shift  20
+
+State 9:
+      (0) prog ::= calc *
+          calc ::= calc * SEMICOLON expr
+
+                             $ reduce 0
+                     SEMICOLON shift  1
+
+State 10:
+      (1) calc ::= calc SEMICOLON expr *
+          expr ::= expr * PLUS term
+          expr ::= expr * MINUS term
+
+                          PLUS shift  3
+                         MINUS shift  4
+                     {default} reduce 1
+
+State 11:
+      (3) expr ::= expr PLUS term *
+          term ::= term * MUL factor
+          term ::= term * DIV factor
+
+                           MUL shift  5
+                           DIV shift  6
+                     {default} reduce 3
+
+State 12:
+      (4) expr ::= expr MINUS term *
+          term ::= term * MUL factor
+          term ::= term * DIV factor
+
+                           MUL shift  5
+                           DIV shift  6
+                     {default} reduce 4
+
+State 13:
+      (5) expr ::= term *
+          term ::= term * MUL factor
+          term ::= term * DIV factor
+
+                           MUL shift  5
+                           DIV shift  6
+                     {default} reduce 5
+
+State 14:
+      (2) calc ::= expr *
+          expr ::= expr * PLUS term
+          expr ::= expr * MINUS term
+
+                          PLUS shift  3
+                         MINUS shift  4
+                     {default} reduce 2
+
+State 15:
+      (6) term ::= term MUL factor *
+
+                     {default} reduce 6
+
+State 16:
+      (9) factor ::= INT *
+
+                     {default} reduce 9
+
+State 17:
+      (7) term ::= term DIV factor *
+
+                     {default} reduce 7
+
+State 18:
+     (11) factor ::= MINUS factor *
+
+                     {default} reduce 11
+
+State 19:
+      (8) term ::= factor *
+
+                     {default} reduce 8
+
+State 20:
+     (10) factor ::= LPAREN expr RPAREN *
+
+                     {default} reduce 10
+
+----------------------------------------------------
+Symbols:
+    0: $:
+    1: SEMICOLON
+    2: PLUS
+    3: MINUS
+    4: MUL
+    5: DIV
+    6: INT
+    7: LPAREN
+    8: RPAREN
+    9: error:
+   10: prog: MINUS INT LPAREN
+   11: calc: MINUS INT LPAREN
+   12: expr: MINUS INT LPAREN
+   13: term: MINUS INT LPAREN
+   14: factor: MINUS INT LPAREN
